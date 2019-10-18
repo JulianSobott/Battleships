@@ -32,6 +32,11 @@ public class PlaygroundOwn extends Playground {
 
     }
 
+    /**
+     *
+     * @param position x, y coordinates of the shot.
+     * @return
+     */
     public ShotResult gotHit(Position position){
         Field f = this.elements[position.getY()][position.getX()];
         f.hit = true;

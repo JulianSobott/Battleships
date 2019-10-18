@@ -22,7 +22,12 @@ public abstract class Playground {
         }
     }
 
-    // y, x
+    /**
+     * Positioning of the elements in playground:
+     * 1. y vertical
+     * 2. x horizontal
+     * {@code Field f = this.elements[y][x];}
+     */
     protected Field[][] elements;
     protected int size;
 
