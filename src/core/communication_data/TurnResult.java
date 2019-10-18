@@ -1,0 +1,26 @@
+package core.communication_data;
+
+public class TurnResult {
+
+    private final ShotResult SHOT_RESULT;
+    private final boolean TURN_AGAIN;
+    private final boolean FINISHED;
+
+    public TurnResult(ShotResult SHOT_RESULT, boolean TURN_AGAIN, boolean FINISHED) {
+        this.SHOT_RESULT = SHOT_RESULT;
+        this.TURN_AGAIN = TURN_AGAIN;
+        this.FINISHED = FINISHED;
+    }
+
+    public ShotResult getSHOT_RESULT() {
+        return SHOT_RESULT;
+    }
+
+    public boolean isTURN_AGAIN() {
+        return TURN_AGAIN;
+    }
+
+    public boolean isFINISHED() {
+        return FINISHED;
+    }
+}
