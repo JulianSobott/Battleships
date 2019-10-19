@@ -1,5 +1,7 @@
 package gui;
 
+import gui.WindowChange.LoadNewScene;
+import gui.newGame.ControllerGameType;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -41,16 +43,10 @@ public class ControllerMainMenu {
     @FXML
     void createNewGame() {
 
-        Parent window = null;
+        ControllerGameType controllerGameType = new ControllerGameType();
+        LoadNewScene loadNewScene = new LoadNewScene(this.anchorPane, "../newGame/GameType.fxml", controllerGameType );
+        loadNewScene.load();
 
-        try {
-            window = FXMLLoader.load(getClass().getResource("newGame/GameType.fxml"));
-
-            Stage stageNewGame = (Stage) anchorPane.getScene().getWindow();
-            stageNewGame.setScene(new Scene(window));
-        } catch (IOException ex) {
-
-        }
     }
 
 
