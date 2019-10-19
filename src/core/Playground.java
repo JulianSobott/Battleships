@@ -20,6 +20,10 @@ public abstract class Playground {
             this.type = type;
             this.element = element;
         }
+
+        Field(FieldType type, PlaygroundElement element){
+            this(type, element, false);
+        }
     }
 
     /**
