@@ -80,8 +80,12 @@ public class PlaygroundOwn extends Playground {
         return true;
     }
 
+    /**
+     * Reset all fields to water fields.
+     * All references to ships are lost.
+     */
     public void resetFieldsToWater(){
-
+        super.resetFields(FieldType.WATER);
     }
 
     public void placeShipsRandom(ShipList shipList){

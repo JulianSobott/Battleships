@@ -24,6 +24,8 @@ public abstract class Playground {
         Field(FieldType type, PlaygroundElement element){
             this(type, element, false);
         }
+
+        // TODO: Maybe add build factories: e.g. newWater(),
     }
 
     /**
