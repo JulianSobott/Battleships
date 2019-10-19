@@ -1,6 +1,6 @@
 package core.communication_data;
 
-class PlaceShipResult {
+public class PlaceShipResult {
 
     private final boolean successfullyPlaced;
     private final ShipPosition position;

@@ -15,6 +15,21 @@ public class ShipPosition extends Position{
         this.LENGTH = LENGTH;
     }
 
+    public Position[] generateIndices(){
+        assert this.getLENGTH() > 0;
+        Position[] indices = new Position[this.getLENGTH()];
+        int x = 0;
+        int y = 0;
+        for (int i = 0; i < this.getLENGTH(); i++) {
+            indices[i] = new Position(this.X + x, this.Y + y);
+            if(this.getDIRECTION() == ShipPosition.Direction.HORIZONTAL)
+                x++;
+            else
+                y++;
+        }
+        return indices;
+    }
+
     public Direction getDIRECTION() {
         return DIRECTION;
     }
