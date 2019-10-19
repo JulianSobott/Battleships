@@ -23,7 +23,7 @@ public abstract class Player {
     public PlaceShipResult moveShip(int id, ShipPosition position){
         return this.playgroundOwn.moveShip(id, position);
     }
-    public boolean deleteShip(int id){
+    public boolean deleteShip(ShipID id){
         return this.playgroundOwn.deleteShip(id);
     }
 

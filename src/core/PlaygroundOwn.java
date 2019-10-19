@@ -34,8 +34,23 @@ public class PlaygroundOwn extends Playground {
         return null;
     }
 
-    public boolean deleteShip(int id){
-        return false;
+    /**
+     * Delete a ship from the playground and replace all fields with water fields.
+     * @param id ID of the ship
+     * @return true if the id exists, false otherwise
+     */
+    public boolean deleteShip(ShipID id){
+        boolean found = false;
+        for (int y = 0; y < this.size; y++) {
+            for (int x = 0; x < this.size; x++) {
+                Field field = this.elements[y][x];
+                if(field != null && field.type == FieldType.SHIP && ((Ship)field.element).getId().equals(id)){
+                    this.elements[y][x] = new Field(FieldType.WATER, new WaterElement());
+                    found = true;
+                }
+            }
+        }
+        return found;
     }
 
     /**

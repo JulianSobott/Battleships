@@ -2,6 +2,7 @@ package core.tests;
 
 import core.PlaygroundOwn;
 import core.communication_data.PlaceShipResult;
+import core.communication_data.ShipID;
 import core.communication_data.ShipPosition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,5 +49,16 @@ public class TestPlaygroundOwn{
         ShipPosition p4 = new ShipPosition(1, 2, ShipPosition.Direction.VERTICAL, 2);
         res = playground.placeShip(p3);
         assert !res.isSuccessfullyPlaced(): "Ship shouldn't be placed";
+    }
+
+    @Test
+    void deleteShip(){
+        ShipPosition p1 = new ShipPosition(0, 0, ShipPosition.Direction.HORIZONTAL, 6);
+        PlaceShipResult res = playground.placeShip(p1);
+        boolean deleted = playground.deleteShip(res.getShipID());
+        assert deleted: "Ship should be deleted";
+
+        deleted = playground.deleteShip(new ShipID(100));
+        assert !deleted: "Ship shouldn't be deleted";
     }
 }
