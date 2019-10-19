@@ -8,8 +8,24 @@ public class PlaygroundOwn extends Playground {
         super(size);
     }
 
+    /**
+     * Place a ship on the playground if it's possible.
+     * @param position Position where the ship is intended to be placed.
+     * @return An result that indicates whether it was successfully placed or not.
+     */
     public PlaceShipResult placeShip(ShipPosition position){
-        return null;
+        assert  position.getX() >= 0 && position.getX() < this.size &&
+                position.getX() >= 0 && position.getX() < this.size: "Ship position not on the playground";
+        boolean successfullyPlaced = false;
+        if(this.canPlaceShip(position)){
+            Ship ship = new Ship(position.getLENGTH());
+            for(Position p : position.generateIndices()){
+                Field f = new Field(FieldType.SHIP, ship);
+                this.elements[p.getY()][p.getX()] = f;
+            }
+            successfullyPlaced = true;
+        }
+        return new PlaceShipResult(successfullyPlaced, position);
     }
 
     public PlaceShipResult moveShip(int id, ShipPosition position){

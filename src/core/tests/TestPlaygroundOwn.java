@@ -1,0 +1,52 @@
+package core.tests;
+
+import core.PlaygroundOwn;
+import core.communication_data.PlaceShipResult;
+import core.communication_data.ShipPosition;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+public class TestPlaygroundOwn{
+
+    private final PlaygroundOwn playground = new PlaygroundOwn(6);
+
+    @BeforeEach
+    void cleanPlayground(){
+        playground.resetFieldsToWater();
+    }
+
+    @Test
+    void canPlaceShip(){
+        ShipPosition p1 = new ShipPosition(0, 0, ShipPosition.Direction.HORIZONTAL, 6);
+        assert playground.canPlaceShip(p1): "Ship should be possible to place";
+
+        ShipPosition p2 = new ShipPosition(5, 5, ShipPosition.Direction.HORIZONTAL, 5);
+        assert !playground.canPlaceShip(p2): "Ship shouldn't be possible to place";
+
+        playground.placeShip(p1);
+        ShipPosition p3 = new ShipPosition(1, 1, ShipPosition.Direction.HORIZONTAL, 1);
+        assert !playground.canPlaceShip(p3): "Ship shouldn't be possible to place";
+
+        ShipPosition p4 = new ShipPosition(0, 2, ShipPosition.Direction.VERTICAL, 2);
+        assert playground.canPlaceShip(p4): "Ship should be possible to place";
+    }
+
+    @Test
+    void placeShip(){
+        ShipPosition p1 = new ShipPosition(0, 0, ShipPosition.Direction.HORIZONTAL, 6);
+        PlaceShipResult res = playground.placeShip(p1);
+        assert res.isSuccessfullyPlaced(): "Ship should be placed";
+
+        ShipPosition p2 = new ShipPosition(0, 2, ShipPosition.Direction.HORIZONTAL, 7);
+        res = playground.placeShip(p2);
+        assert !res.isSuccessfullyPlaced(): "Ship shouldn't be placed";
+
+        ShipPosition p3 = new ShipPosition(0, 2, ShipPosition.Direction.VERTICAL, 2);
+        res = playground.placeShip(p3);
+        assert res.isSuccessfullyPlaced(): "Ship should be placed";
+
+        ShipPosition p4 = new ShipPosition(1, 2, ShipPosition.Direction.VERTICAL, 2);
+        res = playground.placeShip(p3);
+        assert !res.isSuccessfullyPlaced(): "Ship shouldn't be placed";
+    }
+}
