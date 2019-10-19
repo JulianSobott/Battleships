@@ -37,4 +37,30 @@ public class ShipPosition extends Position{
     public int getLENGTH() {
         return LENGTH;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ShipPosition that = (ShipPosition) o;
+        return DIRECTION == that.DIRECTION && LENGTH == that.LENGTH && super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = DIRECTION != null ? DIRECTION.hashCode() : 0;
+        result = 31 * result + LENGTH;
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "ShipPosition{" +
+                "DIRECTION=" + DIRECTION +
+                ", LENGTH=" + LENGTH +
+                ", X=" + X +
+                ", Y=" + Y +
+                '}';
+    }
 }
