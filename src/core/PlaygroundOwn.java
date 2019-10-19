@@ -20,8 +20,31 @@ public class PlaygroundOwn extends Playground {
         return false;
     }
 
+    /**
+     * Checks if the ship can be placed, without overlapping another ship or being to close to another.
+     * Between two ships must be at least one water field.
+     * Ships are allowed to be placed at the edge of the playground.
+     * @param position Position where the ship is intended to be placed.
+     * @return true if ship can be placed, false otherwise.
+     */
     public boolean canPlaceShip(ShipPosition position){
-        return false;
+        int[][] surroundingFields = {{-1, -1}, {-1, 0}, {0, -1}, {0, 0}, {0, 1}, {1, 0}, {1, 1}, {-1, 1}, {1, -1}};
+        for(Position p : position.generateIndices()){
+            // position not on board
+            if(p.getX() >= this.size || p.getX() < 0 || p.getY() >= this.size || p.getY() < 0)
+                return false;
+            // surrounding field is ship
+            for(int[] surroundingField : surroundingFields){
+                // 0 <= x < size
+                int x = Math.min(Math.max(p.getX() + surroundingField[0], 0), this.size - 1);
+                // 0 <= y < size
+                int y = Math.min(Math.max(p.getY() + surroundingField[1], 0), this.size - 1);
+
+                if(this.elements[y][x] != null && this.elements[y][x].type == FieldType.SHIP)
+                    return false;
+            }
+        }
+        return true;
     }
 
     public void resetFieldsToWater(){
