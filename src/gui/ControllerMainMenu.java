@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -36,26 +37,22 @@ public class ControllerMainMenu {
         stage.close();
     }
 
-    // Todo  Fehler finden: Event wird est beim zweiten mal gefeuert?? Warum
 
     @FXML
-    void createNewGame(Event event) {
+    void createNewGame() {
 
-      //  button1.setOnAction(e -> primaryStage.setScene(scene2));
-        buttonNewGame.setOnAction( e -> {
+        Parent window = null;
 
-            Parent fxmlFile = null;
-            try {
-                fxmlFile = FXMLLoader.load(getClass().getResource("../gui/newGame/GameType.fxml"));
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+        try {
+            window = FXMLLoader.load(getClass().getResource("newGame/GameType.fxml"));
 
-            Stage stage = (Stage) anchorPane.getScene().getWindow();
-            stage.setScene(new Scene(fxmlFile));
-        });
+            Stage stageNewGame = (Stage) anchorPane.getScene().getWindow();
+            stageNewGame.setScene(new Scene(window));
+        } catch (IOException ex) {
 
+        }
     }
+
 
     @FXML
     void loadExistingGame(MouseEvent event) {
