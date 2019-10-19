@@ -20,7 +20,7 @@ public abstract class Player {
     public PlaceShipResult placeShip(ShipPosition position){
         return this.playgroundOwn.placeShip(position);
     }
-    public PlaceShipResult moveShip(int id, ShipPosition position){
+    public PlaceShipResult moveShip(ShipID id, ShipPosition position){
         return this.playgroundOwn.moveShip(id, position);
     }
     public boolean deleteShip(ShipID id){

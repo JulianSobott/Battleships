@@ -2,6 +2,9 @@ package core;
 
 import core.communication_data.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PlaygroundOwn extends Playground {
 
     public PlaygroundOwn(int size) {
@@ -30,8 +33,39 @@ public class PlaygroundOwn extends Playground {
         return new PlaceShipResult(successfullyPlaced, position, shipID);
     }
 
-    public PlaceShipResult moveShip(int id, ShipPosition position){
-        return null;
+    /**
+     * Move a ship to new position if it can be placed there.
+     * Algorithm: copy ship -> deleted ship -> place ship -> restore copy if place fails
+     * @param id Id of the ship that shall be moved
+     * @param newPosition New position of the ship
+     * @return PlaceShipResult of the placeShip method.
+     */
+    public PlaceShipResult moveShip(ShipID id, ShipPosition newPosition){
+        // TODO: if ShipPosition would be stored in ship it could be easier restored
+        Ship shipCopy = this.getShipByID(id);
+        Position[] oldPositions = this.getPositionsByShipID(id);
+        this.deleteShip(id);
+        PlaceShipResult res = this.placeShip(newPosition);
+        if(!res.isSuccessfullyPlaced()){
+            for (Position p: oldPositions) {
+                this.elements[p.getY()][p.getX()] = new Field(FieldType.SHIP, shipCopy);
+            }
+        }
+        return res;
+    }
+
+    /**
+     * Fill all fields that are null with a water field
+     */
+    private void fillWithWater() {
+        for (int y = 0; y < this.size; y++) {
+            for (int x = 0; x < this.size; x++) {
+                Field field = this.elements[y][x];
+                if(field == null){
+                    this.elements[y][x] = new Field(FieldType.WATER, new WaterElement());
+                }
+            }
+        }
     }
 
     /**
@@ -40,17 +74,15 @@ public class PlaygroundOwn extends Playground {
      * @return true if the id exists, false otherwise
      */
     public boolean deleteShip(ShipID id){
-        boolean found = false;
-        for (int y = 0; y < this.size; y++) {
-            for (int x = 0; x < this.size; x++) {
-                Field field = this.elements[y][x];
-                if(field != null && field.type == FieldType.SHIP && ((Ship)field.element).getId().equals(id)){
-                    this.elements[y][x] = new Field(FieldType.WATER, new WaterElement());
-                    found = true;
-                }
+        Position[] positions = this.getPositionsByShipID(id);
+        if(positions.length == 0)
+            return false;
+        else {
+            for(Position p : positions){
+                this.elements[p.getY()][p.getX()] = new Field(FieldType.WATER, new WaterElement());
             }
+            return true;
         }
-        return found;
     }
 
     /**
@@ -106,5 +138,28 @@ public class PlaygroundOwn extends Playground {
         }else{
             return new ShotResultWater(position, f.type);
         }
+    }
+
+    private Position[] getPositionsByShipID(ShipID id){
+        List<Position> positions = new ArrayList<>();
+        for (int y = 0; y < this.size; y++) {
+            for (int x = 0; x < this.size; x++) {
+                Field field = this.elements[y][x];
+                if(field != null && field.type == FieldType.SHIP && ((Ship)field.element).getId().equals(id)){
+                    positions.add(new Position(x, y));
+                }
+            }
+        }
+        Position[] positionsArr = new Position[positions.size()];
+        return positions.toArray(positionsArr);
+    }
+
+    private Ship getShipByID(ShipID shipID){
+        Position[] positions = this.getPositionsByShipID(shipID);
+        if(positions.length == 0)
+            return null;
+        int x = positions[0].getX();
+        int y = positions[0].getY();
+        return (Ship)this.elements[y][x].element;
     }
 }

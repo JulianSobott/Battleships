@@ -61,4 +61,23 @@ public class TestPlaygroundOwn{
         deleted = playground.deleteShip(new ShipID(100));
         assert !deleted: "Ship shouldn't be deleted";
     }
+
+    @Test
+    void moveShip(){
+        ShipPosition p1 = new ShipPosition(0, 0, ShipPosition.Direction.HORIZONTAL, 2);
+        PlaceShipResult res1 = playground.placeShip(p1);
+
+        ShipPosition p2 = new ShipPosition(1, 0, ShipPosition.Direction.HORIZONTAL, 2);
+        PlaceShipResult res2 = playground.moveShip(res1.getShipID(), p2);
+        assert res2.isSuccessfullyPlaced(): "Ship should be moved";
+        assert res2.getPosition() == p2 : "Ship is not moved correctly";
+
+        ShipPosition p3 = new ShipPosition(4, 4, ShipPosition.Direction.HORIZONTAL, 2);
+        PlaceShipResult res3 = playground.placeShip(p3);
+        ShipPosition p4 = new ShipPosition(0, 1, ShipPosition.Direction.HORIZONTAL, 2);
+        PlaceShipResult res4 = playground.moveShip(res3.getShipID(), p4);
+        assert !res4.isSuccessfullyPlaced(): "Ship should not be moved";
+        //assert res4.getPosition() == p3 : "Ship position is not restored correctly";
+        //TODO: what position should be stored in the PlaceShipResult on failure
+    }
 }
