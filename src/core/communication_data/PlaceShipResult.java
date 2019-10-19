@@ -4,10 +4,12 @@ public class PlaceShipResult {
 
     private final boolean successfullyPlaced;
     private final ShipPosition position;
+    private final ShipID shipID;
 
-    public PlaceShipResult(boolean successfullyPlaced, ShipPosition position) {
+    public PlaceShipResult(boolean successfullyPlaced, ShipPosition position, ShipID shipID) {
         this.successfullyPlaced = successfullyPlaced;
         this.position = position;
+        this.shipID = shipID;
     }
 
     public boolean isSuccessfullyPlaced() {
@@ -16,5 +18,9 @@ public class PlaceShipResult {
 
     public ShipPosition getPosition() {
         return position;
+    }
+
+    public ShipID getShipID() {
+        return shipID;
     }
 }

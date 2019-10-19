@@ -1,9 +1,11 @@
 package core;
 
+import core.communication_data.ShipID;
+
 public class Ship extends PlaygroundElement{
 
     private int lives;
-    private int id;
+    private ShipID id;
 
     private static int nextID = 0;
 
@@ -11,13 +13,13 @@ public class Ship extends PlaygroundElement{
         SUNKEN, ALIVE
     }
 
-    Ship(int lives){
+    Ship(int lives, ShipID id){
         this.lives = lives;
-        this.id = this.generateID();
+        this.id = id;
     }
 
-    private int generateID() {
-        return Ship.nextID++;
+    Ship(int lives){
+        this(lives, ShipID.getNextShipID());
     }
 
     LifeStatus getStatus() {
@@ -33,7 +35,7 @@ public class Ship extends PlaygroundElement{
         this.lives--;
     }
 
-    public int getId() {
+    public ShipID getId() {
         return id;
     }
 }

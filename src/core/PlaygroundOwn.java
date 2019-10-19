@@ -17,6 +17,7 @@ public class PlaygroundOwn extends Playground {
         assert  position.getX() >= 0 && position.getX() < this.size &&
                 position.getX() >= 0 && position.getX() < this.size: "Ship position not on the playground";
         boolean successfullyPlaced = false;
+        ShipID shipID = null;
         if(this.canPlaceShip(position)){
             Ship ship = new Ship(position.getLENGTH());
             for(Position p : position.generateIndices()){
@@ -24,8 +25,9 @@ public class PlaygroundOwn extends Playground {
                 this.elements[p.getY()][p.getX()] = f;
             }
             successfullyPlaced = true;
+            shipID = ship.getId();
         }
-        return new PlaceShipResult(successfullyPlaced, position);
+        return new PlaceShipResult(successfullyPlaced, position, shipID);
     }
 
     public PlaceShipResult moveShip(int id, ShipPosition position){
