@@ -1,19 +1,12 @@
 package gui;
 
-import gui.WindowChange.LoadNewScene;
+import gui.WindowChange.SceneLoader;
 import gui.newGame.ControllerGameType;
-import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 
 public class ControllerMainMenu {
 
@@ -44,9 +37,8 @@ public class ControllerMainMenu {
     void createNewGame() {
 
         ControllerGameType controllerGameType = new ControllerGameType();
-        LoadNewScene loadNewScene = new LoadNewScene(this.anchorPane, "../newGame/GameType.fxml", controllerGameType );
-        loadNewScene.load();
-
+        SceneLoader sceneLoader = new SceneLoader(this.anchorPane, "../newGame/GameType.fxml", controllerGameType);
+        sceneLoader.loadSceneInExistingWindow();
     }
 
 
