@@ -1,5 +1,6 @@
 package gui;
 
+import gui.WindowChange.SceneLoader;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,20 +19,9 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        Parent window = null;
-        try {
-            window = FXMLLoader.load(getClass().getResource("Main_Menu.fxml"));
-            Stage stage = new Stage();
-            stage.setScene(new Scene(window));
-            stage.setTitle("Battleship");
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
+        ControllerMainMenu controllerMainMenu = new ControllerMainMenu();
+        SceneLoader sceneLoader = new SceneLoader(null, "../Main_Menu.fxml", controllerMainMenu);
+        sceneLoader.loadSceneInNewWindow("Battleship");
 
     }
 }
