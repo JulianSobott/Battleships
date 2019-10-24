@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Button layoutX="339.0" layoutY="144.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="101.0" text=" KI" />
-      <Button layoutX="339.0" layoutY="187.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="101.0" text=" Multiplayer" />
+      <Button layoutX="101.0" layoutY="144.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="101.0" text=" KI" />
+      <Button layoutX="317.0" layoutY="144.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="101.0" text=" Multiplayer" />
       <Button fx:id="BackToMenu" layoutX="78.0" layoutY="668.0" mnemonicParsing="false" onMouseClicked="#goBacktoMainMenus" prefHeight="25.0" prefWidth="118.0" text="Back" />
+      <Label layoutX="215.0" layoutY="74.0" text="Gegenspieler:" />
+      <ImageView fitHeight="440.0" fitWidth="493.0" layoutX="550.0" layoutY="144.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/BattleShip.jpg" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>
