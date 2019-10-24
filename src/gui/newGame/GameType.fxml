@@ -29,8 +29,8 @@
       </HBox>
       <Separator layoutX="176.0" layoutY="183.0" orientation="VERTICAL" prefHeight="306.0" prefWidth="0.0" />
       <Separator layoutX="391.0" layoutY="183.0" orientation="VERTICAL" prefHeight="306.0" prefWidth="0.0" />
-      <RadioButton layoutX="309.0" layoutY="193.0" mnemonicParsing="false" text="Client" />
-      <RadioButton layoutX="217.0" layoutY="193.0" mnemonicParsing="false" text="Server" />
+      <RadioButton fx:id="radioButtonClient" layoutX="309.0" layoutY="193.0" mnemonicParsing="false" text="Client" />
+      <RadioButton fx:id="radioButtonServer" layoutX="217.0" layoutY="193.0" mnemonicParsing="false" text="Server" />
       <TextField layoutX="212.0" layoutY="257.0" promptText="192.168.5.34" />
       <Label layoutX="214.0" layoutY="234.0" text="IP_Adresse:" />
       <Label layoutX="214.0" layoutY="299.0" text="Port:" />
@@ -41,9 +41,9 @@
       <TextField layoutX="417.0" layoutY="323.0" promptText="Bob" />
       <VBox layoutX="67.0" layoutY="234.0" spacing="10.0">
          <children>
-            <RadioButton mnemonicParsing="false" text="Leicht" />
-            <RadioButton mnemonicParsing="false" text="Mittel" />
-            <RadioButton mnemonicParsing="false" text="Schwer" />
+            <RadioButton fx:id="radioButtonEasy" mnemonicParsing="false" text="Leicht" />
+            <RadioButton fx:id="radioButtonMedium" mnemonicParsing="false" text="Mittel" />
+            <RadioButton fx:id="radioButtonHard" mnemonicParsing="false" text="Schwer" />
          </children>
       </VBox>
       <Label layoutX="46.0" layoutY="193.0" text="Schwierigkeitsgrad:" />

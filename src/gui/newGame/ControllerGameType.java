@@ -27,6 +27,21 @@ public class ControllerGameType implements Initializable {
     @FXML
     public  RadioButton radioButtonLocal;
 
+    @FXML
+    public RadioButton radioButtonServer;
+
+    @FXML
+    public RadioButton radioButtonClient;
+
+    @FXML
+    public RadioButton radioButtonEasy;
+
+    @FXML
+    public RadioButton radioButtonMedium;
+
+    @FXML
+    public  RadioButton radioButtonHard;
+
 
 
     @FXML
@@ -47,7 +62,14 @@ public class ControllerGameType implements Initializable {
         radioButtonNetzwerk.setToggleGroup(toggleGroupGameType);
         radioButtonLocal.setToggleGroup(toggleGroupGameType);
 
+        ToggleGroup toggleGroupServerClient = new ToggleGroup();
+        radioButtonClient.setToggleGroup(toggleGroupServerClient);
+        radioButtonServer.setToggleGroup(toggleGroupServerClient);
 
+        ToggleGroup toggleGroupDifficulty = new ToggleGroup();
+        radioButtonEasy.setToggleGroup(toggleGroupDifficulty);
+        radioButtonMedium.setToggleGroup(toggleGroupDifficulty);
+        radioButtonHard.setToggleGroup(toggleGroupDifficulty);
 
     }
 }
