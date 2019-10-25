@@ -17,12 +17,21 @@ public class PlaygroundOwn extends Playground {
      * @return An result that indicates whether it was successfully placed or not.
      */
     public PlaceShipResult placeShip(ShipPosition position){
+        Ship ship = new Ship(position.getLENGTH(), position);
+        return this.placeShip(position, ship);
+    }
+
+    /**
+     * Place an already created ship on the playground if it's possible.
+     * @param position Position where the ship is intended to be placed.
+     * @return An result that indicates whether it was successfully placed or not.
+     */
+    private PlaceShipResult placeShip(ShipPosition position, Ship ship){
         assert  position.getX() >= 0 && position.getX() < this.size &&
                 position.getX() >= 0 && position.getX() < this.size: "Ship position not on the playground";
         boolean successfullyPlaced = false;
         ShipID shipID = null;
         if(this.canPlaceShip(position)){
-            Ship ship = new Ship(position.getLENGTH(), position);
             for(Position p : position.generateIndices()){
                 Field f = new Field(FieldType.SHIP, ship);
                 this.elements[p.getY()][p.getX()] = f;
@@ -41,15 +50,16 @@ public class PlaygroundOwn extends Playground {
      * @return PlaceShipResult of the placeShip method.
      */
     public PlaceShipResult moveShip(ShipID id, ShipPosition newPosition){
-        // TODO: if ShipPosition would be stored in ship it could be easier restored
         Ship shipCopy = this.getShipByID(id);
-        Position[] oldPositions = this.getPositionsByShipID(id);
+        if(shipCopy == null) {
+            // TODO: transfer to caller, that ID doesnt exist. Maybe with enum errors
+            return new PlaceShipResult(false, newPosition, id);
+        }
+        ShipPosition oldPosition = shipCopy.getShipPosition();
         this.deleteShip(id);
         PlaceShipResult res = this.placeShip(newPosition);
         if(!res.isSuccessfullyPlaced()){
-            for (Position p: oldPositions) {
-                this.elements[p.getY()][p.getX()] = new Field(FieldType.SHIP, shipCopy);
-            }
+            this.placeShip(oldPosition, shipCopy);
         }
         return res;
     }
@@ -141,6 +151,7 @@ public class PlaygroundOwn extends Playground {
     }
 
     private Position[] getPositionsByShipID(ShipID id){
+        // TODO: Delete when not needed anymore
         List<Position> positions = new ArrayList<>();
         for (int y = 0; y < this.size; y++) {
             for (int x = 0; x < this.size; x++) {
@@ -155,6 +166,7 @@ public class PlaygroundOwn extends Playground {
     }
 
     private Ship getShipByID(ShipID shipID){
+        // TODO: Find way without getting the positions
         Position[] positions = this.getPositionsByShipID(shipID);
         if(positions.length == 0)
             return null;
