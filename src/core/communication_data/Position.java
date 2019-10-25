@@ -43,4 +43,21 @@ public class Position {
                 ", Y=" + Y +
                 '}';
     }
+
+    /**Is the position inside the min and max values
+     *
+     * @param minX min X value inclusive
+     * @param minY min Y value inclusive
+     * @param maxX max X value inclusive
+     * @param maxY max Y value inclusive
+     * @return true if position is in range, false otherwise
+     */
+    public boolean isInRange(int minX, int minY, int maxX, int maxY){
+        return this.X >= minX && this.X <= maxX && this.Y >= minY && this.Y <= maxY;
+    }
+
+    public boolean isOutsideOfPlayground(int size){
+        // -1 because indexing starts at 0
+        return !this.isInRange(0, 0, size - 1, size - 1);
+    }
 }

@@ -64,4 +64,18 @@ public class ShipPosition extends Position{
                 ", Y=" + Y +
                 '}';
     }
+
+    @Override
+    public boolean isInRange(int minX, int minY, int maxX, int maxY) {
+        if(super.isInRange(minX, minY, maxX, maxY)){
+            if(this.DIRECTION == Direction.HORIZONTAL){
+                // -1 because one part is already on position x, y
+                return new Position(this.X + this.LENGTH - 1, this.Y).isInRange(minX, minY, maxX, maxY);
+            }else{
+                // -1 because one part is already on position x, y
+                return new Position(this.X, this.Y + this.LENGTH - 1).isInRange(minX, minY, maxX, maxY);
+            }
+        }
+        return false;
+    }
 }

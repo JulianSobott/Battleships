@@ -30,11 +30,6 @@ public class TestPlaygroundOwn{
 
         ShipPosition p4 = new ShipPosition(0, 2, ShipPosition.Direction.VERTICAL, 2);
         assert playground.canPlaceShip(p4): "Ship should be possible to place";
-
-        try{
-            ShipPosition p5 = new ShipPosition(6, 6, ShipPosition.Direction.HORIZONTAL, 1);
-            assert false: "Expected AssertionError";
-        }catch (AssertionError ignored){}
     }
 
     @Test
@@ -46,6 +41,7 @@ public class TestPlaygroundOwn{
         ShipPosition p2 = new ShipPosition(0, 2, ShipPosition.Direction.HORIZONTAL, 7);
         res = playground.placeShip(p2);
         assert !res.isSuccessfullyPlaced(): "Ship shouldn't be placed";
+        assert res.getERROR() == PlaceShipResult.Error.NOT_ON_PLAYGROUND: "Error not correctly set";
 
         ShipPosition p3 = new ShipPosition(0, 2, ShipPosition.Direction.VERTICAL, 2);
         res = playground.placeShip(p3);
@@ -54,6 +50,7 @@ public class TestPlaygroundOwn{
         ShipPosition p4 = new ShipPosition(1, 2, ShipPosition.Direction.VERTICAL, 2);
         res = playground.placeShip(p3);
         assert !res.isSuccessfullyPlaced(): "Ship shouldn't be placed";
+        assert res.getERROR() == PlaceShipResult.Error.SPACE_TAKEN: "Error not correctly set";
     }
 
     @Test

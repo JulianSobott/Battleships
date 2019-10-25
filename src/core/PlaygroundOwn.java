@@ -2,9 +2,6 @@ package core;
 
 import core.communication_data.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class PlaygroundOwn extends Playground {
 
     public PlaygroundOwn(int size) {
@@ -27,7 +24,7 @@ public class PlaygroundOwn extends Playground {
      * @return An result that indicates whether it was successfully placed or not.
      */
     private PlaceShipResult placeShip(ShipPosition position, Ship ship){
-        if(!(position.getX() >= 0 && position.getX() < this.size && position.getX() >= 0 && position.getX() < this.size))
+        if(position.isOutsideOfPlayground(this.size))
             return PlaceShipResult.failed(position, null, PlaceShipResult.Error.NOT_ON_PLAYGROUND);
         if(this.canPlaceShip(position)){
             for(Position p : position.generateIndices()){
@@ -104,7 +101,7 @@ public class PlaygroundOwn extends Playground {
         int[][] surroundingFields = {{-1, -1}, {-1, 0}, {0, -1}, {0, 0}, {0, 1}, {1, 0}, {1, 1}, {-1, 1}, {1, -1}};
         for(Position p : position.generateIndices()){
             // position not on board
-            if(p.getX() >= this.size || p.getX() < 0 || p.getY() >= this.size || p.getY() < 0)
+            if(position.isOutsideOfPlayground(this.size))
                 return false;
             // surrounding field is ship
             for(int[] surroundingField : surroundingFields){
