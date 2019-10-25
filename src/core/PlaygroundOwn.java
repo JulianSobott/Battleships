@@ -27,19 +27,18 @@ public class PlaygroundOwn extends Playground {
      * @return An result that indicates whether it was successfully placed or not.
      */
     private PlaceShipResult placeShip(ShipPosition position, Ship ship){
-        assert  position.getX() >= 0 && position.getX() < this.size &&
-                position.getX() >= 0 && position.getX() < this.size: "Ship position not on the playground";
-        boolean successfullyPlaced = false;
-        ShipID shipID = null;
+        if(!(position.getX() >= 0 && position.getX() < this.size && position.getX() >= 0 && position.getX() < this.size))
+            return PlaceShipResult.failed(position, null, PlaceShipResult.Error.NOT_ON_PLAYGROUND);
         if(this.canPlaceShip(position)){
             for(Position p : position.generateIndices()){
                 Field f = new Field(FieldType.SHIP, ship);
                 this.elements[p.getY()][p.getX()] = f;
             }
-            successfullyPlaced = true;
-            shipID = ship.getId();
+            ShipID shipID = ship.getId();
+            return PlaceShipResult.success(position, shipID);
+        }else{
+            return PlaceShipResult.failed(position, null, PlaceShipResult.Error.SPACE_TAKEN);
         }
-        return new PlaceShipResult(successfullyPlaced, position, shipID);
     }
 
     /**
@@ -52,8 +51,7 @@ public class PlaygroundOwn extends Playground {
     public PlaceShipResult moveShip(ShipID id, ShipPosition newPosition){
         Ship shipCopy = this.getShipByID(id);
         if(shipCopy == null) {
-            // TODO: transfer to caller, that ID doesnt exist. Maybe with enum errors
-            return new PlaceShipResult(false, newPosition, id);
+            return PlaceShipResult.failed(newPosition, id, PlaceShipResult.Error.ID_NOT_EXIST);
         }
         ShipPosition oldPosition = shipCopy.getShipPosition();
         this.deleteShip(id);

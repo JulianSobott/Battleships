@@ -7,7 +7,7 @@ public class PlaceShipResult {
     private final ShipID shipID;
     private final Error ERROR;
 
-    enum Error{
+    public enum Error{
         NONE, ID_NOT_EXIST, SPACE_TAKEN, NOT_ON_PLAYGROUND
     }
     private PlaceShipResult(boolean successfullyPlaced, ShipPosition position, ShipID shipID, Error error){
@@ -17,12 +17,12 @@ public class PlaceShipResult {
         this.ERROR = error;
     }
 
-    public PlaceShipResult(boolean successfullyPlaced, ShipPosition position, ShipID shipID) {
-        this(successfullyPlaced, position, shipID, Error.NONE);
-    }
-
     public static PlaceShipResult failed(ShipPosition position, ShipID shipID, Error error){
         return new PlaceShipResult(false, position, shipID, error);
+    }
+
+    public static PlaceShipResult success(ShipPosition position, ShipID shipID){
+        return new PlaceShipResult(true, position, shipID, Error.NONE);
     }
 
     public boolean isSuccessfullyPlaced() {
