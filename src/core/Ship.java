@@ -1,25 +1,26 @@
 package core;
 
 import core.communication_data.ShipID;
+import core.communication_data.ShipPosition;
 
 public class Ship extends PlaygroundElement{
 
     private int lives;
     private ShipID id;
-
-    private static int nextID = 0;
+    private ShipPosition shipPosition;
 
     public enum LifeStatus {
         SUNKEN, ALIVE
     }
 
-    Ship(int lives, ShipID id){
+    Ship(int lives, ShipID id, ShipPosition shipPosition){
         this.lives = lives;
         this.id = id;
+        this.shipPosition = shipPosition;
     }
 
-    Ship(int lives){
-        this(lives, ShipID.getNextShipID());
+    Ship(int lives, ShipPosition shipPosition){
+        this(lives, ShipID.getNextShipID(), shipPosition);
     }
 
     LifeStatus getStatus() {
@@ -37,5 +38,13 @@ public class Ship extends PlaygroundElement{
 
     public ShipID getId() {
         return id;
+    }
+
+    public ShipPosition getShipPosition(){
+        return this.shipPosition;
+    }
+
+    public void setShipPosition(ShipPosition newPosition){
+        this.shipPosition = newPosition;
     }
 }

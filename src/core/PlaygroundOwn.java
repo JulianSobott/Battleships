@@ -22,7 +22,7 @@ public class PlaygroundOwn extends Playground {
         boolean successfullyPlaced = false;
         ShipID shipID = null;
         if(this.canPlaceShip(position)){
-            Ship ship = new Ship(position.getLENGTH());
+            Ship ship = new Ship(position.getLENGTH(), position);
             for(Position p : position.generateIndices()){
                 Field f = new Field(FieldType.SHIP, ship);
                 this.elements[p.getY()][p.getX()] = f;
