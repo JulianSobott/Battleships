@@ -84,11 +84,11 @@ public class PlaygroundOwn extends Playground {
      * @return true if the id exists, false otherwise
      */
     public boolean deleteShip(ShipID id){
-        Position[] positions = this.getPositionsByShipID(id);
-        if(positions.length == 0)
+        Ship ship = this.getShipByID(id);
+        if(ship == null)
             return false;
         else {
-            for(Position p : positions){
+            for(Position p : ship.getShipPosition().generateIndices()){
                 this.elements[p.getY()][p.getX()] = new Field(FieldType.WATER, new WaterElement());
             }
             return true;
@@ -166,12 +166,13 @@ public class PlaygroundOwn extends Playground {
     }
 
     private Ship getShipByID(ShipID shipID){
-        // TODO: Find way without getting the positions
-        Position[] positions = this.getPositionsByShipID(shipID);
-        if(positions.length == 0)
-            return null;
-        int x = positions[0].getX();
-        int y = positions[0].getY();
-        return (Ship)this.elements[y][x].element;
+        for(Field[] row : this.elements){
+            for(Field f : row){
+                if(f.type == FieldType.SHIP && ((Ship)f.element).getId().equals(shipID)){
+                    return (Ship)f.element;
+                }
+            }
+        }
+        return null;
     }
 }
