@@ -5,6 +5,7 @@ public class Position {
     protected final int X, Y;
 
     public Position(int x, int y){
+        assert x >= 0 && y >= 0: "No negative positions are allowed";
         this.X = x;
         this.Y = y;
     }

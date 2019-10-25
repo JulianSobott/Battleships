@@ -21,7 +21,7 @@ public class TestPlaygroundOwn{
         ShipPosition p1 = new ShipPosition(0, 0, ShipPosition.Direction.HORIZONTAL, 6);
         assert playground.canPlaceShip(p1): "Ship should be possible to place";
 
-        ShipPosition p2 = new ShipPosition(5, 5, ShipPosition.Direction.HORIZONTAL, 5);
+        ShipPosition p2 = new ShipPosition(5, 5, ShipPosition.Direction.HORIZONTAL, 2);
         assert !playground.canPlaceShip(p2): "Ship shouldn't be possible to place";
 
         playground.placeShip(p1);
@@ -30,6 +30,11 @@ public class TestPlaygroundOwn{
 
         ShipPosition p4 = new ShipPosition(0, 2, ShipPosition.Direction.VERTICAL, 2);
         assert playground.canPlaceShip(p4): "Ship should be possible to place";
+
+        try{
+            ShipPosition p5 = new ShipPosition(6, 6, ShipPosition.Direction.HORIZONTAL, 1);
+            assert false: "Expected AssertionError";
+        }catch (AssertionError ignored){}
     }
 
     @Test

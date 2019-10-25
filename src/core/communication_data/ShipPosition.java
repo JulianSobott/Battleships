@@ -11,6 +11,7 @@ public class ShipPosition extends Position{
 
     public ShipPosition(int x, int y, Direction DIRECTION, int LENGTH) {
         super(x, y);
+        assert LENGTH > 0: "Length must be greater than 0";
         this.DIRECTION = DIRECTION;
         this.LENGTH = LENGTH;
     }
