@@ -150,21 +150,11 @@ public class PlaygroundOwn extends Playground {
         }
     }
 
-    private Position[] getPositionsByShipID(ShipID id){
-        // TODO: Delete when not needed anymore
-        List<Position> positions = new ArrayList<>();
-        for (int y = 0; y < this.size; y++) {
-            for (int x = 0; x < this.size; x++) {
-                Field field = this.elements[y][x];
-                if(field != null && field.type == FieldType.SHIP && ((Ship)field.element).getId().equals(id)){
-                    positions.add(new Position(x, y));
-                }
-            }
-        }
-        Position[] positionsArr = new Position[positions.size()];
-        return positions.toArray(positionsArr);
-    }
-
+    /**
+     *
+     * @param shipID Searched shipID
+     * @return An Ship object if the ID exists, null otherwise
+     */
     private Ship getShipByID(ShipID shipID){
         for(Field[] row : this.elements){
             for(Field f : row){
