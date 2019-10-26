@@ -79,7 +79,6 @@ public class TestPlaygroundOwn{
         ShipPosition p4 = new ShipPosition(0, 1, ShipPosition.Direction.HORIZONTAL, 2);
         PlaceShipResult res4 = playground.moveShip(res3.getShipID(), p4);
         assert !res4.isSuccessfullyPlaced(): "Ship should not be moved";
-        //assert res4.getPosition() == p3 : "Ship position is not restored correctly";
-        //TODO: what position should be stored in the PlaceShipResult on failure
+        assert res4.getPosition() == p4 : "Ship position is not set correctly";
     }
 }
