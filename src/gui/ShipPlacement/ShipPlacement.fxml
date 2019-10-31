@@ -20,6 +20,6 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
       </GridPane>
-      <VBox fx:id="vBoxShips" alignment="CENTER" layoutX="893.0" layoutY="100.0" prefHeight="550.0" prefWidth="300.0" AnchorPane.bottomAnchor="100.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="100.0" />
+      <VBox fx:id="vBoxShips" alignment="CENTER" layoutX="893.0" layoutY="100.0" prefHeight="550.0" prefWidth="300.0" spacing="10.0" AnchorPane.bottomAnchor="100.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="100.0" />
    </children>
 </AnchorPane>

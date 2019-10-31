@@ -2,7 +2,10 @@ package gui.ShipPlacement;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -19,8 +22,7 @@ public class ControllerShipPlacement implements Initializable {
     private VBox vBoxShips;
 
 
-
-    public  ControllerShipPlacement(){
+    public ControllerShipPlacement() {
 
 
     }
@@ -29,16 +31,29 @@ public class ControllerShipPlacement implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        HBox hBox = createNewGuiShip("", 4);
+        HBox hBox1 = createNewGuiShip("", 2);
+        HBox hBox2 = createNewGuiShip("", 6);
+        HBox hBox3 = createNewGuiShip("", 3);
+        vBoxShips.getChildren().addAll(hBox, hBox1, hBox2,hBox3);
+
     }
 
 
-    private HBox createNewGuiShip(String IconPath, int numberOfShips){
+    private HBox createNewGuiShip(String IconPath, int numberOfShips) {
 
         HBox hBox = new HBox();
         hBox.setSpacing(20);
-        Label labelShipCounter = new Label( "x " + numberOfShips );
+        hBox.setAlignment(Pos.CENTER);
+        Label labelShipCounter = new Label("x " + numberOfShips);
 
-        return null;
+        Image imageShip = new Image("/gui/ShipIcons/Testschiff.png");
+        ImageView imageView = new ImageView(imageShip);
+        imageView.setFitWidth(100);
+        imageView.setFitHeight(50);
+
+        hBox.getChildren().addAll(imageView, labelShipCounter);
+        return hBox;
     }
 
 
