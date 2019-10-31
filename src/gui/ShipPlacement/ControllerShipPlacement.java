@@ -1,18 +1,21 @@
 package gui.ShipPlacement;
 
-import gui.UiClasses.BattleShipImage;
+import gui.UiClasses.BattleShipGui;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class ControllerShipPlacement implements Initializable {
@@ -22,6 +25,15 @@ public class ControllerShipPlacement implements Initializable {
 
     @FXML
     private VBox vBoxShips;
+
+
+    // ToDO Woher weiß man welcher Schiff länge gesetzt wurde ...
+
+    private static final int fieldSize = 5;
+
+    private ArrayList availableShips = new ArrayList();
+
+    private ArrayList<BattleShipGui> battleShips = new ArrayList();
 
 
     public ControllerShipPlacement() {
@@ -39,7 +51,9 @@ public class ControllerShipPlacement implements Initializable {
         HBox hBox3 = createNewGuiShip("", 3);
         vBoxShips.getChildren().addAll(hBox, hBox1, hBox2, hBox3);
 
-        generateWater(0,0);
+        preallocateFieldsWithWater();
+
+
     }
 
 
@@ -50,7 +64,7 @@ public class ControllerShipPlacement implements Initializable {
         hBox.setAlignment(Pos.CENTER);
         Label labelShipCounter = new Label("x " + numberOfShips);
 
-        BattleShipImage battleShipImage = new BattleShipImage("/gui/ShipIcons/Testschiff.png", 1, 3);
+        Image battleShipImage = new Image("/gui/ShipIcons/Testschiff.png");
         ImageView imageView = new ImageView(battleShipImage);
         addEventDragDetected(imageView);
         imageView.setFitWidth(100);
@@ -61,21 +75,35 @@ public class ControllerShipPlacement implements Initializable {
     }
 
 
-    private ImageView generateEmtyImageView(){
+    private ImageView generateEmtyImageView() {
 
         ImageView imageView = new ImageView();
         return imageView;
     }
 
 
-    private void generateWater(int possHorizontal, int possVertical){
+    private void generateWater(int possHorizontal, int possVertical) {
 
         Image battleShipImage = new Image("/gui/ShipIcons/Wellen.jpg");
         ImageView imageView = new ImageView(battleShipImage);
-        imageView.setFitWidth(120);
-        imageView.setFitHeight(150);
+        imageView.setFitWidth(140);
+        imageView.setFitHeight(110);
         handleDragOver(imageView);
-        dataGridBattleship.add(imageView,possHorizontal,possVertical);
+        handleDrop(imageView);
+        dataGridBattleship.add(imageView, possHorizontal, possVertical);
+
+    }
+
+    private void preallocateFieldsWithWater(){
+
+        for (int i= 0; i < fieldSize; i++)
+        {
+            for (int j= 0; j < fieldSize; j++)
+            {
+                generateWater(i,j);
+            }
+        }
+
     }
 
 
@@ -91,7 +119,6 @@ public class ControllerShipPlacement implements Initializable {
             Dragboard dragboard = imageView.startDragAndDrop(TransferMode.ANY);
 
             ClipboardContent clipboardContent = new ClipboardContent();
-
             clipboardContent.putImage(imageView.getImage());
             dragboard.setContent(clipboardContent);
         });
@@ -116,9 +143,11 @@ public class ControllerShipPlacement implements Initializable {
 
     private void handleDrop(ImageView imageView) {
 
-        imageView.setOnDragOver(dragEvent -> {
+        imageView.setOnDragDropped(dragEvent -> {
 
-
+            Dragboard dragboard = dragEvent.getDragboard();
+            Image ship = dragboard.getImage();
+            imageView.setImage(ship);
 
         });
 

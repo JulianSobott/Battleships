@@ -1,14 +1,15 @@
 package gui.UiClasses;
 
-import javafx.scene.image.Image;
+import java.util.ArrayList;
 
-public class BattleShipImage extends Image {
+public class BattleShipGui {
 
     private int ShipID;
     private int ShipSize;
+    private ArrayList shipPosition = new ArrayList();
 
-    public BattleShipImage(String s, int ShipID, int ShipSize){
-        super(s);
+    public BattleShipGui(String s, int ShipID, int ShipSize){
+
         this.ShipID = ShipID;
         this.ShipSize = ShipSize;
 
@@ -29,4 +30,6 @@ public class BattleShipImage extends Image {
     public void setShipSize(int shipSize) {
         ShipSize = shipSize;
     }
+
+
 }
