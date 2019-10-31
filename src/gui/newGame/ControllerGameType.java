@@ -1,6 +1,7 @@
 package gui.newGame;
 
 import gui.ControllerMainMenu;
+import gui.ShipPlacement.ControllerShipPlacement;
 import gui.WindowChange.SceneLoader;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -43,16 +44,9 @@ public class ControllerGameType implements Initializable {
     public  RadioButton radioButtonHard;
 
 
+    private static final String filepathBackMainMenu = "../Main_Menu.fxml";
+    private static final String filepathShipPlacement = "../ShipPlacement/ShipPlacement.fxml";
 
-    @FXML
-    public void goBacktoMainMenus (MouseEvent event){
-
-        ControllerMainMenu controllerMainMenu = new ControllerMainMenu();
-        SceneLoader sceneLoader = new SceneLoader(BackToMenu, "../Main_Menu.fxml", controllerMainMenu);
-        sceneLoader.loadSceneInExistingWindow();
-
-
-    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -71,8 +65,31 @@ public class ControllerGameType implements Initializable {
         radioButtonMedium.setToggleGroup(toggleGroupDifficulty);
         radioButtonHard.setToggleGroup(toggleGroupDifficulty);
 
+
+    }
+
+
+    @FXML
+    public void goBacktoMainMenus (MouseEvent event){
+
+        ControllerMainMenu controllerMainMenu = new ControllerMainMenu();
+        SceneLoader sceneLoader = new SceneLoader(BackToMenu, filepathBackMainMenu, controllerMainMenu);
+        sceneLoader.loadSceneInExistingWindow();
+
+
+    }
+
+    @FXML
+    public void loadShipPöacementScene(){
+
+        ControllerShipPlacement controllerShipPlacement = new ControllerShipPlacement();
+        SceneLoader sceneLoader = new SceneLoader(BackToMenu, filepathShipPlacement, controllerShipPlacement);
+        sceneLoader.loadSceneInExistingWindow();
+
     }
 }
+
+
 
 
 
