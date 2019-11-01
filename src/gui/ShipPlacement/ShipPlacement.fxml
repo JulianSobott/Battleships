@@ -26,6 +26,6 @@
         </rowConstraints>
       </GridPane>
       <VBox fx:id="vBoxShips" alignment="CENTER" layoutX="893.0" layoutY="103.0" prefHeight="547.0" prefWidth="300.0" spacing="10.0" AnchorPane.bottomAnchor="100.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="103.0" />
-      <Button fx:id="buttonBack" layoutX="100.0" layoutY="668.0" mnemonicParsing="false" onMouseClicked="#BackToSettings" prefHeight="25.0" prefWidth="99.0" text="zurrück" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="100.0" />
+      <Button fx:id="buttonBack" layoutX="100.0" layoutY="668.0" mnemonicParsing="false" onMouseClicked="#BackToSettings" prefHeight="25.0" prefWidth="99.0" text="zurrück" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="1000.0" />
    </children>
 </AnchorPane>

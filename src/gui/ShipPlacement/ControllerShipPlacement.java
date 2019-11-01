@@ -12,6 +12,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
@@ -22,7 +24,9 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -66,7 +70,6 @@ public class ControllerShipPlacement implements Initializable {
 
     //ToDo Dynamisches anpassen der Spielfeldgröße....
 
-    //ToDO Anzahl der noch verfügbaren schiffe anpassen...
 
     private static final int fieldSize = 5;
     private static final String filepathBackNewGame = "../newGame/GameType.fxml";
@@ -85,6 +88,9 @@ public class ControllerShipPlacement implements Initializable {
 
     }
 
+    /**
+     * Gui is dynamically generated in the init method and adapted according to the specifications.
+     */
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -101,6 +107,12 @@ public class ControllerShipPlacement implements Initializable {
 
     }
 
+    /**
+     * generates the available graphical ship elements for the GUI.
+     *
+     * @param shipSize      length of the ship type
+     * @param numberOfShips number of ships
+     */
 
     private HBoxExends createNewGuiShip(int shipSize, int numberOfShips) {
 
@@ -144,26 +156,26 @@ public class ControllerShipPlacement implements Initializable {
         return hBox;
     }
 
-
-    private ImageView generateEmtyImageView() {
-
-        ImageView imageView = new ImageView();
-        return imageView;
-    }
-
+    /**
+     * Gui is dynamically generated in the init method and adapted according to the specifications.
+     */
 
     private void generateWater(int possHorizontal, int possVertical) {
 
-        Image battleShipImage = new Image("/gui/ShipIcons/Wellen.jpg");
+        Image battleShipImage = new Image("/gui/ShipIcons/Wasser_Groß.jpg");
         ImageView imageView = new ImageView(battleShipImage);
-        imageView.setFitWidth(120);
-        imageView.setFitHeight(90);
         imageView.setPreserveRatio(true);
         handleDragOver(imageView);
         handleDrop(imageView);
-        dataGridBattleship.add(imageView, possHorizontal, possVertical);
 
+        imageView.fitWidthProperty().bind(buttonBack.widthProperty());
+        dataGridBattleship.add(imageView, possHorizontal, possVertical);
     }
+
+
+    /**
+     * Water is pre-populated on the playing fields
+     */
 
     private void preallocateFieldsWithWater() {
 
@@ -291,7 +303,7 @@ public class ControllerShipPlacement implements Initializable {
                 int index = dataGridBattleship.getChildren().indexOf(button);
                 Node nodeShip = dataGridBattleship.getChildren().remove(index);
                 ButtonShip buttonShip = null;
-                if (nodeShip instanceof  ButtonShip) {
+                if (nodeShip instanceof ButtonShip) {
                     buttonShip = (ButtonShip) nodeShip;
                 }
 
@@ -356,21 +368,8 @@ public class ControllerShipPlacement implements Initializable {
 
 
     /**
-     * shows the player how many ships of one type he can still place
-     *
-     * @param
-     */
-
-    private void adjustNumberOfAvailableShips() {
-
-
-    }
-
-
-    /**
      * go back to previous Scene
      */
-
 
     @FXML
     public void BackToSettings() {
