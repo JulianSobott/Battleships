@@ -40,7 +40,33 @@ public class ControllerShipPlacement implements Initializable {
     private Button buttonBack;
 
 
+    private Label labelShipCounterBattleshipX5 = new Label();
+    private Label labelShipCounterBattleshipX4 = new Label();
+    private Label labelShipCounterBattleshipX3 = new Label();
+    private Label labelShipCounterBattleshipX2 = new Label();
+    private Label labelShipCounterBattleshipX1 = new Label();
+
+    private static final String numberOfBoningShipsX5 = " x " + " 5-er Schiff";
+    private static final String numberOfBoningShipsX4 = " x " + " 4-er Schiff";
+    private static final String numberOfBoningShipsX3 = " x " + " 3-er Schiff";
+    private static final String numberOfBoningShipsX2 = " x " + " 2-er Schiff";
+    private static final String numberOfBoningShipsX1 = " x " + " 1-er Schiff";
+
+    int numberOfBoningShipsX5Counter = 2;
+    int numberOfBoningShipsX4Counter = 1;
+    int numberOfBoningShipsX3Counter = 3;
+    int numberOfBoningShipsX2Counter = 4;
+    int numberOfBoningShipsX1Counter = 2;
+
     // ToDO Woher weiß man welcher Schiff länge gesetzt wurde ...
+
+    //ToDO pool (Arraylist) mit ID's welche dann auf verfügbarkeit geprüft werden und bei erlaubter platzierung einem Schiff zugeordnet werden...
+
+    //ToDO Schiff muss noch per Drag and Drop verschoben werden können
+
+    //ToDo Dynamisches anpassen der Spielfeldgröße....
+
+    //ToDO Anzahl der noch verfügbaren schiffe anpassen...
 
     private static final int fieldSize = 5;
     private static final String filepathBackNewGame = "../newGame/GameType.fxml";
@@ -48,6 +74,8 @@ public class ControllerShipPlacement implements Initializable {
 
 
     private ArrayList availableShips = new ArrayList();
+
+    private ArrayList<Label> availableShipTypes = new ArrayList(); // Absteigend nach größe sortiert
 
     private ArrayList<BattleShipGui> battleShips = new ArrayList();
 
@@ -62,9 +90,11 @@ public class ControllerShipPlacement implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         HBoxExends hBox = createNewGuiShip(4, 1);
+        HBoxExends hBox2 = createNewGuiShip(3, 3);
         HBoxExends hBox1 = createNewGuiShip(2, 2);
+        HBoxExends hBox3 = createNewGuiShip(1, 2);
 
-        vBoxShips.getChildren().addAll(hBox, hBox1);
+        vBoxShips.getChildren().addAll(hBox, hBox2, hBox1, hBox3);
 
         preallocateFieldsWithWater();
 
@@ -78,13 +108,37 @@ public class ControllerShipPlacement implements Initializable {
         HBoxExends hBox = new HBoxExends(battleShipGui);
         hBox.setSpacing(20);
         hBox.setAlignment(Pos.CENTER);
-        Label labelShipCounter = new Label("x " + numberOfShips);
+
+        Label labelShipCounter = null;
+
+        switch (shipSize) {
+            case 5:
+                labelShipCounter = new Label(numberOfShips + " x " + " 5-er Schiff");
+                labelShipCounterBattleshipX5 = labelShipCounter;
+                break;
+            case 4:
+                labelShipCounter = new Label(numberOfShips + " x " + " 4-er Schiff");
+                labelShipCounterBattleshipX4 = labelShipCounter;
+                break;
+            case 3:
+                labelShipCounter = new Label(numberOfShips + " x " + " 3-er Schiff");
+                labelShipCounterBattleshipX3 = labelShipCounter;
+                break;
+            case 2:
+                labelShipCounter = new Label(numberOfShips + " x " + " 2-er Schiff");
+                labelShipCounterBattleshipX2 = labelShipCounter;
+                break;
+            case 1:
+                labelShipCounter = new Label(numberOfShips + " x " + " 1-er Schiff");
+                labelShipCounterBattleshipX1 = labelShipCounter;
+                break;
+        }
 
         Image battleShipImage = new Image("/gui/ShipIcons/Testschiff.png");
         ImageView imageView = new ImageView(battleShipImage);
         addEventDragDetected(hBox);
-        imageView.setFitWidth(100);
-        imageView.setFitHeight(50);
+        imageView.setFitWidth(140);
+        imageView.setFitHeight(60);
 
         hBox.getChildren().addAll(imageView, labelShipCounter);
         return hBox;
@@ -183,6 +237,31 @@ public class ControllerShipPlacement implements Initializable {
 
             dataGridBattleship.add(button, horizontalIndex, verticalIndex, battleShipGui.getShipSize(), 1);
             button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
+
+            switch (battleShipGui.getShipSize()) {
+                case 5:
+                    numberOfBoningShipsX5Counter--;
+                    labelShipCounterBattleshipX5.setText(numberOfBoningShipsX5Counter + numberOfBoningShipsX5);
+                    break;
+                case 4:
+                    numberOfBoningShipsX4Counter--;
+                    labelShipCounterBattleshipX4.setText(numberOfBoningShipsX4Counter + numberOfBoningShipsX4);
+                    break;
+                case 3:
+                    numberOfBoningShipsX3Counter--;
+                    labelShipCounterBattleshipX3.setText(numberOfBoningShipsX3Counter + numberOfBoningShipsX3);
+                    break;
+                case 2:
+                    numberOfBoningShipsX2Counter--;
+                    labelShipCounterBattleshipX2.setText(numberOfBoningShipsX2Counter + numberOfBoningShipsX2);
+                    break;
+                case 1:
+                    numberOfBoningShipsX1Counter--;
+                    labelShipCounterBattleshipX1.setText(numberOfBoningShipsX1Counter + numberOfBoningShipsX1);
+                    break;
+            }
+
         });
 
     }
@@ -210,7 +289,34 @@ public class ControllerShipPlacement implements Initializable {
                 int verticalIndex = GridPane.getRowIndex(button);
 
                 int index = dataGridBattleship.getChildren().indexOf(button);
-                Node buttonShip = dataGridBattleship.getChildren().remove(index);
+                Node nodeShip = dataGridBattleship.getChildren().remove(index);
+                ButtonShip buttonShip = null;
+                if (nodeShip instanceof  ButtonShip) {
+                    buttonShip = (ButtonShip) nodeShip;
+                }
+
+                switch (buttonShip.getBattleShipGui().getShipSize()) {
+                    case 5:
+                        numberOfBoningShipsX5Counter++;
+                        labelShipCounterBattleshipX5.setText(numberOfBoningShipsX5Counter + numberOfBoningShipsX5);
+                        break;
+                    case 4:
+                        numberOfBoningShipsX4Counter++;
+                        labelShipCounterBattleshipX4.setText(numberOfBoningShipsX4Counter + numberOfBoningShipsX4);
+                        break;
+                    case 3:
+                        numberOfBoningShipsX3Counter++;
+                        labelShipCounterBattleshipX3.setText(numberOfBoningShipsX3Counter + numberOfBoningShipsX3);
+                        break;
+                    case 2:
+                        numberOfBoningShipsX2Counter++;
+                        labelShipCounterBattleshipX2.setText(numberOfBoningShipsX2Counter + numberOfBoningShipsX2);
+                        break;
+                    case 1:
+                        numberOfBoningShipsX1Counter++;
+                        labelShipCounterBattleshipX1.setText(numberOfBoningShipsX1Counter + numberOfBoningShipsX1);
+                        break;
+                }
 
             }
         });
@@ -236,10 +342,9 @@ public class ControllerShipPlacement implements Initializable {
 
                     dataGridBattleship.add(node, horizontalIndex, verticalIndex, 1, battleShipGui.getShipSize());
                     battleShipGui.setShipAlignment(ShipAlignment.Vertical);
-                }
-                else {
+                } else {
 
-                    dataGridBattleship.add(node, horizontalIndex, verticalIndex, battleShipGui.getShipSize(), 1 );
+                    dataGridBattleship.add(node, horizontalIndex, verticalIndex, battleShipGui.getShipSize(), 1);
                     battleShipGui.setShipAlignment(ShipAlignment.Horizontal);
                 }
             }
@@ -247,6 +352,18 @@ public class ControllerShipPlacement implements Initializable {
 
         contextMenu.getItems().addAll(item1, item2);
         button.setContextMenu(contextMenu);
+    }
+
+
+    /**
+     * shows the player how many ships of one type he can still place
+     *
+     * @param
+     */
+
+    private void adjustNumberOfAvailableShips() {
+
+
     }
 
 
