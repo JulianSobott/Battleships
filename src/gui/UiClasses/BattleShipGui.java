@@ -1,35 +1,49 @@
 package gui.UiClasses;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class BattleShipGui {
+public class BattleShipGui implements Serializable {
 
-    private int ShipID;
-    private int ShipSize;
-    private ArrayList shipPosition = new ArrayList();
+    private int shipID;
+    private int shipSize;
+    private ShipAlignment shipAlignment;
+    private ArrayList shipPosition = new ArrayList(); //??? Notwenfid ??
 
-    public BattleShipGui(String s, int ShipID, int ShipSize){
+    public BattleShipGui(int shipSize, ShipAlignment shipAlignment){
 
-        this.ShipID = ShipID;
-        this.ShipSize = ShipSize;
+        this.shipSize = shipSize;
+        this.shipAlignment =shipAlignment;
+    }
 
+
+    public BattleShipGui(int ShipID, int shipSize, ShipAlignment shipAlignment){
+
+        this(shipSize, shipAlignment);
+        this.shipID = ShipID;
     }
 
     public int getShipID() {
-        return ShipID;
+        return shipID;
     }
 
     public void setShipID(int shipID) {
-        ShipID = shipID;
+        this.shipID = shipID;
     }
 
     public int getShipSize() {
-        return ShipSize;
+        return shipSize;
     }
 
     public void setShipSize(int shipSize) {
-        ShipSize = shipSize;
+        this.shipSize = shipSize;
     }
 
+    public ShipAlignment getShipAlignment() {
+        return shipAlignment;
+    }
 
+    public void setShipAlignment(ShipAlignment shipAlignment) {
+        this.shipAlignment = shipAlignment;
+    }
 }

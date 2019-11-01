@@ -1,6 +1,9 @@
 package gui.ShipPlacement;
 
 import gui.UiClasses.BattleShipGui;
+import gui.UiClasses.ButtonShip;
+import gui.UiClasses.HBoxExends;
+import gui.UiClasses.ShipAlignment;
 import gui.WindowChange.SceneLoader;
 import gui.newGame.ControllerGameType;
 import javafx.event.ActionEvent;
@@ -16,6 +19,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
@@ -57,11 +61,10 @@ public class ControllerShipPlacement implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        HBox hBox = createNewGuiShip("", 4);
-        HBox hBox1 = createNewGuiShip("", 2);
-        HBox hBox2 = createNewGuiShip("", 6);
-        HBox hBox3 = createNewGuiShip("", 3);
-        vBoxShips.getChildren().addAll(hBox, hBox1, hBox2, hBox3);
+        HBoxExends hBox = createNewGuiShip(4, 1);
+        HBoxExends hBox1 = createNewGuiShip(2, 2);
+
+        vBoxShips.getChildren().addAll(hBox, hBox1);
 
         preallocateFieldsWithWater();
 
@@ -69,16 +72,17 @@ public class ControllerShipPlacement implements Initializable {
     }
 
 
-    private HBox createNewGuiShip(String IconPath, int numberOfShips) {
+    private HBoxExends createNewGuiShip(int shipSize, int numberOfShips) {
 
-        HBox hBox = new HBox();
+        BattleShipGui battleShipGui = new BattleShipGui(shipSize, ShipAlignment.Horizontal);
+        HBoxExends hBox = new HBoxExends(battleShipGui);
         hBox.setSpacing(20);
         hBox.setAlignment(Pos.CENTER);
         Label labelShipCounter = new Label("x " + numberOfShips);
 
         Image battleShipImage = new Image("/gui/ShipIcons/Testschiff.png");
         ImageView imageView = new ImageView(battleShipImage);
-        addEventDragDetected(imageView);
+        addEventDragDetected(hBox);
         imageView.setFitWidth(100);
         imageView.setFitHeight(50);
 
@@ -121,24 +125,29 @@ public class ControllerShipPlacement implements Initializable {
     /**
      * This Method makes it possible to move Ships
      *
-     * @param imageView ShipImage which player will place on the playground
+     * @param hBoxBattleship ShipImage which player will place on the playground
      */
 
-    private void addEventDragDetected(ImageView imageView) {
+    private void addEventDragDetected(HBoxExends hBoxBattleship) {
 
-        imageView.setOnDragDetected(mouseEvent -> {
-            Dragboard dragboard = imageView.startDragAndDrop(TransferMode.ANY);
+        hBoxBattleship.setOnDragDetected(mouseEvent -> {
+            Dragboard dragboard = hBoxBattleship.startDragAndDrop(TransferMode.ANY);
 
             ClipboardContent clipboardContent = new ClipboardContent();
-            clipboardContent.putImage(imageView.getImage());
+            DataFormat dataFormat = DataFormat.lookupMimeType("BattleShip");
+            if (dataFormat == null) {
+                dataFormat = new DataFormat("BattleShip");
+            }
+            clipboardContent.put(dataFormat, hBoxBattleship.getBattleShipGui());
             dragboard.setContent(clipboardContent);
+
         });
     }
 
     /**
      * This Method makes it possible to move Ships
      *
-     * @param imageView ShipImage which player will place on the playground
+     * @param imageView Element witch receives the Drag and Drop element.
      */
 
     private void handleDragOver(ImageView imageView) {
@@ -157,21 +166,22 @@ public class ControllerShipPlacement implements Initializable {
         imageView.setOnDragDropped(dragEvent -> {
 
             Dragboard dragboard = dragEvent.getDragboard();
-            Image ship = dragboard.getImage();
+
+            Object o = dragboard.getContent(DataFormat.lookupMimeType("BattleShip"));
+            BattleShipGui battleShipGui = null;
+            if (o instanceof BattleShipGui) {
+                battleShipGui = (BattleShipGui) o;
+            }
 
             int horizontalIndex = GridPane.getColumnIndex(imageView);
             int verticalIndex = GridPane.getRowIndex(imageView);
-            Button button = new Button();
 
-            //ToDO Bild kann derzeit noch nicht scallieren
-
-            BackgroundImage backgroundImage = new BackgroundImage(new Image(getClass().getResource("/gui/ShipIcons/Testschiff.png").toExternalForm()), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
-            Background background = new Background(backgroundImage);
-            //button.setBackground(background);
+            ButtonShip button = new ButtonShip(battleShipGui);
             button.setStyle("-fx-background-color: #00ff00");
 
             addContextMenu(button);
-            dataGridBattleship.add(button, horizontalIndex, verticalIndex, 3, 1);
+
+            dataGridBattleship.add(button, horizontalIndex, verticalIndex, battleShipGui.getShipSize(), 1);
             button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         });
 
@@ -185,7 +195,6 @@ public class ControllerShipPlacement implements Initializable {
      */
 
     //ToDO derzeit wird Schiff um 90° nach rechts gedreht. Bild leider nicht...
-
     private void addContextMenu(Button button) {
 
         // Create ContextMenu
@@ -215,8 +224,24 @@ public class ControllerShipPlacement implements Initializable {
                 int verticalIndex = GridPane.getRowIndex(button);
 
                 int index = dataGridBattleship.getChildren().indexOf(button);
-                Node buttonShip = dataGridBattleship.getChildren().remove(index);
-                dataGridBattleship.add(buttonShip, horizontalIndex, verticalIndex, 1,3);
+                Node node = dataGridBattleship.getChildren().remove(index);
+
+                ButtonShip buttonShip = null;
+                if (node instanceof ButtonShip) {
+                    buttonShip = (ButtonShip) node;
+                }
+                BattleShipGui battleShipGui = buttonShip.getBattleShipGui();
+
+                if (battleShipGui.getShipAlignment().equals(ShipAlignment.Horizontal)) {
+
+                    dataGridBattleship.add(node, horizontalIndex, verticalIndex, 1, battleShipGui.getShipSize());
+                    battleShipGui.setShipAlignment(ShipAlignment.Vertical);
+                }
+                else {
+
+                    dataGridBattleship.add(node, horizontalIndex, verticalIndex, battleShipGui.getShipSize(), 1 );
+                    battleShipGui.setShipAlignment(ShipAlignment.Horizontal);
+                }
             }
         });
 
