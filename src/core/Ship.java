@@ -1,12 +1,22 @@
 package core;
 
+import core.communication_data.ShipPosition;
+
 public class Ship extends PlaygroundElement{
 
     private int lives;
     private int id;
 
+    private ShipPosition shipPosition;
+
     public enum LifeStatus {
         SUNKEN, ALIVE
+    }
+
+    Ship(int lives, int id, ShipPosition shipPosition){
+        this.lives = lives;
+        this.id = id;
+        this.shipPosition = shipPosition;
     }
 
     LifeStatus getStatus() {
@@ -20,5 +30,9 @@ public class Ship extends PlaygroundElement{
     public void gotHit() {
         super.gotHit();
         this.lives--;
+    }
+
+    public ShipPosition getShipPosition(){
+        return this.shipPosition;
     }
 }
