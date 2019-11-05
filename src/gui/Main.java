@@ -18,17 +18,19 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        Parent root = null;
+        Parent window = null;
         try {
-            root = FXMLLoader.load(getClass().getResource("Main_Menu.fxml"));
+            window = FXMLLoader.load(getClass().getResource("Main_Menu.fxml"));
+            Stage stage = new Stage();
+            stage.setScene(new Scene(window));
+            stage.setTitle("Battleship");
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.show();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-        stage.setTitle("Battleship");
-        stage.initModality(Modality.WINDOW_MODAL);
-                stage.show();
+
 
 
     }
