@@ -2,6 +2,7 @@ package core;
 
 import core.communication_data.ShipList;
 import core.communication_data.ShipPosition;
+import core.utils.ObjectPool;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,43 +13,22 @@ import java.util.HashSet;
  */
 public class ShipPool {
 
-    static class ObjectPool<T> {
-
-        HashSet<T> available = new HashSet<>();
-        HashSet<T> inUse = new HashSet<>();
-
-        T getObject(){
-            if(available.isEmpty()){
-                return null;
+    static class ShipObjectPool extends ObjectPool<Ship> {
+        ShipObjectPool(int length, int num){
+            for (int i = 0; i < num; i++) {
+                // TODO: SET ID of ship
+                Ship s = new Ship(length, 1,
+                        new ShipPosition(0, 0, ShipPosition.Direction.HORIZONTAL, length));
+                this.available.add(s);
             }
-            T o =  available.iterator().next();
-            available.remove(o);
-            inUse.add(o);
-            return o;
         }
-
-        void releaseObject(T object) {
-            inUse.remove(object);
-            available.add(object);
-        }
-
     }
 
     private HashMap<Integer, ObjectPool<Ship>> pools = new HashMap<>();
 
     public ShipPool(ShipList shipList){
         for(ShipList.Pair pair : shipList){
-            ObjectPool<Ship> pool = new ObjectPool<Ship>(){
-                ObjectPool<Ship> init(int num, int length){
-                    for (int i = 0; i < num; i++) {
-                        // TODO: SET ID of ship
-                        Ship s = new Ship(length, 1,
-                                new ShipPosition(0, 0, ShipPosition.Direction.HORIZONTAL, length));
-                        this.available.add(s);
-                    }
-                    return this;
-                }
-            }.init(pair.getNum(), pair.getSize());
+            ObjectPool<Ship> pool = new ShipObjectPool(pair.getSize(), pair.getNum());
             this.pools.put(pair.getSize(), pool);
         }
     }
