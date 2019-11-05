@@ -5,10 +5,9 @@ import core.communication_data.ShipPosition;
 import core.utils.ObjectPool;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 /**
- *
+ * Creates all ships objects at once. You can get and release objects.
  *
  */
 public class ShipPool {
