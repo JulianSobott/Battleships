@@ -14,7 +14,7 @@ public class PlaygroundOwn extends Playground {
      * @return An result that indicates whether it was successfully placed or not.
      */
     public PlaceShipResult placeShip(ShipPosition position){
-        Ship ship = new Ship(position.getLENGTH(), position);
+        Ship ship = new Ship(position.getLENGTH());
         return this.placeShip(position, ship);
     }
 
