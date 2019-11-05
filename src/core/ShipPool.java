@@ -15,9 +15,7 @@ public class ShipPool {
     static class ShipObjectPool extends ObjectPool<Ship> {
         ShipObjectPool(int length, int num){
             for (int i = 0; i < num; i++) {
-                // TODO: SET ID of ship
-                Ship s = new Ship(length, 1,
-                        new ShipPosition(0, 0, ShipPosition.Direction.HORIZONTAL, length));
+                Ship s = new Ship(length);
                 this.available.add(s);
             }
         }

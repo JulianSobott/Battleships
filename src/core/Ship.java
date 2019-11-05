@@ -13,14 +13,19 @@ public class Ship extends PlaygroundElement{
         SUNKEN, ALIVE
     }
 
-    Ship(int lives, ShipID id, ShipPosition shipPosition){
+    private Ship(int lives, ShipID id, ShipPosition shipPosition){
         this.lives = lives;
         this.id = id;
         this.shipPosition = shipPosition;
     }
 
-    Ship(int lives, ShipPosition shipPosition){
-        this(lives, ShipID.getNextShipID(), shipPosition);
+    /**
+     * Constructs a ship with an auto generated ID and default position.
+     *
+     * @param length Length of the ship
+     */
+    Ship(int length){
+        this(length, ShipID.getNextShipID(), new ShipPosition(0, 0, ShipPosition.Direction.HORIZONTAL, length));
     }
 
     LifeStatus getStatus() {
@@ -36,11 +41,11 @@ public class Ship extends PlaygroundElement{
         this.lives--;
     }
 
-    public ShipID getId() {
+    ShipID getId() {
         return id;
     }
 
-    public ShipPosition getShipPosition(){
+    ShipPosition getShipPosition(){
         return this.shipPosition;
     }
 
