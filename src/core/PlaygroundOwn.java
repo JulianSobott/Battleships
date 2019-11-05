@@ -14,7 +14,7 @@ public class PlaygroundOwn extends Playground {
      * @return An result that indicates whether it was successfully placed or not.
      */
     public PlaceShipResult placeShip(ShipPosition position){
-        Ship ship = new Ship(position.getLENGTH());
+        Ship ship = this.shipPool.getShip(position.getLENGTH());
         return this.placeShip(position, ship);
     }
 
@@ -46,15 +46,14 @@ public class PlaygroundOwn extends Playground {
      * @return PlaceShipResult of the placeShip method.
      */
     public PlaceShipResult moveShip(ShipID id, ShipPosition newPosition){
-        Ship shipCopy = this.getShipByID(id);
-        if(shipCopy == null) {
+        Ship ship = this.getShipByID(id);
+        if(ship == null) {
             return PlaceShipResult.failed(newPosition, id, PlaceShipResult.Error.ID_NOT_EXIST);
         }
-        ShipPosition oldPosition = shipCopy.getShipPosition();
-        this.deleteShip(id);
-        PlaceShipResult res = this.placeShip(newPosition);
+        ShipPosition oldPosition = ship.getShipPosition();
+        PlaceShipResult res = this.placeShip(newPosition, ship);
         if(!res.isSuccessfullyPlaced()){
-            this.placeShip(oldPosition, shipCopy);
+            this.placeShip(oldPosition, ship);
         }
         return res;
     }
@@ -86,6 +85,7 @@ public class PlaygroundOwn extends Playground {
             for(Position p : ship.getShipPosition().generateIndices()){
                 this.elements[p.getY()][p.getX()] = new Field(FieldType.WATER, new WaterElement());
             }
+            this.shipPool.releaseShip(ship);
             return true;
         }
     }
