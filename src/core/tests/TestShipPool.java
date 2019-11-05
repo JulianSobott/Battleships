@@ -24,6 +24,6 @@ class TestShipPool {
         assert s2 == null;
         shipPool.releaseShip(s1);
         s2 = shipPool.getShip(1);
-        assert s2.equals(s1);
+        assert s2 == s1;
     }
 }
