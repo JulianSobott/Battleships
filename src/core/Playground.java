@@ -36,10 +36,12 @@ public abstract class Playground {
      */
     protected Field[][] elements;
     protected int size;
+    ShipPool shipPool;
 
     public Playground(int size){
         this.size = size;
         this.elements = new Field[size][size];
+        this.shipPool = new ShipPool(ShipList.fromSize(size));
     }
 
     protected void resetFields(FieldType type){
