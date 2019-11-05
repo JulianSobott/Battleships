@@ -9,11 +9,11 @@ import org.junit.jupiter.api.Test;
 
 public class TestPlaygroundOwn{
 
-    private final PlaygroundOwn playground = new PlaygroundOwn(6);
+    private PlaygroundOwn playground;
 
     @BeforeEach
     void cleanPlayground(){
-        playground.resetFieldsToWater();
+        playground = new PlaygroundOwn(6);
     }
 
     @Test

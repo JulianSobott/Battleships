@@ -6,6 +6,7 @@ public class PlaygroundOwn extends Playground {
 
     public PlaygroundOwn(int size) {
         super(size);
+        this.resetFields(FieldType.WATER);
     }
 
     /**
@@ -51,25 +52,12 @@ public class PlaygroundOwn extends Playground {
             return PlaceShipResult.failed(newPosition, id, PlaceShipResult.Error.ID_NOT_EXIST);
         }
         ShipPosition oldPosition = ship.getShipPosition();
+        this.resetFields(FieldType.WATER, oldPosition.generateIndices());
         PlaceShipResult res = this.placeShip(newPosition, ship);
         if(!res.isSuccessfullyPlaced()){
             this.placeShip(oldPosition, ship);
         }
         return res;
-    }
-
-    /**
-     * Fill all fields that are null with a water field
-     */
-    private void fillWithWater() {
-        for (int y = 0; y < this.size; y++) {
-            for (int x = 0; x < this.size; x++) {
-                Field field = this.elements[y][x];
-                if(field == null){
-                    this.elements[y][x] = new Field(FieldType.WATER, new WaterElement());
-                }
-            }
-        }
     }
 
     /**
@@ -82,9 +70,7 @@ public class PlaygroundOwn extends Playground {
         if(ship == null)
             return false;
         else {
-            for(Position p : ship.getShipPosition().generateIndices()){
-                this.elements[p.getY()][p.getX()] = new Field(FieldType.WATER, new WaterElement());
-            }
+            this.resetFields(FieldType.WATER, ship.getShipPosition().generateIndices());
             this.shipPool.releaseShip(ship);
             return true;
         }
@@ -115,14 +101,6 @@ public class PlaygroundOwn extends Playground {
             }
         }
         return true;
-    }
-
-    /**
-     * Reset all fields to water fields.
-     * All references to ships are lost.
-     */
-    public void resetFieldsToWater(){
-        super.resetFields(FieldType.WATER);
     }
 
     public void placeShipsRandom(ShipList shipList){
