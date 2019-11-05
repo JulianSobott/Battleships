@@ -35,6 +35,12 @@ class TestShipPool {
     }
 
     @Test
+    void testGetFaulty(){
+        Ship s1 = shipPool.getShip(20);
+        assert s1 == null;
+    }
+
+    @Test
     void testRelease(){
         Ship s1 = shipPool.getShip(1);
         shipPool.releaseShip(s1);

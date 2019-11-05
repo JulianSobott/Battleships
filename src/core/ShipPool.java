@@ -37,7 +37,11 @@ public class ShipPool {
      * @return An ship object if an object is available, null if all objects are in use.
      */
     public Ship getShip(int shipSize){
-        return this.pools.get(shipSize).getObject();
+        ObjectPool<Ship> pool = this.pools.get(shipSize);
+        if(pool == null){
+            return null;
+        }
+        return pool.getObject();
     }
 
     /**
@@ -47,6 +51,7 @@ public class ShipPool {
      */
     public void releaseShip(Ship ship){
         int size = ship.getShipPosition().getLENGTH();
+        assert this.pools.containsKey(size);
         this.pools.get(size).releaseObject(ship);
     }
 
