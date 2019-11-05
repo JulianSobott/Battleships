@@ -45,4 +45,15 @@ class TestShipPool {
         Ship s3 = shipPool.getShip(1);
         assert s3 == null;
     }
+
+    @Test
+    void testReleaseAll(){
+        Ship s1 = shipPool.getShip(1);
+        Ship s2 = shipPool.getShip(2);
+        shipPool.releaseAll();
+        Ship s1_1 = shipPool.getShip(1);
+        assert s1_1 == s1;
+        Ship s2_1 = shipPool.getShip(2);
+        assert s2_1 == s2;
+    }
 }

@@ -54,5 +54,11 @@ public class ShipPool {
         // TODO: reset ship position and lives
     }
 
+    public void releaseAll() {
+        for(ObjectPool<Ship> pool : this.pools.values()){
+            pool.releaseAll();
+        }
+    }
+
 
 }
