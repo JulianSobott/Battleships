@@ -1,6 +1,7 @@
 package core;
 
 import core.communication_data.PlaceShipResult;
+import core.communication_data.Position;
 import core.communication_data.ShipList;
 import core.communication_data.ShipPosition;
 
@@ -45,19 +46,28 @@ public abstract class Playground {
     }
 
     protected void resetFields(FieldType type){
-
         for(int y = 0; y < this.size; y++){
             for(int x = 0; x < this.size; x++){
-                PlaygroundElement element;
-                if(type == FieldType.FOG)
-                    element = new FogElement();
-                else if(type == FieldType.WATER)
-                    element = new WaterElement();
-                else
-                    assert false: "Cannot fill field with ships";
-                this.elements[y][x] = new Field(type, new FogElement(), false);
+                this.resetField(type, new Position(x, y));
             }
         }
+    }
+
+    protected void resetFields(FieldType type, Position[] positions){
+        for(Position pos : positions){
+            this.resetField(type, pos);
+        }
+    }
+
+    private void resetField(FieldType type, Position pos){
+        PlaygroundElement element = new WaterElement();
+        if(type == FieldType.FOG)
+            element = new FogElement();
+        else if(type == FieldType.WATER)
+            element = new WaterElement();
+        else
+            assert false: "Cannot fill field with ships";
+        this.elements[pos.getY()][pos.getX()] = new Field(type, element, false);
     }
 
 }
