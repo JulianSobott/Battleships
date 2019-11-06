@@ -8,7 +8,7 @@ public interface GameManagerInterface {
     public GameSettings getGameSettings();
 
     // create game
-    public void newGame(GameSettings settings);
+    public NewGameResult newGame(GameSettings settings);
 
     // Ship Placement
 

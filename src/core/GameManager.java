@@ -19,8 +19,9 @@ public class GameManager implements GameManagerInterface {
     }
 
     @Override
-    public void newGame(GameSettings settings) {
+    public NewGameResult newGame(GameSettings settings) {
 
+        return null;
     }
 
     @Override

@@ -1,15 +1,11 @@
 package core.communication_data;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 public class ShipList implements Iterable<ShipList.Pair>{
 
-
-    @NotNull
     @Override
     public Iterator<Pair> iterator() {
         return new Iterator<Pair>() {
