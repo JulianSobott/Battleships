@@ -24,9 +24,7 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 import java.net.URL;
@@ -164,16 +162,16 @@ public class ControllerShipPlacement implements Initializable {
     private void generateWater(int possHorizontal, int possVertical) {
         Pane p = new Pane();
         dataGridBattleship.add(p, possHorizontal, possVertical);
-
-        Image battleShipImage = new Image("/gui/ShipIcons/Wasser_Groß.jpg");
-        ImageView imageView = new ImageView(battleShipImage);
-        imageView.setPreserveRatio(false);
         handleDragOver(p);
         handleDrop(p);
 
-        imageView.fitWidthProperty().bind(p.widthProperty());
-        imageView.fitHeightProperty().bind(p.heightProperty());
-        p.getChildren().add(imageView);
+//        Image battleShipImage = new Image("/gui/ShipIcons/Wasser_Groß.jpg");
+//        ImageView imageView = new ImageView(battleShipImage);
+//        imageView.setPreserveRatio(false);
+//
+//        imageView.fitWidthProperty().bind(p.widthProperty());
+//        imageView.fitHeightProperty().bind(p.heightProperty());
+//        p.getChildren().add(imageView);
     }
 
 
@@ -182,6 +180,12 @@ public class ControllerShipPlacement implements Initializable {
      */
 
     private void preallocateFieldsWithWater() {
+        Image battleShipImage = new Image("/gui/ShipIcons/Wasser_Groß.jpg");
+        ImageView imageView = new ImageView(battleShipImage);
+        BackgroundImage im = new BackgroundImage(battleShipImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
+
+        dataGridBattleship.setBackground(new Background(im));
+
         for (int i = 0; i < fieldSize; i++) {
             for (int j = 0; j < fieldSize; j++) {
                 generateWater(i, j);
