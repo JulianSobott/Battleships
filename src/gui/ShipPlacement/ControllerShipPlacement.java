@@ -25,6 +25,7 @@ import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
@@ -161,15 +162,18 @@ public class ControllerShipPlacement implements Initializable {
      */
 
     private void generateWater(int possHorizontal, int possVertical) {
+        Pane p = new Pane();
+        dataGridBattleship.add(p, possHorizontal, possVertical);
 
         Image battleShipImage = new Image("/gui/ShipIcons/Wasser_Groß.jpg");
         ImageView imageView = new ImageView(battleShipImage);
-        imageView.setPreserveRatio(true);
-        handleDragOver(imageView);
-        handleDrop(imageView);
+        imageView.setPreserveRatio(false);
+        handleDragOver(p);
+        handleDrop(p);
 
-        imageView.fitWidthProperty().bind(buttonBack.widthProperty());
-        dataGridBattleship.add(imageView, possHorizontal, possVertical);
+        imageView.fitWidthProperty().bind(p.widthProperty());
+        imageView.fitHeightProperty().bind(p.heightProperty());
+        p.getChildren().add(imageView);
     }
 
 
@@ -178,7 +182,6 @@ public class ControllerShipPlacement implements Initializable {
      */
 
     private void preallocateFieldsWithWater() {
-
         for (int i = 0; i < fieldSize; i++) {
             for (int j = 0; j < fieldSize; j++) {
                 generateWater(i, j);
@@ -216,7 +219,7 @@ public class ControllerShipPlacement implements Initializable {
      * @param imageView Element witch receives the Drag and Drop element.
      */
 
-    private void handleDragOver(ImageView imageView) {
+    private void handleDragOver(Pane imageView) {
 
         imageView.setOnDragOver(dragEvent -> dragEvent.acceptTransferModes(TransferMode.ANY));
     }
@@ -227,7 +230,7 @@ public class ControllerShipPlacement implements Initializable {
      * @param imageView ShipImage which player will place on the playground
      */
 
-    private void handleDrop(ImageView imageView) {
+    private void handleDrop(Pane imageView) {
 
         imageView.setOnDragDropped(dragEvent -> {
 
