@@ -7,7 +7,7 @@ public class BattleShipGui implements Serializable {
 
     private int shipID;
     private int shipSize;
-    private ShipAlignment shipAlignment;
+    private ShipAlignment shipAlignment; // TODO: Take ShipPosition.Direction?
     private ArrayList shipPosition = new ArrayList(); //??? Notwenfid ??
 
     public BattleShipGui(int shipSize, ShipAlignment shipAlignment){
