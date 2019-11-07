@@ -16,6 +16,10 @@ public class ShipPosition extends Position{
         this.LENGTH = LENGTH;
     }
 
+    public static ShipPosition DEFAULT(int length){
+        return new ShipPosition(0, 0, Direction.HORIZONTAL, length);
+    }
+
     public Position[] generateIndices(){
         assert this.getLENGTH() > 0;
         Position[] indices = new Position[this.getLENGTH()];

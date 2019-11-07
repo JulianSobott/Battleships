@@ -25,7 +25,7 @@ public class Ship extends PlaygroundElement{
      * @param length Length of the ship
      */
     Ship(int length){
-        this(length, ShipID.getNextShipID(), new ShipPosition(0, 0, ShipPosition.Direction.HORIZONTAL, length));
+        this(length, ShipID.getNextShipID(), ShipPosition.DEFAULT(length));
     }
 
     LifeStatus getStatus() {
