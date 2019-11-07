@@ -42,7 +42,7 @@ public class PlaygroundOwn extends Playground {
 
     /**
      * Move a ship to new position if it can be placed there.
-     * Algorithm: copy ship -> deleted ship -> place ship -> restore copy if place fails
+     *
      * @param id Id of the ship that shall be moved
      * @param newPosition New position of the ship
      * @return PlaceShipResult of the placeShip method.
