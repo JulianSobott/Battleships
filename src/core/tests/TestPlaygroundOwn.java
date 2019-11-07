@@ -91,4 +91,14 @@ class TestPlaygroundOwn{
         assert !res.isSuccessfullyPlaced();
         assert res.getERROR() == PlaceShipResult.Error.ID_NOT_EXIST;
     }
+
+    @Test
+    void gotHit_normal(){
+        // TODO
+    }
+
+    @Test
+    void gotHit_invalidPosition(){
+        // TODO
+    }
 }

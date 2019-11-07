@@ -41,11 +41,13 @@ public class GameManager implements GameManagerInterface {
 
     @Override
     public TurnResult ownTurn(Position position) {
+        // TODO
         return null;
     }
 
     @Override
     public TurnResult enemyTurn() {
+        // TODO
         return null;
     }
 }

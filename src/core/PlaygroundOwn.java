@@ -109,7 +109,7 @@ public class PlaygroundOwn extends Playground {
     }
 
     /**
-     *
+     * TODO: java docs + check implementation
      * @param position x, y coordinates of the shot.
      * @return
      */
