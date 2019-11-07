@@ -7,7 +7,7 @@ import core.communication_data.ShipPosition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class TestPlaygroundOwn{
+class TestPlaygroundOwn{
 
     private PlaygroundOwn playground;
 
@@ -80,5 +80,15 @@ public class TestPlaygroundOwn{
         PlaceShipResult res4 = playground.moveShip(res3.getShipID(), p4);
         assert !res4.isSuccessfullyPlaced(): "Ship should not be moved";
         assert res4.getPosition() == p4 : "Ship position is not set correctly";
+    }
+
+    @Test
+    void moveShipWrongID() {
+        // Move a ship which ID does not exist
+        ShipID id = ShipID.getNextShipID();
+        ShipPosition pos = new ShipPosition(0, 0, ShipPosition.Direction.HORIZONTAL, 2);
+        PlaceShipResult res = playground.moveShip(id, pos);
+        assert !res.isSuccessfullyPlaced();
+        assert res.getERROR() == PlaceShipResult.Error.ID_NOT_EXIST;
     }
 }
