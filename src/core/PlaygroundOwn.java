@@ -33,6 +33,7 @@ public class PlaygroundOwn extends Playground {
                 this.elements[p.getY()][p.getX()] = f;
             }
             ShipID shipID = ship.getId();
+            ship.setShipPosition(position);
             return PlaceShipResult.success(position, shipID);
         }else{
             return PlaceShipResult.failed(position, null, PlaceShipResult.Error.SPACE_TAKEN);
