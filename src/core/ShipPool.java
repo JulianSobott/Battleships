@@ -53,10 +53,11 @@ public class ShipPool {
         int size = ship.getShipPosition().getLENGTH();
         assert this.pools.containsKey(size);
         this.pools.get(size).releaseObject(ship);
+        this.cleanUp(ship);
     }
 
     private void cleanUp(Ship ship){
-        // TODO: reset ship position and lives
+        ship.setShipPosition(ShipPosition.DEFAULT(ship.getShipPosition().getLENGTH()));
     }
 
     public void releaseAll() {
@@ -64,6 +65,5 @@ public class ShipPool {
             pool.releaseAll();
         }
     }
-
 
 }
