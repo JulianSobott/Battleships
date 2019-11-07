@@ -19,23 +19,24 @@ public class GameManager implements GameManagerInterface {
     }
 
     @Override
-    public void newGame(GameSettings settings) {
+    public NewGameResult newGame(GameSettings settings) {
 
+        return null;
     }
 
     @Override
     public PlaceShipResult placeShip(ShipPosition pos) {
-        return null;
+        return currentPlayer.placeShip(pos);
     }
 
     @Override
-    public PlaceShipResult moveShip(int id, ShipPosition pos) {
-        return null;
+    public PlaceShipResult moveShip(ShipID id, ShipPosition pos) {
+        return currentPlayer.moveShip(id, pos);
     }
 
     @Override
-    public boolean deleteShip(int id) {
-        return false;
+    public boolean deleteShip(ShipID id) {
+        return currentPlayer.deleteShip(id);
     }
 
     @Override
