@@ -14,7 +14,6 @@ public class ObjectPool<T> {
         T o =  available.iterator().next();
         available.remove(o);
         inUse.add(o);
-        Logger.debug("getShip: ", "available: " + available.size() + "\tinUse: " + inUse.size());
         return o;
     }
 

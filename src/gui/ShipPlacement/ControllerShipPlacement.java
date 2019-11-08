@@ -257,7 +257,6 @@ public class ControllerShipPlacement implements Initializable {
     private void handleDrop(Pane imageView) {
 
         imageView.setOnDragDropped(dragEvent -> {
-
             Dragboard dragboard = dragEvent.getDragboard();
 
             Object o = dragboard.getContent(DataFormat.lookupMimeType("BattleShip"));

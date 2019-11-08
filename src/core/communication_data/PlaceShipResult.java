@@ -8,7 +8,7 @@ public class PlaceShipResult {
     private final Error ERROR;
 
     public enum Error{
-        NONE, ID_NOT_EXIST, SPACE_TAKEN, NOT_ON_PLAYGROUND
+        NONE, ID_NOT_EXIST, SPACE_TAKEN, NOT_ON_PLAYGROUND, NO_MORE_SHIPS
     }
     private PlaceShipResult(boolean successfullyPlaced, ShipPosition position, ShipID shipID, Error error){
         this.successfullyPlaced = successfullyPlaced;

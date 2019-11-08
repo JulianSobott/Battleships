@@ -1,6 +1,7 @@
 package core;
 
 import core.communication_data.*;
+import core.utils.Logger;
 
 import java.util.HashMap;
 
@@ -20,7 +21,14 @@ public class PlaygroundOwn extends Playground {
      */
     public PlaceShipResult placeShip(ShipPosition position){
         Ship ship = this.shipPool.getShip(position.getLENGTH());
-        return this.placeShip(position, ship);
+        if(ship == null){
+            return PlaceShipResult.failed(position, null, PlaceShipResult.Error.NO_MORE_SHIPS);
+        }
+        PlaceShipResult res = this.placeShip(position, ship);
+        if(!res.isSuccessfullyPlaced()){
+            this.shipPool.releaseShip(ship);
+        }
+        return res;
     }
 
     /**
@@ -73,8 +81,9 @@ public class PlaygroundOwn extends Playground {
      */
     public boolean deleteShip(ShipID id){
         Ship ship = this.getShipByID(id);
-        if(ship == null)
+        if(ship == null) {
             return false;
+        }
         else {
             this.resetFields(FieldType.WATER, ship.getShipPosition().generateIndices());
             this.shipPool.releaseShip(ship);
@@ -137,5 +146,26 @@ public class PlaygroundOwn extends Playground {
      */
     private Ship getShipByID(ShipID shipID){
         return this.shipHashMap.get(shipID);
+    }
+
+    public void printField(){
+        StringBuilder s = new StringBuilder();
+        for(Field[] row : this.elements){
+            for(Field f : row){
+                if(f == null){
+                    s.append("N");
+                }
+                else if(f.type == FieldType.SHIP){
+                    s.append("S");
+                }
+                else if(f.type == FieldType.WATER){
+                    s.append("~");
+                }else if(f.type == FieldType.FOG){
+                    s.append("=");
+                }
+            }
+            s.append("\n");
+        }
+        Logger.debug(s);
     }
 }
