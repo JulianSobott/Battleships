@@ -278,6 +278,7 @@ public class ControllerShipPlacement implements Initializable {
                     battleShipGui.getPosition().getDIRECTION(), battleShipGui.getPosition().getLENGTH()));
             if(res.isSuccessfullyPlaced()){
                 battleShipGui.setPosition(res.getPosition());
+                battleShipGui.setShipID(res.getShipID());
                 dataGridBattleship.add(button, horizontalIndex, verticalIndex, battleShipGui.getPosition().getLENGTH(), 1);
                 button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
@@ -314,13 +315,19 @@ public class ControllerShipPlacement implements Initializable {
                 int verticalIndex = GridPane.getRowIndex(button);
 
                 int index = dataGridBattleship.getChildren().indexOf(button);
-                Node nodeShip = dataGridBattleship.getChildren().remove(index);
+                Node nodeShip = dataGridBattleship.getChildren().get(index);
                 ButtonShip buttonShip = null;
                 if (nodeShip instanceof ButtonShip) {
                     buttonShip = (ButtonShip) nodeShip;
                 }
 
-                hashMapShipLabels.get(buttonShip.getBattleShipGui().getPosition().getLENGTH()).increaseCounter();
+                boolean success = GAME_MANAGER.deleteShip(buttonShip.getBattleShipGui().getShipID());
+                if(success){
+                    hashMapShipLabels.get(buttonShip.getBattleShipGui().getPosition().getLENGTH()).increaseCounter();
+                    dataGridBattleship.getChildren().remove(index);
+                }else{
+                    // TODO: inform user
+                }
             }
         });
         MenuItem item2 = new MenuItem("Schiff drehen");
@@ -333,7 +340,7 @@ public class ControllerShipPlacement implements Initializable {
                 int verticalIndex = GridPane.getRowIndex(button);
 
                 int index = dataGridBattleship.getChildren().indexOf(button);
-                Node node = dataGridBattleship.getChildren().remove(index);
+                Node node = dataGridBattleship.getChildren().get(index);
 
                 ButtonShip buttonShip = null;
                 if (node instanceof ButtonShip) {
@@ -341,14 +348,28 @@ public class ControllerShipPlacement implements Initializable {
                 }
                 BattleShipGui battleShipGui = buttonShip.getBattleShipGui();
 
+                int colspan, rowspan;
+                ShipPosition.Direction directionNew;
+
                 if (battleShipGui.getPosition().getDIRECTION() == ShipPosition.Direction.HORIZONTAL) {
-
-                    dataGridBattleship.add(node, horizontalIndex, verticalIndex, 1, battleShipGui.getPosition().getLENGTH());
-                    battleShipGui.getPosition().setDIRECTION(ShipPosition.Direction.VERTICAL);
+                    colspan = 1;
+                    rowspan = battleShipGui.getPosition().getLENGTH();
+                    directionNew = ShipPosition.Direction.VERTICAL;
                 } else {
+                    colspan = battleShipGui.getPosition().getLENGTH();
+                    rowspan = 1;
+                    directionNew = ShipPosition.Direction.HORIZONTAL;
+                }
 
-                    dataGridBattleship.add(node, horizontalIndex, verticalIndex, battleShipGui.getPosition().getLENGTH(), 1);
-                    battleShipGui.getPosition().setDIRECTION(ShipPosition.Direction.HORIZONTAL);
+                ShipPosition posOld = battleShipGui.getPosition();
+                ShipPosition position = new ShipPosition(posOld.getX(), posOld.getY(),
+                        directionNew, posOld.getLENGTH());
+                PlaceShipResult res = GAME_MANAGER.moveShip(battleShipGui.getShipID(), position);
+
+                if(res.isSuccessfullyPlaced()){
+                    dataGridBattleship.getChildren().remove(index);
+                    dataGridBattleship.add(node, horizontalIndex, verticalIndex, colspan, rowspan);
+                    battleShipGui.getPosition().setDIRECTION(directionNew);
                 }
             }
         });
