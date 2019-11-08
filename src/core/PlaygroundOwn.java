@@ -21,9 +21,6 @@ public class PlaygroundOwn extends Playground {
      */
     public PlaceShipResult placeShip(ShipPosition position){
         Ship ship = this.shipPool.getShip(position.getLENGTH());
-        if(ship == null){
-            return PlaceShipResult.failed(position, null, PlaceShipResult.Error.NO_MORE_SHIPS);
-        }
         PlaceShipResult res = this.placeShip(position, ship);
         if(!res.isSuccessfullyPlaced()){
             this.shipPool.releaseShip(ship);
@@ -37,9 +34,13 @@ public class PlaygroundOwn extends Playground {
      * @return An result that indicates whether it was successfully placed or not.
      */
     private PlaceShipResult placeShip(ShipPosition position, Ship ship){
+        if(ship == null)
+            return PlaceShipResult.failed(position, null, PlaceShipResult.Error.NO_MORE_SHIPS);
         if(position.isOutsideOfPlayground(this.size))
             return PlaceShipResult.failed(position, null, PlaceShipResult.Error.NOT_ON_PLAYGROUND);
-        if(this.canPlaceShip(position)){
+        if(!this.canPlaceShip(position)){
+            return PlaceShipResult.failed(position, null, PlaceShipResult.Error.SPACE_TAKEN);
+        }else{
             for(Position p : position.generateIndices()){
                 Field f = new Field(FieldType.SHIP, ship);
                 this.elements[p.getY()][p.getX()] = f;
@@ -48,8 +49,6 @@ public class PlaygroundOwn extends Playground {
             ship.setShipPosition(position);
             this.shipHashMap.put(shipID, ship);
             return PlaceShipResult.success(position, shipID);
-        }else{
-            return PlaceShipResult.failed(position, null, PlaceShipResult.Error.SPACE_TAKEN);
         }
     }
 

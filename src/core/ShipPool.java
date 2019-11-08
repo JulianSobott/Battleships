@@ -51,6 +51,8 @@ public class ShipPool {
      * @param ship Ship object that is no free to use
      */
     public void releaseShip(Ship ship){
+        if(ship == null)
+            return;
         int size = ship.getShipPosition().getLENGTH();
         assert this.pools.containsKey(size);
         this.pools.get(size).releaseObject(ship);
