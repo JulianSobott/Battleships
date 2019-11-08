@@ -33,6 +33,7 @@ import javafx.scene.paint.Color;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 public class ControllerShipPlacement implements Initializable {
@@ -50,11 +51,54 @@ public class ControllerShipPlacement implements Initializable {
     private final GameManager GAME_MANAGER;
     private final ShipList SHIP_LIST;
 
-    private Label labelShipCounterBattleshipX5 = new Label();
-    private Label labelShipCounterBattleshipX4 = new Label();
-    private Label labelShipCounterBattleshipX3 = new Label();
-    private Label labelShipCounterBattleshipX2 = new Label();
-    private Label labelShipCounterBattleshipX1 = new Label();
+//    private Label labelShipCounterBattleshipX5 = new Label();
+//    private Label labelShipCounterBattleshipX4 = new Label();
+//    private Label labelShipCounterBattleshipX3 = new Label();
+//    private Label labelShipCounterBattleshipX2 = new Label();
+//    private Label labelShipCounterBattleshipX1 = new Label();
+
+    class ShipCounterPair {
+        private String text;
+        private Label textLabel;
+        private int counter;
+        private final int size;
+
+        public ShipCounterPair(int counter, int size) {
+            this.counter = counter;
+            this.size = size;
+            this.textLabel = new Label(this.getText());
+        }
+
+        public Label getTextLabel() {
+            return textLabel;
+        }
+
+        public int getCounter() {
+            return counter;
+        }
+
+        private void setCounter(int counter) {
+            this.counter = counter;
+            this.textLabel.setText(this.getText());
+        }
+
+        public void decreaseCounter(){
+            this.setCounter(this.counter - 1);
+        }
+
+        public void increaseCounter(){
+            this.setCounter(this.counter + 1);
+        }
+
+        private String getText(){
+            this.text = this.counter + " x " + this.size + "-er Shiffe";
+            return this.text;
+        }
+    }
+
+    private HashMap<Integer, ShipCounterPair> hashMapShipLabels = new HashMap<>();
+
+
 
 
     private static final String numberOfBoningShipsX5 = " x " + " 5-er Schiff";
@@ -124,38 +168,13 @@ public class ControllerShipPlacement implements Initializable {
         hBox.setSpacing(20);
         hBox.setAlignment(Pos.CENTER);
 
-        Label labelShipCounter = null;
-
-        switch (shipSize) {
-            case 5:
-                labelShipCounter = new Label(numberOfShips + " x " + " 5-er Schiff");
-                labelShipCounterBattleshipX5 = labelShipCounter;
-                break;
-            case 4:
-                labelShipCounter = new Label(numberOfShips + " x " + " 4-er Schiff");
-                labelShipCounterBattleshipX4 = labelShipCounter;
-                break;
-            case 3:
-                labelShipCounter = new Label(numberOfShips + " x " + " 3-er Schiff");
-                labelShipCounterBattleshipX3 = labelShipCounter;
-                break;
-            case 2:
-                labelShipCounter = new Label(numberOfShips + " x " + " 2-er Schiff");
-                labelShipCounterBattleshipX2 = labelShipCounter;
-                break;
-            case 1:
-                labelShipCounter = new Label(numberOfShips + " x " + " 1-er Schiff");
-                labelShipCounterBattleshipX1 = labelShipCounter;
-                break;
-        }
-
         Image battleShipImage = new Image("/gui/ShipIcons/Testschiff.png");
         ImageView imageView = new ImageView(battleShipImage);
         addEventDragDetected(hBox);
         imageView.setFitWidth(140);
         imageView.setFitHeight(60);
 
-        hBox.getChildren().addAll(imageView, labelShipCounter);
+        hBox.getChildren().addAll(imageView, this.hashMapShipLabels.get(shipSize).getTextLabel());
         return hBox;
     }
 
@@ -260,29 +279,7 @@ public class ControllerShipPlacement implements Initializable {
             dataGridBattleship.add(button, horizontalIndex, verticalIndex, battleShipGui.getShipSize(), 1);
             button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
-
-            switch (battleShipGui.getShipSize()) {
-                case 5:
-                    numberOfBoningShipsX5Counter--;
-                    labelShipCounterBattleshipX5.setText(numberOfBoningShipsX5Counter + numberOfBoningShipsX5);
-                    break;
-                case 4:
-                    numberOfBoningShipsX4Counter--;
-                    labelShipCounterBattleshipX4.setText(numberOfBoningShipsX4Counter + numberOfBoningShipsX4);
-                    break;
-                case 3:
-                    numberOfBoningShipsX3Counter--;
-                    labelShipCounterBattleshipX3.setText(numberOfBoningShipsX3Counter + numberOfBoningShipsX3);
-                    break;
-                case 2:
-                    numberOfBoningShipsX2Counter--;
-                    labelShipCounterBattleshipX2.setText(numberOfBoningShipsX2Counter + numberOfBoningShipsX2);
-                    break;
-                case 1:
-                    numberOfBoningShipsX1Counter--;
-                    labelShipCounterBattleshipX1.setText(numberOfBoningShipsX1Counter + numberOfBoningShipsX1);
-                    break;
-            }
+            this.hashMapShipLabels.get(battleShipGui.getShipSize()).decreaseCounter();
 
         });
 
@@ -317,29 +314,7 @@ public class ControllerShipPlacement implements Initializable {
                     buttonShip = (ButtonShip) nodeShip;
                 }
 
-                switch (buttonShip.getBattleShipGui().getShipSize()) {
-                    case 5:
-                        numberOfBoningShipsX5Counter++;
-                        labelShipCounterBattleshipX5.setText(numberOfBoningShipsX5Counter + numberOfBoningShipsX5);
-                        break;
-                    case 4:
-                        numberOfBoningShipsX4Counter++;
-                        labelShipCounterBattleshipX4.setText(numberOfBoningShipsX4Counter + numberOfBoningShipsX4);
-                        break;
-                    case 3:
-                        numberOfBoningShipsX3Counter++;
-                        labelShipCounterBattleshipX3.setText(numberOfBoningShipsX3Counter + numberOfBoningShipsX3);
-                        break;
-                    case 2:
-                        numberOfBoningShipsX2Counter++;
-                        labelShipCounterBattleshipX2.setText(numberOfBoningShipsX2Counter + numberOfBoningShipsX2);
-                        break;
-                    case 1:
-                        numberOfBoningShipsX1Counter++;
-                        labelShipCounterBattleshipX1.setText(numberOfBoningShipsX1Counter + numberOfBoningShipsX1);
-                        break;
-                }
-
+                hashMapShipLabels.get(buttonShip.getBattleShipGui().getShipSize()).increaseCounter();
             }
         });
         MenuItem item2 = new MenuItem("Schiff drehen");
@@ -404,6 +379,8 @@ public class ControllerShipPlacement implements Initializable {
     private void generateShips(){
         ArrayList<Node> list = new ArrayList<>();
         for(ShipList.Pair pair : this.SHIP_LIST){
+            ShipCounterPair shipPair = new ShipCounterPair(pair.getNum(), pair.getSize());
+            this.hashMapShipLabels.put(pair.getSize(), shipPair);
             HBoxExends hBox = createNewGuiShip(pair.getSize(), pair.getNum());
             list.add(hBox);
         }
