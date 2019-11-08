@@ -12,13 +12,13 @@ public class BattleShipGui implements Serializable {
     private ShipID shipID;
     private ShipPosition position;
 
-    public BattleShipGui(int shipSize, ShipAlignment shipAlignment){
+    public BattleShipGui(int shipSize){
         this.position = ShipPosition.DEFAULT(shipSize);
     }
 
 
-    public BattleShipGui(ShipID ShipID, int shipSize, ShipAlignment shipAlignment){
-        this(shipSize, shipAlignment);
+    public BattleShipGui(ShipID ShipID, int shipSize){
+        this(shipSize);
         this.shipID = ShipID;
     }
 
@@ -38,14 +38,4 @@ public class BattleShipGui implements Serializable {
         this.position = position;
     }
 
-    public int getShipSize() {
-        return this.position.getLENGTH();
-    }
-
-    public Object getShipAlignment() {
-        return ShipAlignment.Horizontal;
-    }
-
-    public void setShipAlignment(ShipAlignment vertical) {
-    }
 }

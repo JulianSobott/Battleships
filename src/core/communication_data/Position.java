@@ -1,6 +1,8 @@
 package core.communication_data;
 
-public class Position {
+import java.io.Serializable;
+
+public class Position implements Serializable {
 
     protected final int X, Y;
 

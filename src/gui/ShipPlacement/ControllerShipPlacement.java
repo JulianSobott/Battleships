@@ -4,10 +4,10 @@ import core.GameManager;
 import core.communication_data.GameSettings;
 import core.communication_data.NewGameResult;
 import core.communication_data.ShipList;
+import core.communication_data.ShipPosition;
 import gui.UiClasses.BattleShipGui;
 import gui.UiClasses.ButtonShip;
 import gui.UiClasses.HBoxExends;
-import gui.UiClasses.ShipAlignment;
 import gui.WindowChange.SceneLoader;
 import gui.newGame.ControllerGameType;
 import javafx.event.ActionEvent;
@@ -163,7 +163,7 @@ public class ControllerShipPlacement implements Initializable {
 
     private HBoxExends createNewGuiShip(int shipSize, int numberOfShips) {
 
-        BattleShipGui battleShipGui = new BattleShipGui(shipSize, ShipAlignment.Horizontal);
+        BattleShipGui battleShipGui = new BattleShipGui(shipSize);
         HBoxExends hBox = new HBoxExends(battleShipGui);
         hBox.setSpacing(20);
         hBox.setAlignment(Pos.CENTER);
@@ -276,10 +276,10 @@ public class ControllerShipPlacement implements Initializable {
 
             addContextMenu(button);
 
-            dataGridBattleship.add(button, horizontalIndex, verticalIndex, battleShipGui.getShipSize(), 1);
+            dataGridBattleship.add(button, horizontalIndex, verticalIndex, battleShipGui.getPosition().getLENGTH(), 1);
             button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
-            this.hashMapShipLabels.get(battleShipGui.getShipSize()).decreaseCounter();
+            this.hashMapShipLabels.get(battleShipGui.getPosition().getLENGTH()).decreaseCounter();
 
         });
 
@@ -314,7 +314,7 @@ public class ControllerShipPlacement implements Initializable {
                     buttonShip = (ButtonShip) nodeShip;
                 }
 
-                hashMapShipLabels.get(buttonShip.getBattleShipGui().getShipSize()).increaseCounter();
+                hashMapShipLabels.get(buttonShip.getBattleShipGui().getPosition().getLENGTH()).increaseCounter();
             }
         });
         MenuItem item2 = new MenuItem("Schiff drehen");
@@ -335,14 +335,14 @@ public class ControllerShipPlacement implements Initializable {
                 }
                 BattleShipGui battleShipGui = buttonShip.getBattleShipGui();
 
-                if (battleShipGui.getShipAlignment().equals(ShipAlignment.Horizontal)) {
+                if (battleShipGui.getPosition().getDIRECTION() == ShipPosition.Direction.HORIZONTAL) {
 
-                    dataGridBattleship.add(node, horizontalIndex, verticalIndex, 1, battleShipGui.getShipSize());
-                    battleShipGui.setShipAlignment(ShipAlignment.Vertical);
+                    dataGridBattleship.add(node, horizontalIndex, verticalIndex, 1, battleShipGui.getPosition().getLENGTH());
+                    battleShipGui.getPosition().setDIRECTION(ShipPosition.Direction.VERTICAL);
                 } else {
 
-                    dataGridBattleship.add(node, horizontalIndex, verticalIndex, battleShipGui.getShipSize(), 1);
-                    battleShipGui.setShipAlignment(ShipAlignment.Horizontal);
+                    dataGridBattleship.add(node, horizontalIndex, verticalIndex, battleShipGui.getPosition().getLENGTH(), 1);
+                    battleShipGui.getPosition().setDIRECTION(ShipPosition.Direction.HORIZONTAL);
                 }
             }
         });

@@ -8,8 +8,9 @@ public class ShipPosition extends Position implements Serializable {
         HORIZONTAL, VERTICAL,
     }
 
-    private final Direction DIRECTION;
-    private final int LENGTH;
+    // TODO: lowercase names
+    private Direction DIRECTION;
+    private int LENGTH;
 
     public ShipPosition(int x, int y, Direction DIRECTION, int LENGTH) {
         super(x, y);
@@ -83,5 +84,13 @@ public class ShipPosition extends Position implements Serializable {
             }
         }
         return false;
+    }
+
+    public void setDIRECTION(Direction DIRECTION) {
+        this.DIRECTION = DIRECTION;
+    }
+
+    public void setLENGTH(int LENGTH) {
+        this.LENGTH = LENGTH;
     }
 }
