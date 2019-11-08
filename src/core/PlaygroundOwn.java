@@ -2,7 +2,11 @@ package core;
 
 import core.communication_data.*;
 
+import java.util.HashMap;
+
 public class PlaygroundOwn extends Playground {
+
+    private HashMap<ShipID, Ship> shipHashMap = new HashMap<>();
 
     public PlaygroundOwn(int size) {
         super(size);
@@ -34,6 +38,7 @@ public class PlaygroundOwn extends Playground {
             }
             ShipID shipID = ship.getId();
             ship.setShipPosition(position);
+            this.shipHashMap.put(shipID, ship);
             return PlaceShipResult.success(position, shipID);
         }else{
             return PlaceShipResult.failed(position, null, PlaceShipResult.Error.SPACE_TAKEN);
@@ -73,6 +78,7 @@ public class PlaygroundOwn extends Playground {
         else {
             this.resetFields(FieldType.WATER, ship.getShipPosition().generateIndices());
             this.shipPool.releaseShip(ship);
+            this.shipHashMap.remove(id);
             return true;
         }
     }
@@ -130,13 +136,6 @@ public class PlaygroundOwn extends Playground {
      * @return An Ship object if the ID exists, null otherwise
      */
     private Ship getShipByID(ShipID shipID){
-        for(Field[] row : this.elements){
-            for(Field f : row){
-                if(f.type == FieldType.SHIP && ((Ship)f.element).getId().equals(shipID)){
-                    return (Ship)f.element;
-                }
-            }
-        }
-        return null;
+        return this.shipHashMap.get(shipID);
     }
 }

@@ -2,6 +2,7 @@ package gui.ShipPlacement;
 
 import core.GameManager;
 import core.communication_data.*;
+import core.utils.Logger;
 import gui.UiClasses.BattleShipGui;
 import gui.UiClasses.ButtonShip;
 import gui.UiClasses.HBoxExends;
@@ -32,7 +33,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 public class ControllerShipPlacement implements Initializable {
 
@@ -276,6 +276,7 @@ public class ControllerShipPlacement implements Initializable {
 
             PlaceShipResult res = this.GAME_MANAGER.placeShip(new ShipPosition(horizontalIndex, verticalIndex,
                     battleShipGui.getPosition().getDIRECTION(), battleShipGui.getPosition().getLENGTH()));
+            Logger.debug(res);
             if(res.isSuccessfullyPlaced()){
                 battleShipGui.setPosition(res.getPosition());
                 battleShipGui.setShipID(res.getShipID());
@@ -286,7 +287,6 @@ public class ControllerShipPlacement implements Initializable {
             }else{
                 // TODO: inform user about failure
             }
-
 
         });
 

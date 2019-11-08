@@ -2,6 +2,7 @@ package core;
 
 import core.communication_data.ShipList;
 import core.communication_data.ShipPosition;
+import core.utils.Logger;
 import core.utils.ObjectPool;
 
 import java.util.HashMap;

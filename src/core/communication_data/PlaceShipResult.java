@@ -40,4 +40,14 @@ public class PlaceShipResult {
     public Error getERROR() {
         return ERROR;
     }
+
+    @Override
+    public String toString() {
+        return "PlaceShipResult{" +
+                "successfullyPlaced=" + successfullyPlaced +
+                ", position=" + position +
+                ", shipID=" + shipID +
+                ", ERROR=" + ERROR +
+                '}';
+    }
 }
