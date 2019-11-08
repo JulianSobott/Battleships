@@ -75,7 +75,6 @@ public class ControllerShipPlacement implements Initializable {
     //ToDo Dynamisches anpassen der Spielfeldgröße....
 
 
-    private static final int fieldSize = 5;
     private static final String filepathBackNewGame = "../newGame/GameType.fxml";
     private static final String filepathPlayground = "../";
 
@@ -99,6 +98,7 @@ public class ControllerShipPlacement implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        generateGridPane();
         HBoxExends hBox = createNewGuiShip(4, 1);
         HBoxExends hBox2 = createNewGuiShip(3, 3);
         HBoxExends hBox1 = createNewGuiShip(2, 2);
@@ -188,14 +188,13 @@ public class ControllerShipPlacement implements Initializable {
         ImageView imageView = new ImageView(battleShipImage);
         BackgroundImage im = new BackgroundImage(battleShipImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
 
-        dataGridBattleship.setBackground(new Background(im));
+        // dataGridBattleship.setBackground(new Background(im));
 
-        for (int i = 0; i < fieldSize; i++) {
-            for (int j = 0; j < fieldSize; j++) {
+        for (int i = 0; i < this.playgroundSize; i++) {
+            for (int j = 0; j < this.playgroundSize; j++) {
                 generateWater(i, j);
             }
         }
-
     }
 
 
@@ -389,6 +388,17 @@ public class ControllerShipPlacement implements Initializable {
         SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathBackNewGame, controllerGameType);
         sceneLoader.loadSceneInExistingWindow();
 
+    }
+
+    private void generateGridPane(){
+        double cellWidth = dataGridBattleship.getWidth() / this.playgroundSize;
+        double cellHeight = dataGridBattleship.getHeight() / this.playgroundSize;
+
+        for(int y = 0; y < this.playgroundSize; y++){
+            for(int x = 0; x < this.playgroundSize; x++) {
+                // TODO:
+            }
+        }
     }
 
 }
