@@ -3,6 +3,7 @@ package gui.newGame;
 import core.GameManager;
 import core.Player;
 import core.communication_data.GameSettings;
+import core.communication_data.NewGameResult;
 import gui.ControllerMainMenu;
 import gui.ShipPlacement.ControllerShipPlacement;
 import gui.WindowChange.SceneLoader;
@@ -92,9 +93,8 @@ public class ControllerGameType implements Initializable {
     @FXML
     public void loadShipPöacementScene(){
         GameSettings settings = buildGameSettings();
-        GameManager gameManager = new GameManager(settings);
 
-        ControllerShipPlacement controllerShipPlacement = new ControllerShipPlacement(settings, gameManager);
+        ControllerShipPlacement controllerShipPlacement = new ControllerShipPlacement(settings);
         SceneLoader sceneLoader = new SceneLoader(BackToMenu, filepathShipPlacement, controllerShipPlacement);
         sceneLoader.loadSceneInExistingWindow();
 

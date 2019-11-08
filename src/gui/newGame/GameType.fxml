@@ -41,6 +41,6 @@
       </VBox>
       <Label layoutX="46.0" layoutY="193.0" text="Schwierigkeitsgrad:" />
       <Button layoutX="956.0" layoutY="668.0" mnemonicParsing="false" onMouseClicked="#loadShipPöacementScene" prefHeight="25.0" prefWidth="133.0" text="Spiel starten" AnchorPane.bottomAnchor="60.0" AnchorPane.rightAnchor="100.0" />
-      <TextField fx:id="textfieldPlaygroundSize" layoutX="287.0" layoutY="544.0" promptText="Spielfeld größe" />
+      <TextField fx:id="textfieldPlaygroundSize" layoutX="287.0" layoutY="544.0" promptText="Spielfeld größe" text="5" />
    </children>
 </AnchorPane>

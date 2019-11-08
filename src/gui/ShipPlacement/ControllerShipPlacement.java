@@ -2,6 +2,8 @@ package gui.ShipPlacement;
 
 import core.GameManager;
 import core.communication_data.GameSettings;
+import core.communication_data.NewGameResult;
+import core.communication_data.ShipList;
 import gui.UiClasses.BattleShipGui;
 import gui.UiClasses.ButtonShip;
 import gui.UiClasses.HBoxExends;
@@ -46,13 +48,14 @@ public class ControllerShipPlacement implements Initializable {
 
     private final int playgroundSize;
     private final GameManager GAME_MANAGER;
-
+    private final ShipList SHIP_LIST;
 
     private Label labelShipCounterBattleshipX5 = new Label();
     private Label labelShipCounterBattleshipX4 = new Label();
     private Label labelShipCounterBattleshipX3 = new Label();
     private Label labelShipCounterBattleshipX2 = new Label();
     private Label labelShipCounterBattleshipX1 = new Label();
+
 
     private static final String numberOfBoningShipsX5 = " x " + " 5-er Schiff";
     private static final String numberOfBoningShipsX4 = " x " + " 4-er Schiff";
@@ -86,9 +89,11 @@ public class ControllerShipPlacement implements Initializable {
     private ArrayList<BattleShipGui> battleShips = new ArrayList();
 
 
-    public ControllerShipPlacement(GameSettings settings, GameManager manager) {
+    public ControllerShipPlacement(GameSettings settings) {
+        this.GAME_MANAGER = new GameManager();
+        NewGameResult res = this.GAME_MANAGER.newGame(settings);
+        this.SHIP_LIST = res.getSHIP_LIST();
         this.playgroundSize = settings.getPlaygroundSize();
-        this.GAME_MANAGER = manager;
     }
 
     /**
@@ -99,12 +104,7 @@ public class ControllerShipPlacement implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         generateGridPane();
-        HBoxExends hBox = createNewGuiShip(4, 1);
-        HBoxExends hBox2 = createNewGuiShip(3, 3);
-        HBoxExends hBox1 = createNewGuiShip(2, 2);
-        HBoxExends hBox3 = createNewGuiShip(1, 2);
-
-        vBoxShips.getChildren().addAll(hBox, hBox2, hBox1, hBox3);
+        generateShips();
 
         preallocateFieldsWithWater();
 
@@ -399,6 +399,15 @@ public class ControllerShipPlacement implements Initializable {
                 // TODO:
             }
         }
+    }
+
+    private void generateShips(){
+        ArrayList<Node> list = new ArrayList<>();
+        for(ShipList.Pair pair : this.SHIP_LIST){
+            HBoxExends hBox = createNewGuiShip(pair.getSize(), pair.getNum());
+            list.add(hBox);
+        }
+        vBoxShips.getChildren().addAll(list);
     }
 
 }
