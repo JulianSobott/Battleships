@@ -7,6 +7,12 @@ public class GameManager implements GameManagerInterface {
     private Player player1, player2;
     private Player currentPlayer;
 
+    public GameManager(GameSettings settings) {
+        this.player1 = settings.getP1();
+        this.player2 = settings.getP2();
+        // TODO: Set current player
+    }
+
 
     @Override
     public boolean connectToServer(String ip, int port) {
@@ -16,11 +22,6 @@ public class GameManager implements GameManagerInterface {
     @Override
     public GameSettings getGameSettings() {
         return null;
-    }
-
-    @Override
-    public void newGame(GameSettings settings) {
-
     }
 
     @Override

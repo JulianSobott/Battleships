@@ -1,5 +1,7 @@
 package gui.ShipPlacement;
 
+import core.GameManager;
+import core.communication_data.GameSettings;
 import gui.UiClasses.BattleShipGui;
 import gui.UiClasses.ButtonShip;
 import gui.UiClasses.HBoxExends;
@@ -42,6 +44,9 @@ public class ControllerShipPlacement implements Initializable {
     @FXML
     private Button buttonBack;
 
+    private final int playgroundSize;
+    private final GameManager GAME_MANAGER;
+
 
     private Label labelShipCounterBattleshipX5 = new Label();
     private Label labelShipCounterBattleshipX4 = new Label();
@@ -82,9 +87,9 @@ public class ControllerShipPlacement implements Initializable {
     private ArrayList<BattleShipGui> battleShips = new ArrayList();
 
 
-    public ControllerShipPlacement() {
-
-
+    public ControllerShipPlacement(GameSettings settings, GameManager manager) {
+        this.playgroundSize = settings.getPlaygroundSize();
+        this.GAME_MANAGER = manager;
     }
 
     /**
@@ -102,7 +107,6 @@ public class ControllerShipPlacement implements Initializable {
         vBoxShips.getChildren().addAll(hBox, hBox2, hBox1, hBox3);
 
         preallocateFieldsWithWater();
-
 
     }
 

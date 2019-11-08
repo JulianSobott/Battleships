@@ -1,5 +1,7 @@
 package gui.newGame;
 
+import core.GameManager;
+import core.Player;
 import core.communication_data.GameSettings;
 import gui.ControllerMainMenu;
 import gui.ShipPlacement.ControllerShipPlacement;
@@ -11,6 +13,9 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
+import player.PlayerAI;
+import player.PlayerHuman;
+import player.PlayerNetwork;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -86,15 +91,29 @@ public class ControllerGameType implements Initializable {
 
     @FXML
     public void loadShipPöacementScene(){
-        ControllerShipPlacement controllerShipPlacement = new ControllerShipPlacement();
+        GameSettings settings = buildGameSettings();
+        GameManager gameManager = new GameManager(settings);
+
+        ControllerShipPlacement controllerShipPlacement = new ControllerShipPlacement(settings, gameManager);
         SceneLoader sceneLoader = new SceneLoader(BackToMenu, filepathShipPlacement, controllerShipPlacement);
         sceneLoader.loadSceneInExistingWindow();
 
     }
 
 
-    public void buildGameSettings() {
-
+    private GameSettings buildGameSettings() {
+        // TODO: Surface validation
+        int playgroundSize = Integer.parseInt(this.textfieldPlaygroundSize.getText());
+        Player p1 = new PlayerHuman("TODO", playgroundSize);
+        Player p2;
+        if(this.radioButtonKI.isSelected()){
+            p2 = new PlayerAI("KI", playgroundSize);
+        }else if(this.radioButtonNetzwerk.isSelected()){
+            p2 = new PlayerNetwork("KI", playgroundSize);
+        }else{
+            p2 = new PlayerHuman("KI", playgroundSize);
+        }
+        return new GameSettings(playgroundSize, p1, p2);
     }
 }
 

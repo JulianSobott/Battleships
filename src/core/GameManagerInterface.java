@@ -7,9 +7,6 @@ public interface GameManagerInterface {
     public boolean connectToServer(String ip, int port);
     public GameSettings getGameSettings();
 
-    // create game
-    public void newGame(GameSettings settings);
-
     // Ship Placement
     public PlaceShipResult placeShip(ShipPosition pos);
     public PlaceShipResult moveShip(int id, ShipPosition pos);
