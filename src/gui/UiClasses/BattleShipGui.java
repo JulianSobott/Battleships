@@ -1,49 +1,51 @@
 package gui.UiClasses;
 
+import core.Ship;
+import core.communication_data.ShipID;
+import core.communication_data.ShipPosition;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
 public class BattleShipGui implements Serializable {
 
-    private int shipID;
-    private int shipSize;
-    private ShipAlignment shipAlignment; // TODO: Take ShipPosition.Direction?
-    private ArrayList shipPosition = new ArrayList(); //??? Notwenfid ??
+    private ShipID shipID;
+    private ShipPosition position;
 
     public BattleShipGui(int shipSize, ShipAlignment shipAlignment){
-
-        this.shipSize = shipSize;
-        this.shipAlignment =shipAlignment;
+        this.position = ShipPosition.DEFAULT(shipSize);
     }
 
 
-    public BattleShipGui(int ShipID, int shipSize, ShipAlignment shipAlignment){
-
+    public BattleShipGui(ShipID ShipID, int shipSize, ShipAlignment shipAlignment){
         this(shipSize, shipAlignment);
         this.shipID = ShipID;
     }
 
-    public int getShipID() {
+    public ShipID getShipID() {
         return shipID;
     }
 
-    public void setShipID(int shipID) {
+    public void setShipID(ShipID shipID) {
         this.shipID = shipID;
     }
 
+    public ShipPosition getPosition() {
+        return position;
+    }
+
+    public void setPosition(ShipPosition position) {
+        this.position = position;
+    }
+
     public int getShipSize() {
-        return shipSize;
+        return this.position.getLENGTH();
     }
 
-    public void setShipSize(int shipSize) {
-        this.shipSize = shipSize;
+    public Object getShipAlignment() {
+        return ShipAlignment.Horizontal;
     }
 
-    public ShipAlignment getShipAlignment() {
-        return shipAlignment;
-    }
-
-    public void setShipAlignment(ShipAlignment shipAlignment) {
-        this.shipAlignment = shipAlignment;
+    public void setShipAlignment(ShipAlignment vertical) {
     }
 }
