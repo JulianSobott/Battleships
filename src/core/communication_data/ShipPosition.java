@@ -1,6 +1,8 @@
 package core.communication_data;
 
-public class ShipPosition extends Position{
+import java.io.Serializable;
+
+public class ShipPosition extends Position implements Serializable {
 
     public enum Direction {
         HORIZONTAL, VERTICAL,
