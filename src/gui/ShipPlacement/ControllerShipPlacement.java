@@ -1,10 +1,7 @@
 package gui.ShipPlacement;
 
 import core.GameManager;
-import core.communication_data.GameSettings;
-import core.communication_data.NewGameResult;
-import core.communication_data.ShipList;
-import core.communication_data.ShipPosition;
+import core.communication_data.*;
 import gui.UiClasses.BattleShipGui;
 import gui.UiClasses.ButtonShip;
 import gui.UiClasses.HBoxExends;
@@ -35,6 +32,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 public class ControllerShipPlacement implements Initializable {
 
@@ -276,10 +274,18 @@ public class ControllerShipPlacement implements Initializable {
 
             addContextMenu(button);
 
-            dataGridBattleship.add(button, horizontalIndex, verticalIndex, battleShipGui.getPosition().getLENGTH(), 1);
-            button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+            PlaceShipResult res = this.GAME_MANAGER.placeShip(new ShipPosition(horizontalIndex, verticalIndex,
+                    battleShipGui.getPosition().getDIRECTION(), battleShipGui.getPosition().getLENGTH()));
+            if(res.isSuccessfullyPlaced()){
+                battleShipGui.setPosition(res.getPosition());
+                dataGridBattleship.add(button, horizontalIndex, verticalIndex, battleShipGui.getPosition().getLENGTH(), 1);
+                button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
-            this.hashMapShipLabels.get(battleShipGui.getPosition().getLENGTH()).decreaseCounter();
+                this.hashMapShipLabels.get(battleShipGui.getPosition().getLENGTH()).decreaseCounter();
+            }else{
+                // TODO: inform user about failure
+            }
+
 
         });
 
