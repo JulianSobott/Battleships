@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Button fx:id="BackToMenu" layoutX="78.0" layoutY="668.0" mnemonicParsing="false" onMouseClicked="#goBacktoMainMenus" prefHeight="25.0" prefWidth="118.0" text="Back" />
       <Label layoutX="253.0" layoutY="73.0" text="Gegenspieler:" />
@@ -48,5 +41,6 @@
       </VBox>
       <Label layoutX="46.0" layoutY="193.0" text="Schwierigkeitsgrad:" />
       <Button layoutX="956.0" layoutY="668.0" mnemonicParsing="false" onMouseClicked="#loadShipPöacementScene" prefHeight="25.0" prefWidth="133.0" text="Spiel starten" AnchorPane.bottomAnchor="60.0" AnchorPane.rightAnchor="100.0" />
+      <TextField fx:id="textfieldPlaygroundSize" layoutX="287.0" layoutY="544.0" promptText="Spielfeld größe" />
    </children>
 </AnchorPane>

@@ -1,5 +1,6 @@
 package gui.newGame;
 
+import core.communication_data.GameSettings;
 import gui.ControllerMainMenu;
 import gui.ShipPlacement.ControllerShipPlacement;
 import gui.WindowChange.SceneLoader;
@@ -7,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 
@@ -42,6 +44,9 @@ public class ControllerGameType implements Initializable {
 
     @FXML
     public  RadioButton radioButtonHard;
+
+    @FXML
+    public TextField textfieldPlaygroundSize;
 
 
     private static final String filepathBackMainMenu = "../Main_Menu.fxml";
@@ -81,10 +86,14 @@ public class ControllerGameType implements Initializable {
 
     @FXML
     public void loadShipPöacementScene(){
-
         ControllerShipPlacement controllerShipPlacement = new ControllerShipPlacement();
         SceneLoader sceneLoader = new SceneLoader(BackToMenu, filepathShipPlacement, controllerShipPlacement);
         sceneLoader.loadSceneInExistingWindow();
+
+    }
+
+
+    public void buildGameSettings() {
 
     }
 }
