@@ -4,6 +4,7 @@ import core.communication_data.*;
 import core.utils.Logger;
 
 import java.util.HashMap;
+import java.util.Random;
 
 public class PlaygroundOwn extends Playground {
 
@@ -119,7 +120,43 @@ public class PlaygroundOwn extends Playground {
     }
 
     public void placeShipsRandom(ShipList shipList){
+        int max_tries = 10000;
+        Random random = new Random();
+        boolean foundPlace = true;
+        for (int iteration = 0; iteration < max_tries; iteration++) {
+            this.resetAll(FieldType.WATER);
+            foundPlace = true;
+            for(ShipList.Pair pair : shipList){
+                for(int i = 0; i < pair.getNum() && foundPlace; i++){
+                    foundPlace = this.placeSingleShipRandom(pair.getSize(), random);
+                }
+                if(!foundPlace) break;
+            }
+            if(foundPlace) {
+                Logger.debug("Found in iteration: " + iteration);
+                break;
+            }
+        }
+        if(foundPlace){
+            Logger.debug("Successfully placed ships");
+        }else{
+            Logger.debug("Could not place ships");
+        }
+        this.printField();
+    }
 
+    private boolean placeSingleShipRandom(int length, Random rand){
+        int max_iterations = 100;
+        for(int i = 0; i < max_iterations; i++){
+            int x = rand.nextInt(this.size);
+            int y = rand.nextInt(this.size);
+            ShipPosition.Direction dir = rand.nextBoolean() ? ShipPosition.Direction.HORIZONTAL :
+                    ShipPosition.Direction.VERTICAL;
+            ShipPosition pos = new ShipPosition(x, y, dir, length);
+            if(this.placeShip(pos).isSuccessfullyPlaced())
+                return true;
+        }
+        return false;
     }
 
     /**

@@ -45,6 +45,17 @@ public abstract class Playground {
         this.shipPool = new ShipPool(ShipList.fromSize(size));
     }
 
+    /**
+     * Reset all fields to type.
+     * Releases all ships. Same as creating a new Playground
+     *
+     * @param type
+     */
+    void resetAll(FieldType type){
+        this.resetFields(type);
+        this.shipPool.releaseAll();
+    }
+
     protected void resetFields(FieldType type){
         for(int y = 0; y < this.size; y++){
             for(int x = 0; x < this.size; x++){
