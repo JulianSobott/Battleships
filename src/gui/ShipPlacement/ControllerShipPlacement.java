@@ -296,16 +296,16 @@ public class ControllerShipPlacement implements Initializable {
                 addContextMenu(button);
 
                 PlaceShipResult res = this.GAME_MANAGER.placeShip(new ShipPosition(horizontalIndex, verticalIndex,
-                        battleShipGui.getPosition().getDIRECTION(), battleShipGui.getPosition().getLENGTH()));
+                        battleShipGui.getPosition().getDirection(), battleShipGui.getPosition().getLength()));
                 Logger.debug(res);
                 if (res.isSuccessfullyPlaced()) {
                     battleShipGui.setPosition(res.getPosition());
                     battleShipGui.setShipID(res.getShipID());
-                    dataGridBattleship.add(button, horizontalIndex, verticalIndex, battleShipGui.getPosition().getLENGTH(), 1);
+                    dataGridBattleship.add(button, horizontalIndex, verticalIndex, battleShipGui.getPosition().getLength(), 1);
                     button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
                     shipArrayListGui.add(button);
 
-                    this.hashMapShipLabels.get(battleShipGui.getPosition().getLENGTH()).decreaseCounter();
+                    this.hashMapShipLabels.get(battleShipGui.getPosition().getLength()).decreaseCounter();
                 } else {
                     // TODO: inform user about failure
                 }
@@ -346,11 +346,11 @@ public class ControllerShipPlacement implements Initializable {
                 int col = GridPane.getColumnIndex(panePlaygroundCell);
                 int row = GridPane.getRowIndex(panePlaygroundCell);
 
-                if (battleShipGui.getPosition().getDIRECTION() == ShipPosition.Direction.HORIZONTAL)
-                    dataGridBattleship.add(button, col, row, battleShipGui.getPosition().getLENGTH(), 1);
+                if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.HORIZONTAL)
+                    dataGridBattleship.add(button, col, row, battleShipGui.getPosition().getLength(), 1);
                 button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-                if (battleShipGui.getPosition().getDIRECTION() == ShipPosition.Direction.VERTICAL) {
-                    dataGridBattleship.add(button, col, row,  1, battleShipGui.getPosition().getLENGTH());
+                if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.VERTICAL) {
+                    dataGridBattleship.add(button, col, row,  1, battleShipGui.getPosition().getLength());
                     button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
                 }
 
@@ -406,7 +406,7 @@ public class ControllerShipPlacement implements Initializable {
 
                 boolean success = GAME_MANAGER.deleteShip(buttonShip.getBattleShipGui().getShipID());
                 if (success) {
-                    hashMapShipLabels.get(buttonShip.getBattleShipGui().getPosition().getLENGTH()).increaseCounter();
+                    hashMapShipLabels.get(buttonShip.getBattleShipGui().getPosition().getLength()).increaseCounter();
                     dataGridBattleship.getChildren().remove(index);
                 } else {
                     // TODO: inform user
@@ -436,25 +436,25 @@ public class ControllerShipPlacement implements Initializable {
                 int colspan, rowspan;
                 ShipPosition.Direction directionNew;
 
-                if (battleShipGui.getPosition().getDIRECTION() == ShipPosition.Direction.HORIZONTAL) {
+                if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.HORIZONTAL) {
                     colspan = 1;
-                    rowspan = battleShipGui.getPosition().getLENGTH();
+                    rowspan = battleShipGui.getPosition().getLength();
                     directionNew = ShipPosition.Direction.VERTICAL;
                 } else {
-                    colspan = battleShipGui.getPosition().getLENGTH();
+                    colspan = battleShipGui.getPosition().getLength();
                     rowspan = 1;
                     directionNew = ShipPosition.Direction.HORIZONTAL;
                 }
 
                 ShipPosition posOld = battleShipGui.getPosition();
                 ShipPosition position = new ShipPosition(posOld.getX(), posOld.getY(),
-                        directionNew, posOld.getLENGTH());
+                        directionNew, posOld.getLength());
                 PlaceShipResult res = GAME_MANAGER.moveShip(battleShipGui.getShipID(), position);
 
                 if (res.isSuccessfullyPlaced()) {
                     dataGridBattleship.getChildren().remove(index);
                     dataGridBattleship.add(node, horizontalIndex, verticalIndex, colspan, rowspan);
-                    battleShipGui.getPosition().setDIRECTION(directionNew);
+                    battleShipGui.getPosition().setDirection(directionNew);
                 }
             }
         });
