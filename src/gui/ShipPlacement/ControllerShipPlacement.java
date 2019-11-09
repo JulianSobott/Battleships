@@ -333,10 +333,11 @@ public class ControllerShipPlacement implements Initializable {
             } else {
                 // TODO: inform user about failure
             }
-
         });
-
     }
+
+
+    /** ##########################################   SHIPS CONTEXT-MENU  ############################################ */
 
 
     /**
@@ -345,28 +346,35 @@ public class ControllerShipPlacement implements Initializable {
      * @param button to add the event
      */
 
-
-
-
-    /** ##########################################   SHIPS CONTEXT-MENU  ############################################ */
-
-
-    //ToDO derzeit wird Schiff um 90° nach rechts gedreht. Bild leider nicht...
     private void addContextMenu(Button button) {
 
-        // Create ContextMenu
         ContextMenu contextMenu = new ContextMenu();
 
         MenuItem item1 = new MenuItem("Schiff löschen");
-        item1.setOnAction(new EventHandler<ActionEvent>() {
+        addMenuItemDeleteShip(item1, button);
+
+        MenuItem item2 = new MenuItem("Schiff drehen");
+        addMenuItemTurnShip(item2, button);
+
+        contextMenu.getItems().addAll(item1, item2);
+        button.setContextMenu(contextMenu);
+    }
+
+    /**
+     * add functionality to MenuItemDeleteShip
+     *
+     * @param menuItemDeleteShip to add the event
+     * @param buttonShip  Gui Ship Object
+     */
+
+    private void addMenuItemDeleteShip(MenuItem menuItemDeleteShip, Button buttonShip) {
+
+        menuItemDeleteShip.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent event) {
 
-                int horizontalIndex = GridPane.getColumnIndex(button);
-                int verticalIndex = GridPane.getRowIndex(button);
-
-                int index = dataGridBattleship.getChildren().indexOf(button);
+                int index = dataGridBattleship.getChildren().indexOf(buttonShip);
                 Node nodeShip = dataGridBattleship.getChildren().get(index);
                 ButtonShip buttonShip = null;
                 if (nodeShip instanceof ButtonShip) {
@@ -382,16 +390,18 @@ public class ControllerShipPlacement implements Initializable {
                 }
             }
         });
-        MenuItem item2 = new MenuItem("Schiff drehen");
-        item2.setOnAction(new EventHandler<ActionEvent>() {
+    }
+
+    private void addMenuItemTurnShip(MenuItem menuItemTurnShip, Button buttonShip){
+        menuItemTurnShip.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent event) {
 
-                int horizontalIndex = GridPane.getColumnIndex(button);
-                int verticalIndex = GridPane.getRowIndex(button);
+                int horizontalIndex = GridPane.getColumnIndex(buttonShip);
+                int verticalIndex = GridPane.getRowIndex(buttonShip);
 
-                int index = dataGridBattleship.getChildren().indexOf(button);
+                int index = dataGridBattleship.getChildren().indexOf(buttonShip);
                 Node node = dataGridBattleship.getChildren().get(index);
 
                 ButtonShip buttonShip = null;
@@ -425,13 +435,7 @@ public class ControllerShipPlacement implements Initializable {
                 }
             }
         });
-
-        contextMenu.getItems().addAll(item1, item2);
-        button.setContextMenu(contextMenu);
     }
-
-
-
 
 
     /** ###########################################   Window Navigation  ############################################ */
