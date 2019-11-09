@@ -8,11 +8,13 @@ import gui.UiClasses.ButtonShip;
 import gui.UiClasses.HBoxExends;
 import gui.WindowChange.SceneLoader;
 import gui.newGame.ControllerGameType;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
@@ -97,8 +99,6 @@ public class ControllerShipPlacement implements Initializable {
     private static final String filepathPlayground = "../";
 
 
-
-
     public ControllerShipPlacement(GameSettings settings) {
         this.GAME_MANAGER = new GameManager();
         NewGameResult res = this.GAME_MANAGER.newGame(settings);
@@ -173,6 +173,7 @@ public class ControllerShipPlacement implements Initializable {
         dataGridBattleship.add(p, possHorizontal, possVertical);
         handleDragOver(p);
         handleDrop(p);
+        // handleDropShipShift(p);
 
 //        Image battleShipImage = new Image("/gui/ShipIcons/Wasser_Groß.jpg");
 //        ImageView imageView = new ImageView(battleShipImage);
@@ -270,41 +271,75 @@ public class ControllerShipPlacement implements Initializable {
     /**
      * This Method makes it possible to move Ships
      *
-     * @param imageView ShipImage which player will place on the playground
+     * @param panePlaygroundCell ShipImage which player will place on the playground
      */
 
-    private void handleDrop(Pane imageView) {
+    private void handleDrop(Pane panePlaygroundCell) {
 
-        imageView.setOnDragDropped(dragEvent -> {
+        panePlaygroundCell.setOnDragDropped(dragEvent -> {
             Dragboard dragboard = dragEvent.getDragboard();
 
-            Object o = dragboard.getContent(DataFormat.lookupMimeType("BattleShip"));
-            BattleShipGui battleShipGui = null;
-            if (o instanceof BattleShipGui) {
-                battleShipGui = (BattleShipGui) o;
-            }
+            Object o;
+            if (null != dragboard.getContent(DataFormat.lookupMimeType("BattleShip"))) {
+                o = dragboard.getContent(DataFormat.lookupMimeType("BattleShip"));
 
-            int horizontalIndex = GridPane.getColumnIndex(imageView);
-            int verticalIndex = GridPane.getRowIndex(imageView);
+                BattleShipGui battleShipGui = null;
+                if (o instanceof BattleShipGui) {
+                    battleShipGui = (BattleShipGui) o;
+                }
 
-            ButtonShip button = new ButtonShip(battleShipGui);
-            button.setStyle("-fx-background-color: #00ff00");
-            addEventDragDetectedPlacedShip(button);
+                int horizontalIndex = GridPane.getColumnIndex(panePlaygroundCell);
+                int verticalIndex = GridPane.getRowIndex(panePlaygroundCell);
 
-            addContextMenu(button);
+                ButtonShip button = new ButtonShip(battleShipGui);
+                button.setStyle("-fx-background-color: #00ff00");
+                addEventDragDetectedPlacedShip(button);
 
-            PlaceShipResult res = this.GAME_MANAGER.placeShip(new ShipPosition(horizontalIndex, verticalIndex,
-                    battleShipGui.getPosition().getDIRECTION(), battleShipGui.getPosition().getLENGTH()));
-            Logger.debug(res);
-            if (res.isSuccessfullyPlaced()) {
-                battleShipGui.setPosition(res.getPosition());
-                battleShipGui.setShipID(res.getShipID());
-                dataGridBattleship.add(button, horizontalIndex, verticalIndex, battleShipGui.getPosition().getLENGTH(), 1);
+                addContextMenu(button);
+
+                PlaceShipResult res = this.GAME_MANAGER.placeShip(new ShipPosition(horizontalIndex, verticalIndex,
+                        battleShipGui.getPosition().getDIRECTION(), battleShipGui.getPosition().getLENGTH()));
+                Logger.debug(res);
+                if (res.isSuccessfullyPlaced()) {
+                    battleShipGui.setPosition(res.getPosition());
+                    battleShipGui.setShipID(res.getShipID());
+                    dataGridBattleship.add(button, horizontalIndex, verticalIndex, battleShipGui.getPosition().getLENGTH(), 1);
+                    button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
+                    this.hashMapShipLabels.get(battleShipGui.getPosition().getLENGTH()).decreaseCounter();
+                } else {
+                    // TODO: inform user about failure
+                }
+            } else if (null != dragboard.getContent(DataFormat.lookupMimeType("PlacedBattleShip"))) {
+                Object o1 = dragboard.getContent(DataFormat.lookupMimeType("PlacedBattleShip"));
+                BattleShipGui battleShipGui = null;
+                if (o1 instanceof BattleShipGui) {
+                    battleShipGui = (BattleShipGui) o1;
+                }
+
+                /** -----------------------------------deletes Ship on old Position --------------------------------- */
+
+                //TODO löschsen mithilfe des Objects Button .. Woher bekommen ??
+
+
+                /** -----------------------------------Adds Ship on new Position ------------------------------------ */
+
+                ButtonShip button = new ButtonShip(battleShipGui);
+                button.setStyle("-fx-background-color: #00ff00");
+                addEventDragDetectedPlacedShip(button);
+                addContextMenu(button);
+
+                int col = GridPane.getColumnIndex(panePlaygroundCell);
+                int row = GridPane.getRowIndex(panePlaygroundCell);
+
+                if (battleShipGui.getPosition().getDIRECTION() == ShipPosition.Direction.HORIZONTAL)
+                    dataGridBattleship.add(button, col, row, battleShipGui.getPosition().getLENGTH(), 1);
                 button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                if (battleShipGui.getPosition().getDIRECTION() == ShipPosition.Direction.VERTICAL) {
+                    dataGridBattleship.add(button, col, row,  1, battleShipGui.getPosition().getLENGTH());
+                    button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                }
 
-                this.hashMapShipLabels.get(battleShipGui.getPosition().getLENGTH()).decreaseCounter();
-            } else {
-                // TODO: inform user about failure
             }
         });
     }
@@ -337,7 +372,7 @@ public class ControllerShipPlacement implements Initializable {
      * add functionality to MenuItemDeleteShip
      *
      * @param menuItemDeleteShip to add the event
-     * @param buttonShip  Gui Ship Object
+     * @param buttonShip         Gui Ship Object
      */
 
     private void addMenuItemDeleteShip(MenuItem menuItemDeleteShip, Button buttonShip) {
@@ -365,7 +400,7 @@ public class ControllerShipPlacement implements Initializable {
         });
     }
 
-    private void addMenuItemTurnShip(MenuItem menuItemTurnShip, Button buttonShip){
+    private void addMenuItemTurnShip(MenuItem menuItemTurnShip, Button buttonShip) {
         menuItemTurnShip.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
