@@ -14,17 +14,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.*;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -46,11 +46,6 @@ public class ControllerShipPlacement implements Initializable {
     private final GameManager GAME_MANAGER;
     private final ShipList SHIP_LIST;
 
-//    private Label labelShipCounterBattleshipX5 = new Label();
-//    private Label labelShipCounterBattleshipX4 = new Label();
-//    private Label labelShipCounterBattleshipX3 = new Label();
-//    private Label labelShipCounterBattleshipX2 = new Label();
-//    private Label labelShipCounterBattleshipX1 = new Label();
 
     class ShipCounterPair {
         private String text;
@@ -91,39 +86,17 @@ public class ControllerShipPlacement implements Initializable {
         }
     }
 
-    private HashMap<Integer, ShipCounterPair> hashMapShipLabels = new HashMap<>();
-
-
-    private static final String numberOfBoningShipsX5 = " x " + " 5-er Schiff";
-    private static final String numberOfBoningShipsX4 = " x " + " 4-er Schiff";
-    private static final String numberOfBoningShipsX3 = " x " + " 3-er Schiff";
-    private static final String numberOfBoningShipsX2 = " x " + " 2-er Schiff";
-    private static final String numberOfBoningShipsX1 = " x " + " 1-er Schiff";
-
-    int numberOfBoningShipsX5Counter = 2;
-    int numberOfBoningShipsX4Counter = 1;
-    int numberOfBoningShipsX3Counter = 3;
-    int numberOfBoningShipsX2Counter = 4;
-    int numberOfBoningShipsX1Counter = 2;
-
-    // ToDO Woher weiß man welcher Schiff länge gesetzt wurde ...
-
-    //ToDO pool (Arraylist) mit ID's welche dann auf verfügbarkeit geprüft werden und bei erlaubter platzierung einem Schiff zugeordnet werden...
 
     //ToDO Schiff muss noch per Drag and Drop verschoben werden können
 
     //ToDo Dynamisches anpassen der Spielfeldgröße....
 
+    private HashMap<Integer, ShipCounterPair> hashMapShipLabels = new HashMap<>();
 
     private static final String filepathBackNewGame = "../newGame/GameType.fxml";
     private static final String filepathPlayground = "../";
 
 
-    private ArrayList availableShips = new ArrayList();
-
-    private ArrayList<Label> availableShipTypes = new ArrayList(); // Absteigend nach größe sortiert
-
-    private ArrayList<BattleShipGui> battleShips = new ArrayList();
 
 
     public ControllerShipPlacement(GameSettings settings) {
