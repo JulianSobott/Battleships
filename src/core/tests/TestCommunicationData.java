@@ -23,8 +23,8 @@ public class TestCommunicationData {
         }catch (AssertionError ignored){thrown = true;}
         assert thrown: "Expected AssertionError! No negative length is allowed";
         ShipPosition p3 = new ShipPosition(2, 1, ShipPosition.Direction.HORIZONTAL, 2);
-        assert p3.getX() == 2 && p3.getY() == 1 && p3.getDIRECTION() == ShipPosition.Direction.HORIZONTAL
-                && p3.getLENGTH() == 2: "Attributes not properly set";
+        assert p3.getX() == 2 && p3.getY() == 1 && p3.getDirection() == ShipPosition.Direction.HORIZONTAL
+                && p3.getLength() == 2: "Attributes not properly set";
         Position[] positionsExpected = {new Position(2, 1), new Position(3, 1)};
         assert Arrays.equals(positionsExpected, p3.generateIndices());
     }

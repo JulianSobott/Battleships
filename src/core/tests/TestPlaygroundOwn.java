@@ -38,7 +38,7 @@ class TestPlaygroundOwn{
         PlaceShipResult res = playground.placeShip(p1);
         assert res.isSuccessfullyPlaced(): "Ship should be placed";
 
-        ShipPosition p2 = new ShipPosition(0, 2, ShipPosition.Direction.HORIZONTAL, 7);
+        ShipPosition p2 = new ShipPosition(4, 2, ShipPosition.Direction.HORIZONTAL, 3);
         res = playground.placeShip(p2);
         assert !res.isSuccessfullyPlaced(): "Ship shouldn't be placed";
         assert res.getERROR() == PlaceShipResult.Error.NOT_ON_PLAYGROUND: "Error not correctly set";
