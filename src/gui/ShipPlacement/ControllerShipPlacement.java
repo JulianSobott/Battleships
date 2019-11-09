@@ -98,6 +98,10 @@ public class ControllerShipPlacement implements Initializable {
     private static final String filepathBackNewGame = "../newGame/GameType.fxml";
     private static final String filepathPlayground = "../";
 
+    private ArrayList<ButtonShip> shipArrayListGui = new ArrayList<>();
+
+
+
 
     public ControllerShipPlacement(GameSettings settings) {
         this.GAME_MANAGER = new GameManager();
@@ -136,6 +140,8 @@ public class ControllerShipPlacement implements Initializable {
     }
 
     private void generateGridPane() {
+
+        //ToDO cell value is 0 ?? Why
         double cellWidth = dataGridBattleship.getWidth() / this.playgroundSize;
         double cellHeight = dataGridBattleship.getHeight() / this.playgroundSize;
 
@@ -173,15 +179,7 @@ public class ControllerShipPlacement implements Initializable {
         dataGridBattleship.add(p, possHorizontal, possVertical);
         handleDragOver(p);
         handleDrop(p);
-        // handleDropShipShift(p);
 
-//        Image battleShipImage = new Image("/gui/ShipIcons/Wasser_Groß.jpg");
-//        ImageView imageView = new ImageView(battleShipImage);
-//        imageView.setPreserveRatio(false);
-//
-//        imageView.fitWidthProperty().bind(p.widthProperty());
-//        imageView.fitHeightProperty().bind(p.heightProperty());
-//        p.getChildren().add(imageView);
     }
 
     /**
@@ -305,6 +303,7 @@ public class ControllerShipPlacement implements Initializable {
                     battleShipGui.setShipID(res.getShipID());
                     dataGridBattleship.add(button, horizontalIndex, verticalIndex, battleShipGui.getPosition().getLENGTH(), 1);
                     button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                    shipArrayListGui.add(button);
 
                     this.hashMapShipLabels.get(battleShipGui.getPosition().getLENGTH()).decreaseCounter();
                 } else {
@@ -319,15 +318,30 @@ public class ControllerShipPlacement implements Initializable {
 
                 /** -----------------------------------deletes Ship on old Position --------------------------------- */
 
-                //TODO löschsen mithilfe des Objects Button .. Woher bekommen ??
+                //TODO löschsen mithilfe des Objects Button .. Woher bekommen ?? Button nicht im Gridpane ?? Warum ??
+
+                ButtonShip buttonShipDelete = null;
+                for (ButtonShip buttonShip : shipArrayListGui) {
+
+                    if (battleShipGui.getShipID().equals(buttonShip.getBattleShipGui().getShipID()))
+                    {
+                        buttonShipDelete = buttonShip;
+                        dataGridBattleship.getChildren().remove(buttonShipDelete);
+                       // shipArrayListGui.remove(buttonShipDelete);
+                    }
+
+                }
+
 
 
                 /** -----------------------------------Adds Ship on new Position ------------------------------------ */
 
                 ButtonShip button = new ButtonShip(battleShipGui);
+                shipArrayListGui.add(button);
                 button.setStyle("-fx-background-color: #00ff00");
                 addEventDragDetectedPlacedShip(button);
                 addContextMenu(button);
+
 
                 int col = GridPane.getColumnIndex(panePlaygroundCell);
                 int row = GridPane.getRowIndex(panePlaygroundCell);
@@ -340,6 +354,7 @@ public class ControllerShipPlacement implements Initializable {
                     button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
                 }
 
+                shipArrayListGui.remove(buttonShipDelete);
             }
         });
     }
