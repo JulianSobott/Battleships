@@ -20,7 +20,7 @@ public class PlaygroundOwn extends Playground {
      * @return An result that indicates whether it was successfully placed or not.
      */
     public PlaceShipResult placeShip(ShipPosition position){
-        Ship ship = this.shipPool.getShip(position.getLENGTH());
+        Ship ship = this.shipPool.getShip(position.getLength());
         PlaceShipResult res = this.placeShip(position, ship);
         if(!res.isSuccessfullyPlaced()){
             this.shipPool.releaseShip(ship);

@@ -2,7 +2,6 @@ package core;
 
 import core.communication_data.ShipList;
 import core.communication_data.ShipPosition;
-import core.utils.Logger;
 import core.utils.ObjectPool;
 
 import java.util.HashMap;
@@ -53,14 +52,14 @@ public class ShipPool {
     public void releaseShip(Ship ship){
         if(ship == null)
             return;
-        int size = ship.getShipPosition().getLENGTH();
+        int size = ship.getShipPosition().getLength();
         assert this.pools.containsKey(size);
         this.pools.get(size).releaseObject(ship);
         this.cleanUp(ship);
     }
 
     private void cleanUp(Ship ship){
-        ship.setShipPosition(ShipPosition.DEFAULT(ship.getShipPosition().getLENGTH()));
+        ship.setShipPosition(ShipPosition.DEFAULT(ship.getShipPosition().getLength()));
     }
 
     public void releaseAll() {
