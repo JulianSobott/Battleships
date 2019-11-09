@@ -22,10 +22,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DataFormat;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
+import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
@@ -80,23 +77,21 @@ public class ControllerShipPlacement implements Initializable {
             this.textLabel.setText(this.getText());
         }
 
-        public void decreaseCounter(){
+        public void decreaseCounter() {
             this.setCounter(this.counter - 1);
         }
 
-        public void increaseCounter(){
+        public void increaseCounter() {
             this.setCounter(this.counter + 1);
         }
 
-        private String getText(){
+        private String getText() {
             this.text = this.counter + " x " + this.size + "-er Shiffe";
             return this.text;
         }
     }
 
     private HashMap<Integer, ShipCounterPair> hashMapShipLabels = new HashMap<>();
-
-
 
 
     private static final String numberOfBoningShipsX5 = " x " + " 5-er Schiff";
@@ -147,9 +142,72 @@ public class ControllerShipPlacement implements Initializable {
 
         generateGridPane();
         generateShips();
-
         preallocateFieldsWithWater();
 
+    }
+
+
+    /**
+     * ################################################   init methods  ############################################
+     */
+
+    private void generateShips() {
+        ArrayList<Node> list = new ArrayList<>();
+        for (ShipList.Pair pair : this.SHIP_LIST) {
+            ShipCounterPair shipPair = new ShipCounterPair(pair.getNum(), pair.getSize());
+            this.hashMapShipLabels.put(pair.getSize(), shipPair);
+            HBoxExends hBox = createNewGuiShip(pair.getSize(), pair.getNum());
+            list.add(hBox);
+        }
+        vBoxShips.getChildren().addAll(list);
+    }
+
+    private void generateGridPane() {
+        double cellWidth = dataGridBattleship.getWidth() / this.playgroundSize;
+        double cellHeight = dataGridBattleship.getHeight() / this.playgroundSize;
+
+        for (int y = 0; y < this.playgroundSize; y++) {
+            for (int x = 0; x < this.playgroundSize; x++) {
+                // TODO:
+            }
+        }
+    }
+
+    /**
+     * Water is pre-populated on the playing fields
+     */
+
+    private void preallocateFieldsWithWater() {
+        Image battleShipImage = new Image("/gui/ShipIcons/Wasser_Groß.jpg");
+        ImageView imageView = new ImageView(battleShipImage);
+        BackgroundImage im = new BackgroundImage(battleShipImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
+
+        // dataGridBattleship.setBackground(new Background(im));
+
+        for (int i = 0; i < this.playgroundSize; i++) {
+            for (int j = 0; j < this.playgroundSize; j++) {
+                generateWater(i, j);
+            }
+        }
+    }
+
+    /**
+     * Gui is dynamically generated in the init method and adapted according to the specifications.
+     */
+
+    private void generateWater(int possHorizontal, int possVertical) {
+        Pane p = new Pane();
+        dataGridBattleship.add(p, possHorizontal, possVertical);
+        handleDragOver(p);
+        handleDrop(p);
+
+//        Image battleShipImage = new Image("/gui/ShipIcons/Wasser_Groß.jpg");
+//        ImageView imageView = new ImageView(battleShipImage);
+//        imageView.setPreserveRatio(false);
+//
+//        imageView.fitWidthProperty().bind(p.widthProperty());
+//        imageView.fitHeightProperty().bind(p.heightProperty());
+//        p.getChildren().add(imageView);
     }
 
     /**
@@ -176,43 +234,8 @@ public class ControllerShipPlacement implements Initializable {
         return hBox;
     }
 
-    /**
-     * Gui is dynamically generated in the init method and adapted according to the specifications.
-     */
 
-    private void generateWater(int possHorizontal, int possVertical) {
-        Pane p = new Pane();
-        dataGridBattleship.add(p, possHorizontal, possVertical);
-        handleDragOver(p);
-        handleDrop(p);
-
-//        Image battleShipImage = new Image("/gui/ShipIcons/Wasser_Groß.jpg");
-//        ImageView imageView = new ImageView(battleShipImage);
-//        imageView.setPreserveRatio(false);
-//
-//        imageView.fitWidthProperty().bind(p.widthProperty());
-//        imageView.fitHeightProperty().bind(p.heightProperty());
-//        p.getChildren().add(imageView);
-    }
-
-
-    /**
-     * Water is pre-populated on the playing fields
-     */
-
-    private void preallocateFieldsWithWater() {
-        Image battleShipImage = new Image("/gui/ShipIcons/Wasser_Groß.jpg");
-        ImageView imageView = new ImageView(battleShipImage);
-        BackgroundImage im = new BackgroundImage(battleShipImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
-
-        // dataGridBattleship.setBackground(new Background(im));
-
-        for (int i = 0; i < this.playgroundSize; i++) {
-            for (int j = 0; j < this.playgroundSize; j++) {
-                generateWater(i, j);
-            }
-        }
-    }
+    /** #########################################   DRAG & Drop-Feature  ############################################ */
 
 
     /**
@@ -238,11 +261,34 @@ public class ControllerShipPlacement implements Initializable {
     }
 
     /**
+     * This Method makes it possible to shift Ships on the Playground
+     *
+     * @param buttonShip Placed ship on the Playground
+     */
+
+    private void addEventDragDetectedPlacedShip(ButtonShip buttonShip) {
+
+        buttonShip.setOnDragDetected(mouseEvent -> {
+            Dragboard dragboard = buttonShip.startDragAndDrop(TransferMode.ANY);
+
+            ClipboardContent clipboardContent = new ClipboardContent();
+            DataFormat dataFormat = DataFormat.lookupMimeType("PlacedBattleShip");
+            if (dataFormat == null) {
+                dataFormat = new DataFormat("PlacedBattleShip");
+            }
+            clipboardContent.put(dataFormat, buttonShip.getBattleShipGui());
+            dragboard.setContent(clipboardContent);
+        });
+    }
+
+
+    /**
      * This Method makes it possible to move Ships
      *
      * @param imageView Element witch receives the Drag and Drop element.
      */
 
+    //ToDO Felder einfärben in denen das Schiff platziert wird
     private void handleDragOver(Pane imageView) {
 
         imageView.setOnDragOver(dragEvent -> dragEvent.acceptTransferModes(TransferMode.ANY));
@@ -270,20 +316,21 @@ public class ControllerShipPlacement implements Initializable {
 
             ButtonShip button = new ButtonShip(battleShipGui);
             button.setStyle("-fx-background-color: #00ff00");
+            addEventDragDetectedPlacedShip(button);
 
             addContextMenu(button);
 
             PlaceShipResult res = this.GAME_MANAGER.placeShip(new ShipPosition(horizontalIndex, verticalIndex,
                     battleShipGui.getPosition().getDIRECTION(), battleShipGui.getPosition().getLENGTH()));
             Logger.debug(res);
-            if(res.isSuccessfullyPlaced()){
+            if (res.isSuccessfullyPlaced()) {
                 battleShipGui.setPosition(res.getPosition());
                 battleShipGui.setShipID(res.getShipID());
                 dataGridBattleship.add(button, horizontalIndex, verticalIndex, battleShipGui.getPosition().getLENGTH(), 1);
                 button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
                 this.hashMapShipLabels.get(battleShipGui.getPosition().getLENGTH()).decreaseCounter();
-            }else{
+            } else {
                 // TODO: inform user about failure
             }
 
@@ -297,6 +344,12 @@ public class ControllerShipPlacement implements Initializable {
      *
      * @param button to add the event
      */
+
+
+
+
+    /** ##########################################   SHIPS CONTEXT-MENU  ############################################ */
+
 
     //ToDO derzeit wird Schiff um 90° nach rechts gedreht. Bild leider nicht...
     private void addContextMenu(Button button) {
@@ -321,10 +374,10 @@ public class ControllerShipPlacement implements Initializable {
                 }
 
                 boolean success = GAME_MANAGER.deleteShip(buttonShip.getBattleShipGui().getShipID());
-                if(success){
+                if (success) {
                     hashMapShipLabels.get(buttonShip.getBattleShipGui().getPosition().getLENGTH()).increaseCounter();
                     dataGridBattleship.getChildren().remove(index);
-                }else{
+                } else {
                     // TODO: inform user
                 }
             }
@@ -365,7 +418,7 @@ public class ControllerShipPlacement implements Initializable {
                         directionNew, posOld.getLENGTH());
                 PlaceShipResult res = GAME_MANAGER.moveShip(battleShipGui.getShipID(), position);
 
-                if(res.isSuccessfullyPlaced()){
+                if (res.isSuccessfullyPlaced()) {
                     dataGridBattleship.getChildren().remove(index);
                     dataGridBattleship.add(node, horizontalIndex, verticalIndex, colspan, rowspan);
                     battleShipGui.getPosition().setDIRECTION(directionNew);
@@ -378,6 +431,11 @@ public class ControllerShipPlacement implements Initializable {
     }
 
 
+
+
+
+    /** ###########################################   Window Navigation  ############################################ */
+
     /**
      * go back to previous Scene
      */
@@ -389,28 +447,6 @@ public class ControllerShipPlacement implements Initializable {
         SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathBackNewGame, controllerGameType);
         sceneLoader.loadSceneInExistingWindow();
 
-    }
-
-    private void generateGridPane(){
-        double cellWidth = dataGridBattleship.getWidth() / this.playgroundSize;
-        double cellHeight = dataGridBattleship.getHeight() / this.playgroundSize;
-
-        for(int y = 0; y < this.playgroundSize; y++){
-            for(int x = 0; x < this.playgroundSize; x++) {
-                // TODO:
-            }
-        }
-    }
-
-    private void generateShips(){
-        ArrayList<Node> list = new ArrayList<>();
-        for(ShipList.Pair pair : this.SHIP_LIST){
-            ShipCounterPair shipPair = new ShipCounterPair(pair.getNum(), pair.getSize());
-            this.hashMapShipLabels.put(pair.getSize(), shipPair);
-            HBoxExends hBox = createNewGuiShip(pair.getSize(), pair.getNum());
-            list.add(hBox);
-        }
-        vBoxShips.getChildren().addAll(list);
     }
 
 }
