@@ -8,13 +8,11 @@ import gui.UiClasses.ButtonShip;
 import gui.UiClasses.HBoxExends;
 import gui.WindowChange.SceneLoader;
 import gui.newGame.ControllerGameType;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
@@ -99,8 +97,6 @@ public class ControllerShipPlacement implements Initializable {
     private static final String filepathPlayground = "../";
 
     private ArrayList<ButtonShip> shipArrayListGui = new ArrayList<>();
-
-
 
 
     public ControllerShipPlacement(GameSettings settings) {
@@ -323,15 +319,11 @@ public class ControllerShipPlacement implements Initializable {
                 ButtonShip buttonShipDelete = null;
                 for (ButtonShip buttonShip : shipArrayListGui) {
 
-                    if (battleShipGui.getShipID().equals(buttonShip.getBattleShipGui().getShipID()))
-                    {
+                    if (battleShipGui.getShipID().equals(buttonShip.getBattleShipGui().getShipID())) {
                         buttonShipDelete = buttonShip;
                         dataGridBattleship.getChildren().remove(buttonShipDelete);
-                       // shipArrayListGui.remove(buttonShipDelete);
                     }
-
                 }
-
 
 
                 /** -----------------------------------Adds Ship on new Position ------------------------------------ */
@@ -350,7 +342,7 @@ public class ControllerShipPlacement implements Initializable {
                     dataGridBattleship.add(button, col, row, battleShipGui.getPosition().getLength(), 1);
                 button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
                 if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.VERTICAL) {
-                    dataGridBattleship.add(button, col, row,  1, battleShipGui.getPosition().getLength());
+                    dataGridBattleship.add(button, col, row, 1, battleShipGui.getPosition().getLength());
                     button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
                 }
 
@@ -369,7 +361,7 @@ public class ControllerShipPlacement implements Initializable {
      * @param button to add the event
      */
 
-    private void addContextMenu(Button button) {
+    private void addContextMenu(ButtonShip button) {
 
         ContextMenu contextMenu = new ContextMenu();
 
@@ -415,7 +407,7 @@ public class ControllerShipPlacement implements Initializable {
         });
     }
 
-    private void addMenuItemTurnShip(MenuItem menuItemTurnShip, Button buttonShip) {
+    private void addMenuItemTurnShip(MenuItem menuItemTurnShip, ButtonShip buttonShip) {
         menuItemTurnShip.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
@@ -424,13 +416,6 @@ public class ControllerShipPlacement implements Initializable {
                 int horizontalIndex = GridPane.getColumnIndex(buttonShip);
                 int verticalIndex = GridPane.getRowIndex(buttonShip);
 
-                int index = dataGridBattleship.getChildren().indexOf(buttonShip);
-                Node node = dataGridBattleship.getChildren().get(index);
-
-                ButtonShip buttonShip = null;
-                if (node instanceof ButtonShip) {
-                    buttonShip = (ButtonShip) node;
-                }
                 BattleShipGui battleShipGui = buttonShip.getBattleShipGui();
 
                 int colspan, rowspan;
@@ -452,8 +437,8 @@ public class ControllerShipPlacement implements Initializable {
                 PlaceShipResult res = GAME_MANAGER.moveShip(battleShipGui.getShipID(), position);
 
                 if (res.isSuccessfullyPlaced()) {
-                    dataGridBattleship.getChildren().remove(index);
-                    dataGridBattleship.add(node, horizontalIndex, verticalIndex, colspan, rowspan);
+                    dataGridBattleship.getChildren().remove(buttonShip);
+                    dataGridBattleship.add(buttonShip, horizontalIndex, verticalIndex, colspan, rowspan);
                     battleShipGui.getPosition().setDirection(directionNew);
                 }
             }
