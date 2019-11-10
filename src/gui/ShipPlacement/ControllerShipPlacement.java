@@ -139,7 +139,7 @@ public class ControllerShipPlacement implements Initializable {
 
         //ToDO cell value is 0 ?? Why
 
-        double cellPercentage = 400/ playgroundSize;
+        double cellPercentage = 400 / playgroundSize;
         double cellWidth = dataGridBattleship.getWidth() / this.playgroundSize;
         double cellHeight = dataGridBattleship.getHeight() / this.playgroundSize;
 
@@ -312,43 +312,53 @@ public class ControllerShipPlacement implements Initializable {
                 BattleShipGui battleShipGui = null;
                 if (o1 instanceof BattleShipGui) {
                     battleShipGui = (BattleShipGui) o1;
+                } else {
+                    throw new NullPointerException("BattleshipGui object not set");
                 }
-
-                /** -----------------------------------deletes Ship on old Position --------------------------------- */
-
-                //TODO löschsen mithilfe des Objects Button .. Woher bekommen ?? Button nicht im Gridpane ?? Warum ??
-
-                ButtonShip buttonShipDelete = null;
-                for (ButtonShip buttonShip : shipArrayListGui) {
-
-                    if (battleShipGui.getShipID().equals(buttonShip.getBattleShipGui().getShipID())) {
-                        buttonShipDelete = buttonShip;
-                        dataGridBattleship.getChildren().remove(buttonShipDelete);
-                    }
-                }
-
-
-                /** -----------------------------------Adds Ship on new Position ------------------------------------ */
-
-                ButtonShip button = new ButtonShip(battleShipGui);
-                shipArrayListGui.add(button);
-                button.setStyle("-fx-background-color: #00ff00");
-                addEventDragDetectedPlacedShip(button);
-                addContextMenu(button);
-
 
                 int col = GridPane.getColumnIndex(panePlaygroundCell);
                 int row = GridPane.getRowIndex(panePlaygroundCell);
 
-                if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.HORIZONTAL)
-                    dataGridBattleship.add(button, col, row, battleShipGui.getPosition().getLength(), 1);
-                button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-                if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.VERTICAL) {
-                    dataGridBattleship.add(button, col, row, 1, battleShipGui.getPosition().getLength());
+                ShipPosition oldPos = battleShipGui.getPosition();
+                ShipPosition pos = new ShipPosition(col, row, oldPos.getDirection(), oldPos.getLength());
+                PlaceShipResult res = this.GAME_MANAGER.moveShip(battleShipGui.getShipID(), pos);
+                if (res.isSuccessfullyPlaced()) {
+                    ButtonShip buttonShipDelete = null;
+
+                    /*  -----------------------------deletes Ship on old Position --------------------------------- */
+                    //TODO löschsen mithilfe des Objects Button .. Woher bekommen ?? Button nicht im Gridpane ?? Warum ??
+                    for (ButtonShip buttonShip : shipArrayListGui) {
+
+                        if (battleShipGui.getShipID().equals(buttonShip.getBattleShipGui().getShipID())) {
+                            buttonShipDelete = buttonShip;
+                            dataGridBattleship.getChildren().remove(buttonShipDelete);
+                        }
+                    }
+
+
+                    /** ---------------------------Adds Ship on new Position ------------------------------------ */
+
+                    ButtonShip button = new ButtonShip(battleShipGui);
+                    shipArrayListGui.add(button);
+                    button.setStyle("-fx-background-color: #00ff00");
+                    addEventDragDetectedPlacedShip(button);
+                    addContextMenu(button);
+
+
+                    if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.HORIZONTAL)
+                        dataGridBattleship.add(button, col, row, battleShipGui.getPosition().getLength(), 1);
                     button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                    if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.VERTICAL) {
+                        dataGridBattleship.add(button, col, row, 1, battleShipGui.getPosition().getLength());
+                        button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                    }
+
+                    shipArrayListGui.remove(buttonShipDelete);
+                } else {
+                    Logger.debug("[USER HINT] Cannot move ship to new position: " + res.getERROR());
+                    // TODO: inform user
                 }
 
-                shipArrayListGui.remove(buttonShipDelete);
             }
         });
     }
