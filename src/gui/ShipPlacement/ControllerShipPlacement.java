@@ -138,12 +138,14 @@ public class ControllerShipPlacement implements Initializable {
     private void generateGridPane() {
 
         //ToDO cell value is 0 ?? Why
+
+        double cellPercentage = 400/ playgroundSize;
         double cellWidth = dataGridBattleship.getWidth() / this.playgroundSize;
         double cellHeight = dataGridBattleship.getHeight() / this.playgroundSize;
 
         for (int y = 0; y < this.playgroundSize; y++) {
             for (int x = 0; x < this.playgroundSize; x++) {
-                // TODO:
+
             }
         }
     }
