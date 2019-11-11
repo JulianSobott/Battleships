@@ -11,7 +11,6 @@ public interface GameManagerInterface {
     public NewGameResult newGame(GameSettings settings);
 
     // Ship Placement
-
     /**
      *  Request for positioning a ship.
      * Checks whether the position is valid and free are made in the implementation.
@@ -41,6 +40,20 @@ public interface GameManagerInterface {
     boolean deleteShip(ShipID id);
 
     // turn
-    public TurnResult ownTurn(Position position);
-    public TurnResult enemyTurn();
+
+    /**
+     * player shoots at a position on the enemies board.
+     *
+     * @param position position of the shot destination.
+     * @return ShotResult
+     */
+    TurnResult shoot(Position position);
+
+    /**
+     * Call everytime the enemy will make a shot
+     *
+     * @return TurnResult, where the enemy has shot. Use to update own board
+     */
+    TurnResult getEnemyShot();
+
 }

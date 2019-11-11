@@ -27,7 +27,7 @@ public abstract class Player {
         return this.playgroundOwn.deleteShip(id);
     }
 
-    public ShotResult gotHit(Position position){
+    public TurnResult gotHit(Position position) {
         return this.playgroundOwn.gotHit(position);
     }
 

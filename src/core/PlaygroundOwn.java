@@ -113,15 +113,16 @@ public class PlaygroundOwn extends Playground {
      * @param position x, y coordinates of the shot.
      * @return
      */
-    public ShotResult gotHit(Position position){
-        Field f = this.elements[position.getY()][position.getX()];
-        f.hit = true;
-        f.element.gotHit();
-        if(f.type == FieldType.SHIP){
-            return new ShotResultShip(position, FieldType.SHIP, ((Ship)f.element).getStatus());
-        }else{
-            return new ShotResultWater(position, f.type);
-        }
+    public TurnResult gotHit(Position position){
+//        Field f = this.elements[position.getY()][position.getX()];
+//        f.hit = true;
+//        f.element.gotHit();
+//        if(f.type == FieldType.SHIP){
+//            return new ShotResultShip(position, FieldType.SHIP, ((Ship)f.element).getStatus());
+//        }else{
+//            return new ShotResultWater(position, f.type);
+//        }
+        return null;    // TODO
     }
 
     /**
