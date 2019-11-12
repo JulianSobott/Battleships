@@ -109,20 +109,28 @@ public class PlaygroundOwn extends Playground {
     }
 
     /**
-     * TODO: java docs + check implementation
+     * Call when the enemy shoots at own board.
+     *
      * @param position x, y coordinates of the shot.
-     * @return
+     * @return TurnResult
      */
     public TurnResult gotHit(Position position){
-//        Field f = this.elements[position.getY()][position.getX()];
-//        f.hit = true;
-//        f.element.gotHit();
-//        if(f.type == FieldType.SHIP){
-//            return new ShotResultShip(position, FieldType.SHIP, ((Ship)f.element).getStatus());
-//        }else{
-//            return new ShotResultWater(position, f.type);
-//        }
-        return null;    // TODO
+        Field f = this.elements[position.getY()][position.getX()];
+        f.hit = true;
+        f.element.gotHit();
+        ShotResult shotRes;
+        if (f.type == FieldType.SHIP) {
+            shotRes = new ShotResultShip(position, FieldType.SHIP, ((Ship) f.element).getStatus());
+        } else {
+            shotRes = new ShotResultWater(position, f.type);
+        }
+        boolean turnAgain = shotRes.getType() == FieldType.SHIP;
+        boolean finished = this.areAllShipsSunken();
+        return new TurnResult(shotRes, turnAgain, finished);
+    }
+
+    private boolean areAllShipsSunken() {
+        return false; // TODO
     }
 
     /**
