@@ -143,8 +143,15 @@ public class PlaygroundOwn extends Playground {
         return new TurnResult(shotRes, turnAgain, finished);
     }
 
+    /**
+     * @return true when all ships are sunken. false when at least one ship is alive.
+     */
     private boolean areAllShipsSunken() {
-        return false; // TODO
+        for (Ship s : this.shipHashMap.values()) {
+            if (s.getStatus() == Ship.LifeStatus.ALIVE)
+                return false;
+        }
+        return true;
     }
 
     /**

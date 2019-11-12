@@ -77,7 +77,7 @@ public class GameManager implements GameManagerInterface {
      * @return TurnResult
      */
     private TurnResult shoot(Player player, Position position) {
-        assert !position.isOutsideOfPlayground(this.getGameSettings().getSize()) : "Shot position must be on playground";
+        assert !position.isOutsideOfPlayground(this.getGameSettings().getPlaygroundSize()) : "Shot position must be on playground";
         TurnResult res = this.otherPlayer(player).gotHit(position);
         player.update(res.getSHOT_RESULT());
         return res;
