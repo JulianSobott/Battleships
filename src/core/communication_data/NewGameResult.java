@@ -4,7 +4,7 @@ public class NewGameResult {
 
     private final ShipList SHIP_LIST;
 
-    NewGameResult(ShipList shipList){
+    public NewGameResult(ShipList shipList){
         this.SHIP_LIST = shipList;
     }
 

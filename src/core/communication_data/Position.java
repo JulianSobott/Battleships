@@ -1,21 +1,23 @@
 package core.communication_data;
 
-public class Position {
+import java.io.Serializable;
 
-    protected final int X, Y;
+public class Position implements Serializable {
+
+    protected int x, y;
 
     public Position(int x, int y){
         assert x >= 0 && y >= 0: "No negative positions are allowed";
-        this.X = x;
-        this.Y = y;
+        this.x = x;
+        this.y = y;
     }
 
     public int getX() {
-        return X;
+        return x;
     }
 
     public int getY() {
-        return Y;
+        return y;
     }
 
     @Override
@@ -25,22 +27,22 @@ public class Position {
 
         Position position = (Position) o;
 
-        if (X != position.X) return false;
-        return Y == position.Y;
+        if (x != position.x) return false;
+        return y == position.y;
     }
 
     @Override
     public int hashCode() {
-        int result = X;
-        result = 31 * result + Y;
+        int result = x;
+        result = 31 * result + y;
         return result;
     }
 
     @Override
     public String toString() {
         return "Position{" +
-                "X=" + X +
-                ", Y=" + Y +
+                "x=" + x +
+                ", y=" + y +
                 '}';
     }
 
@@ -53,7 +55,7 @@ public class Position {
      * @return true if position is in range, false otherwise
      */
     public boolean isInRange(int minX, int minY, int maxX, int maxY){
-        return this.X >= minX && this.X <= maxX && this.Y >= minY && this.Y <= maxY;
+        return this.x >= minX && this.x <= maxX && this.y >= minY && this.y <= maxY;
     }
 
     public boolean isOutsideOfPlayground(int size){

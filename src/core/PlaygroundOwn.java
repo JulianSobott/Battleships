@@ -1,8 +1,13 @@
 package core;
 
 import core.communication_data.*;
+import core.utils.Logger;
+
+import java.util.HashMap;
 
 public class PlaygroundOwn extends Playground {
+
+    private HashMap<ShipID, Ship> shipHashMap = new HashMap<>();
 
     public PlaygroundOwn(int size) {
         super(size);
@@ -15,8 +20,12 @@ public class PlaygroundOwn extends Playground {
      * @return An result that indicates whether it was successfully placed or not.
      */
     public PlaceShipResult placeShip(ShipPosition position){
-        Ship ship = this.shipPool.getShip(position.getLENGTH());
-        return this.placeShip(position, ship);
+        Ship ship = this.shipPool.getShip(position.getLength());
+        PlaceShipResult res = this.placeShip(position, ship);
+        if(!res.isSuccessfullyPlaced()){
+            this.shipPool.releaseShip(ship);
+        }
+        return res;
     }
 
     /**
@@ -25,18 +34,21 @@ public class PlaygroundOwn extends Playground {
      * @return An result that indicates whether it was successfully placed or not.
      */
     private PlaceShipResult placeShip(ShipPosition position, Ship ship){
+        if(ship == null)
+            return PlaceShipResult.failed(position, null, PlaceShipResult.Error.NO_MORE_SHIPS);
         if(position.isOutsideOfPlayground(this.size))
             return PlaceShipResult.failed(position, null, PlaceShipResult.Error.NOT_ON_PLAYGROUND);
-        if(this.canPlaceShip(position)){
+        if(!this.canPlaceShip(position)){
+            return PlaceShipResult.failed(position, null, PlaceShipResult.Error.SPACE_TAKEN);
+        }else{
             for(Position p : position.generateIndices()){
                 Field f = new Field(FieldType.SHIP, ship);
                 this.elements[p.getY()][p.getX()] = f;
             }
             ShipID shipID = ship.getId();
             ship.setShipPosition(position);
+            this.shipHashMap.put(shipID, ship);
             return PlaceShipResult.success(position, shipID);
-        }else{
-            return PlaceShipResult.failed(position, null, PlaceShipResult.Error.SPACE_TAKEN);
         }
     }
 
@@ -68,11 +80,13 @@ public class PlaygroundOwn extends Playground {
      */
     public boolean deleteShip(ShipID id){
         Ship ship = this.getShipByID(id);
-        if(ship == null)
+        if(ship == null) {
             return false;
+        }
         else {
             this.resetFields(FieldType.WATER, ship.getShipPosition().generateIndices());
             this.shipPool.releaseShip(ship);
+            this.shipHashMap.remove(id);
             return true;
         }
     }
@@ -139,13 +153,27 @@ public class PlaygroundOwn extends Playground {
      * @return An Ship object if the ID exists, null otherwise
      */
     private Ship getShipByID(ShipID shipID){
+        return this.shipHashMap.get(shipID);
+    }
+
+    public void printField(){
+        StringBuilder s = new StringBuilder();
         for(Field[] row : this.elements){
             for(Field f : row){
-                if(f.type == FieldType.SHIP && ((Ship)f.element).getId().equals(shipID)){
-                    return (Ship)f.element;
+                if(f == null){
+                    s.append("N");
+                }
+                else if(f.type == FieldType.SHIP){
+                    s.append("S");
+                }
+                else if(f.type == FieldType.WATER){
+                    s.append("~");
+                }else if(f.type == FieldType.FOG){
+                    s.append("=");
                 }
             }
+            s.append("\n");
         }
-        return null;
+        Logger.debug(s);
     }
 }
