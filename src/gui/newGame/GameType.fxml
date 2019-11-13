@@ -1,12 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
-
-<AnchorPane prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" >
+<AnchorPane prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Button layoutX="339.0" layoutY="144.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="101.0" text=" KI" />
-      <Button layoutX="339.0" layoutY="187.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="101.0" text=" Multiplayer" />
+      <Button fx:id="BackToMenu" layoutX="78.0" layoutY="668.0" mnemonicParsing="false" onMouseClicked="#goBacktoMainMenus" prefHeight="25.0" prefWidth="118.0" text="Back" />
+      <Label layoutX="253.0" layoutY="73.0" text="Gegenspieler:" />
+      <ImageView fitHeight="440.0" fitWidth="493.0" layoutX="597.0" layoutY="144.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/BattleShip.jpg" />
+         </image>
+      </ImageView>
+      <HBox layoutX="57.0" layoutY="144.0" spacing="130.0">
+         <children>
+            <RadioButton fx:id="radioButtonKI" mnemonicParsing="false" text="KI" />
+            <RadioButton fx:id="radioButtonNetzwerk" mnemonicParsing="false" text="Netzwerk" />
+            <RadioButton fx:id="radioButtonLocal" mnemonicParsing="false" text="Lokal" />
+         </children>
+      </HBox>
+      <Separator layoutX="176.0" layoutY="183.0" orientation="VERTICAL" prefHeight="306.0" prefWidth="0.0" />
+      <Separator layoutX="391.0" layoutY="183.0" orientation="VERTICAL" prefHeight="306.0" prefWidth="0.0" />
+      <RadioButton fx:id="radioButtonClient" layoutX="309.0" layoutY="193.0" mnemonicParsing="false" text="Client" />
+      <RadioButton fx:id="radioButtonServer" layoutX="217.0" layoutY="193.0" mnemonicParsing="false" text="Server" />
+      <TextField layoutX="212.0" layoutY="257.0" promptText="192.168.5.34" />
+      <Label layoutX="214.0" layoutY="234.0" text="IP_Adresse:" />
+      <Label layoutX="214.0" layoutY="299.0" text="Port:" />
+      <TextField alignment="TOP_LEFT" layoutX="212.0" layoutY="325.0" promptText="1578" />
+      <Label layoutX="417.0" layoutY="193.0" text="Player 1;" />
+      <TextField layoutX="417.0" layoutY="221.0" promptText="Alice " />
+      <Label layoutX="417.0" layoutY="299.0" text="Player 2;" />
+      <TextField layoutX="417.0" layoutY="323.0" promptText="Bob" />
+      <VBox layoutX="67.0" layoutY="234.0" spacing="10.0">
+         <children>
+            <RadioButton fx:id="radioButtonEasy" mnemonicParsing="false" text="Leicht" />
+            <RadioButton fx:id="radioButtonMedium" mnemonicParsing="false" text="Mittel" />
+            <RadioButton fx:id="radioButtonHard" mnemonicParsing="false" text="Schwer" />
+         </children>
+      </VBox>
+      <Label layoutX="46.0" layoutY="193.0" text="Schwierigkeitsgrad:" />
+      <Button layoutX="956.0" layoutY="668.0" mnemonicParsing="false" onMouseClicked="#loadShipPöacementScene" prefHeight="25.0" prefWidth="133.0" text="Spiel starten" AnchorPane.bottomAnchor="60.0" AnchorPane.rightAnchor="100.0" />
+      <TextField fx:id="textfieldPlaygroundSize" layoutX="287.0" layoutY="544.0" promptText="Spielfeld größe" text="5" />
    </children>
 </AnchorPane>

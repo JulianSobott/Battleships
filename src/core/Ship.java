@@ -1,12 +1,33 @@
 package core;
 
-public class Ship extends PlaygroundElement{
+import core.communication_data.ShipID;
+import core.communication_data.ShipPosition;
+
+import java.io.Serializable;
+
+public class Ship extends PlaygroundElement implements Serializable {
 
     private int lives;
-    private int id;
+    private ShipID id;
+    private ShipPosition shipPosition;
 
     public enum LifeStatus {
         SUNKEN, ALIVE
+    }
+
+    private Ship(int lives, ShipID id, ShipPosition shipPosition){
+        this.lives = lives;
+        this.id = id;
+        this.shipPosition = shipPosition;
+    }
+
+    /**
+     * Constructs a ship with an auto generated ID and default position.
+     *
+     * @param length Length of the ship
+     */
+    Ship(int length){
+        this(length, ShipID.getNextShipID(), ShipPosition.DEFAULT(length));
     }
 
     LifeStatus getStatus() {
@@ -20,5 +41,17 @@ public class Ship extends PlaygroundElement{
     public void gotHit() {
         super.gotHit();
         this.lives--;
+    }
+
+    ShipID getId() {
+        return id;
+    }
+
+    ShipPosition getShipPosition(){
+        return this.shipPosition;
+    }
+
+    public void setShipPosition(ShipPosition newPosition){
+        this.shipPosition = newPosition;
     }
 }

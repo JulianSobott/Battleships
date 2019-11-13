@@ -1,5 +1,6 @@
 package gui;
 
+import gui.Settings.ControllerSettings;
 import gui.WindowChange.SceneLoader;
 import gui.newGame.ControllerGameType;
 import javafx.fxml.FXML;
@@ -49,6 +50,10 @@ public class ControllerMainMenu {
 
     @FXML
     void loadSettings(MouseEvent event) {
+
+        ControllerSettings controllerSettings = new ControllerSettings();
+        SceneLoader sceneLoader = new SceneLoader(this.anchorPane, "../Settings/Settingsfxml.fxml", controllerSettings);
+        sceneLoader.loadSceneInExistingWindow();
 
     }
 

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<AnchorPane prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button fx:id="buttonBackMainMenu" layoutX="87.0" layoutY="656.0" mnemonicParsing="false" onMouseClicked="#goBackToMenu" prefHeight="25.0" prefWidth="81.0" text="zurück" AnchorPane.bottomAnchor="70.0" />
+      <Separator layoutX="429.0" layoutY="67.0" orientation="VERTICAL" prefHeight="509.0" prefWidth="0.0" AnchorPane.bottomAnchor="70.0" AnchorPane.topAnchor="70.0" />
+      <Separator layoutX="460.0" layoutY="347.0" prefHeight="0.0" prefWidth="613.0" AnchorPane.leftAnchor="460.0" AnchorPane.rightAnchor="70.0" />
+      <VBox layoutX="524.6666259765625" layoutY="164.0" AnchorPane.leftAnchor="550.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="150.0">
+         <children>
+            <VBox alignment="CENTER">
+               <children>
+                  <Label text="Musik" />
+               </children>
+            </VBox>
+            <HBox alignment="CENTER" spacing="100.0">
+               <children>
+                  <VBox alignment="CENTER_LEFT" spacing="15.0">
+                     <children>
+                        <VBox alignment="CENTER">
+                           <children>
+                              <Label prefWidth="48.0" text="Im Menü" />
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="15.0" top="10.0" />
+                           </VBox.margin>
+                        </VBox>
+                        <CheckBox mnemonicParsing="false" text="Musik an" />
+                        <Slider />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER_LEFT" spacing="15.0">
+                     <children>
+                        <VBox alignment="CENTER">
+                           <children>
+                              <Label prefWidth="48.0" text="Im Spiel" />
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="15.0" top="10.0" />
+                           </VBox.margin>
+                        </VBox>
+                        <CheckBox mnemonicParsing="false" text="Musik an" />
+                        <Slider />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <ImageView fitHeight="301.0" fitWidth="647.0" layoutX="527.0" layoutY="388.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="60.0" AnchorPane.rightAnchor="150.0">
+         <image>
+            <Image url="@../Images/Uboot.jpg" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>

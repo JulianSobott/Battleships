@@ -8,16 +8,16 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorPane" prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ControllerMainMenu">
+<AnchorPane fx:id="anchorPane" prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label alignment="CENTER" layoutX="481.0" layoutY="110.0" text="Schiffe versenken" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="300.0">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <ImageView fitHeight="360.0" fitWidth="456.0" layoutX="152.0" layoutY="217.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="343.0" fitWidth="524.0" layoutX="76.0" layoutY="228.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@Images/Flugzeugträger.jpg" />
+            <Image url="@Images/Flugzeugtraeger.jpg" />
          </image>
       </ImageView>
       <VBox alignment="CENTER" layoutX="701.0" layoutY="263.0" spacing="15.0" AnchorPane.rightAnchor="280.0">
