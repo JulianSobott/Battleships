@@ -99,9 +99,13 @@ public class GameManager implements GameManagerInterface {
         return res;
     }
 
+    /**
+     * Call when a player is completely finished with his turn and the other player can turn.
+     * switches the current player to the other player;
+     */
     private void nextPlayer() {
-        if (currentPlayer == player1) currentPlayer = player2;
-        else currentPlayer = player1;
+        this.currentPlayer = this.otherPlayer(this.currentPlayer);
+        this.currentPlayer.makeTurn();
     }
 
     private Player otherPlayer(Player player) {
