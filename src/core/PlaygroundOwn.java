@@ -122,6 +122,9 @@ public class PlaygroundOwn extends Playground {
 
     }
 
+    boolean areAllShipsPlaced() {
+        return this.shipPool.areAllShipsPlaced();
+    }
     /**
      * Call when the enemy shoots at own board.
      *

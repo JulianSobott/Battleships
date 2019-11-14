@@ -42,6 +42,14 @@ public interface GameManagerInterface {
     // turn
 
     /**
+     * Request to start the shooting.
+     * Only possible, when all ships are placed.
+     *
+     * @return whether it is possible to start or not.
+     */
+    StartShootingRes startShooting();
+
+    /**
      * player shoots at a position on the enemies board.
      *
      * @param position position of the shot destination.

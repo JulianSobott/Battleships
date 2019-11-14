@@ -39,4 +39,7 @@ public abstract class Player {
         this.playgroundEnemy.updateField(result.getPosition(), result.getType());
     }
 
+    public boolean areAllShipsPlaced() {
+        return this.playgroundOwn.areAllShipsPlaced();
+    }
 }

@@ -59,6 +59,13 @@ public class GameManager implements GameManagerInterface {
     }
 
     @Override
+    public StartShootingRes startShooting() {
+        if (!this.player1.areAllShipsPlaced()) return StartShootingRes.OWN_NOT_ALL_SHIPS_PLACED;
+        if (!this.player2.areAllShipsPlaced()) return StartShootingRes.ENEMY_NOT_ALL_SHIPS_PLACED;
+        return StartShootingRes.SHOOTING_ALLOWED;
+    }
+
+    @Override
     public TurnResult shoot(Position position) {
         TurnResult res = this.shoot(this.currentPlayer, position);
         if (!res.isTURN_AGAIN() && !res.isFINISHED())

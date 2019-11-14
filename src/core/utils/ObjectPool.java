@@ -26,4 +26,8 @@ public class ObjectPool<T> {
         available.addAll(inUse);
         inUse.clear();
     }
+
+    public int getNumRemainingObjects() {
+        return available.size();
+    }
 }
