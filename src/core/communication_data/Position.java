@@ -12,6 +12,19 @@ public class Position implements Serializable {
         this.y = y;
     }
 
+    /**
+     * @param pos Positions in form: {{x, y}, {x, y}, ...}
+     * @return Position[]
+     */
+    public static Position[] intArrayToPositionArray(int[][] pos) {
+        Position[] positions = new Position[pos.length];
+        int i = 0;
+        for (int[] p : pos) {
+            positions[i] = new Position(p[0], p[1]);
+        }
+        return positions;
+    }
+
     public int getX() {
         return x;
     }

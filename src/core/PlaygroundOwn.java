@@ -4,6 +4,7 @@ import core.communication_data.*;
 import core.utils.Logger;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Random;
 
 public class PlaygroundOwn extends Playground {
@@ -176,10 +177,40 @@ public class PlaygroundOwn extends Playground {
         f.hit = true;
         f.element.gotHit();
         if(f.type == FieldType.SHIP){
-            return new ShotResultShip(position, FieldType.SHIP, ((Ship)f.element).getStatus());
+            Ship s = (Ship) f.element;
+            if (s.getStatus() == Ship.LifeStatus.SUNKEN) {
+                Position[] surroundingWaterPositions = this.getSurroundingWaterPositions(s);
+                return new ShotResultShip(position, FieldType.SHIP, s.getStatus(), surroundingWaterPositions);
+            } else {
+                return new ShotResultShip(position, FieldType.SHIP, s.getStatus());
+            }
         }else{
             return new ShotResultWater(position, f.type);
         }
+    }
+
+    /**
+     * Get a list of all Positions around a ship that are water.
+     * When a ship is sunken it is known, that these fields are water.
+     *
+     * @param s A ship. Most likely a ship that is sunken.
+     * @return All positions around this ship
+     */
+    private Position[] getSurroundingWaterPositions(Ship s) {
+        HashSet<Position> waterPositions = new HashSet<Position>();
+        int[][] surroundingFields = {{-1, -1}, {-1, 0}, {0, -1}, {0, 0}, {0, 1}, {1, 0}, {1, 1}, {-1, 1}, {1, -1}};
+        for (Position shipPosition : s.getShipPosition().generateIndices()) {
+            for (int[] surrPos : surroundingFields) {
+                int x = surrPos[0] + shipPosition.getX();
+                int y = surrPos[1] + shipPosition.getY();
+                Position pos = new Position(x, y);
+                if (!pos.isOutsideOfPlayground(this.size) && this.elements[y][x].type == FieldType.WATER) {
+                    waterPositions.add(pos);
+                }
+            }
+        }
+        Position[] positions = new Position[waterPositions.size()];
+        return waterPositions.toArray(positions);
     }
 
     /**
