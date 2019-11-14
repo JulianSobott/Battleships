@@ -73,13 +73,6 @@ public class GameManager implements GameManagerInterface {
         return res;
     }
 
-    /**
-     * Returns the last enemy TurnResult.
-     * If it is not present it waits until it is present.
-     * Necessary to update fields in a gui.
-     *
-     * @return the last TurnResult of the enemy.
-     */
     @Override
     public TurnResult getEnemyTurn() {
         while (this.lastTurn == null) {

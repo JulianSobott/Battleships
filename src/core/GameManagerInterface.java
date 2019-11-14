@@ -5,14 +5,16 @@ import core.communication_data.*;
 public interface GameManagerInterface {
     // Server
     public boolean connectToServer(String ip, int port);
+
     public GameSettings getGameSettings();
 
     // create game
     public NewGameResult newGame(GameSettings settings);
 
     // Ship Placement
+
     /**
-     *  Request for positioning a ship.
+     * Request for positioning a ship.
      * Checks whether the position is valid and free are made in the implementation.
      *
      * @param pos Wanted position where ship should be placed
@@ -25,7 +27,7 @@ public interface GameManagerInterface {
      * Checks whether the new position is valid and free are made in the implementation.
      * If it is not free the ship stays at the old position.
      *
-     * @param id Id of the ship. The id is part of the PlaceShipResult.
+     * @param id  Id of the ship. The id is part of the PlaceShipResult.
      * @param pos The wanted new position
      * @return A result with information, if the move was successfully
      */
@@ -58,9 +60,12 @@ public interface GameManagerInterface {
     TurnResult shoot(Position position);
 
     /**
-     * Call everytime the enemy will make a shot
+     * Call every time the enemy will make a shot.
+     * Returns the last enemy TurnResult.
+     * If it is not present it waits until it is present.
+     * Necessary to update fields in a gui.
      *
-     * @return TurnResult, where the enemy has shot. Use to update own board
+     * @return the last TurnResult of the enemy.
      */
     TurnResult getEnemyTurn();
 
