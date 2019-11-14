@@ -119,7 +119,12 @@ public class PlaygroundOwn extends Playground {
         return true;
     }
 
-    public void placeShipsRandom(ShipList shipList){
+    public PlaceShipsRandomRes placeShipsRandom() {
+        ShipList shipList = ShipList.fromSize(this.size);
+        return this.placeShipsRandom(shipList);
+    }
+
+    public PlaceShipsRandomRes placeShipsRandom(ShipList shipList) {
         int max_tries = 10000;
         Random random = new Random();
         boolean foundPlace = true;
@@ -139,10 +144,12 @@ public class PlaygroundOwn extends Playground {
         }
         if(foundPlace){
             Logger.debug("Successfully placed ships");
+            return new PlaceShipsRandomRes(this.elements);
         }else{
             Logger.debug("Could not place ships");
+            return PlaceShipsRandomRes.failure();
         }
-        this.printField();
+
     }
 
     private boolean placeSingleShipRandom(int length, Random rand){
@@ -162,7 +169,7 @@ public class PlaygroundOwn extends Playground {
     /**
      *
      * @param position x, y coordinates of the shot.
-     * @return
+     * @return A ShotResult, with information about what field was hit
      */
     public ShotResult gotHit(Position position){
         Field f = this.elements[position.getY()][position.getX()];

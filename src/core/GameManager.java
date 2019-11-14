@@ -34,6 +34,11 @@ public class GameManager implements GameManagerInterface {
     }
 
     @Override
+    public PlaceShipsRandomRes placeShipsRandom() {
+        return this.currentPlayer.placeShipsRandom();
+    }
+
+    @Override
     public PlaceShipResult moveShip(ShipID id, ShipPosition pos) {
         return currentPlayer.moveShip(id, pos);
     }

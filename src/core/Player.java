@@ -35,4 +35,7 @@ public abstract class Player {
         this.playgroundEnemy.updateField(result.getPosition(), result.getType());
     }
 
+    public PlaceShipsRandomRes placeShipsRandom() {
+        return this.playgroundOwn.placeShipsRandom();
+    }
 }
