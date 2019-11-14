@@ -27,6 +27,10 @@ public abstract class Player {
         return this.playgroundOwn.deleteShip(id);
     }
 
+    TurnResult.Error canShootAt(Position position) {
+        return this.playgroundEnemy.canShootAt(position);
+    }
+
     public TurnResult gotHit(Position position) {
         return this.playgroundOwn.gotHit(position);
     }

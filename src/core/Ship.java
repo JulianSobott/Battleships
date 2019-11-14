@@ -11,11 +11,7 @@ public class Ship extends PlaygroundElement implements Serializable {
     private ShipID id;
     private ShipPosition shipPosition;
 
-    public enum LifeStatus {
-        SUNKEN, ALIVE
-    }
-
-    private Ship(int lives, ShipID id, ShipPosition shipPosition){
+    private Ship(int lives, ShipID id, ShipPosition shipPosition) {
         this.lives = lives;
         this.id = id;
         this.shipPosition = shipPosition;
@@ -53,5 +49,9 @@ public class Ship extends PlaygroundElement implements Serializable {
 
     public void setShipPosition(ShipPosition newPosition){
         this.shipPosition = newPosition;
+    }
+
+    public enum LifeStatus {
+        SUNKEN, ALIVE
     }
 }

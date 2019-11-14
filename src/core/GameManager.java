@@ -70,17 +70,22 @@ public class GameManager implements GameManagerInterface {
     }
 
     /**
-     * Player is shooting at position
+     * Player is shooting at position.
+     * Validation checks are made here.
      *
      * @param player   Player which is currently shooting
      * @param position Where the shot is placed
      * @return TurnResult
      */
     private TurnResult shoot(Player player, Position position) {
-        assert !position.isOutsideOfPlayground(this.getGameSettings().getPlaygroundSize()) : "Shot position must be on playground";
-        TurnResult res = this.otherPlayer(player).gotHit(position);
-        player.update(res.getSHOT_RESULT());
-        return res;
+        TurnResult.Error shootError = player.canShootAt(position);
+        if (shootError != TurnResult.Error.NONE)
+            return TurnResult.failure(shootError);
+        else {
+            TurnResult res = this.otherPlayer(player).gotHit(position);
+            player.update(res.getSHOT_RESULT());
+            return res;
+        }
     }
 
     private void nextPlayer() {
