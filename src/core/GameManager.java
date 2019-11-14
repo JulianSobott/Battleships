@@ -20,6 +20,8 @@ public class GameManager implements GameManagerInterface {
 
     private Player currentPlayer;
 
+    private TurnResult lastTurn;
+
 
     @Override
     public boolean connectToServer(String ip, int port) {
@@ -64,9 +66,15 @@ public class GameManager implements GameManagerInterface {
         return res;
     }
 
+    /**
+     * Returns the last enemy TurnResult.
+     * Necessary to update fields in a gui.
+     *
+     * @return the last TurnResult of the enemy.
+     */
     @Override
-    public TurnResult getEnemyShot() {
-        return null;
+    public TurnResult getEnemyTurn() {
+        return this.lastTurn;
     }
 
     /**
@@ -79,13 +87,16 @@ public class GameManager implements GameManagerInterface {
      */
     private TurnResult shoot(Player player, Position position) {
         TurnResult.Error shootError = player.canShootAt(position);
+        TurnResult res;
         if (shootError != TurnResult.Error.NONE)
-            return TurnResult.failure(shootError);
+            res = TurnResult.failure(shootError);
         else {
-            TurnResult res = this.otherPlayer(player).gotHit(position);
+            res = this.otherPlayer(player).gotHit(position);
             player.update(res.getSHOT_RESULT());
             return res;
         }
+        this.lastTurn = res;
+        return res;
     }
 
     private void nextPlayer() {

@@ -54,6 +54,6 @@ public interface GameManagerInterface {
      *
      * @return TurnResult, where the enemy has shot. Use to update own board
      */
-    TurnResult getEnemyShot();
+    TurnResult getEnemyTurn();
 
 }
