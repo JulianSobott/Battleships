@@ -375,7 +375,7 @@ public class ControllerShipPlacement implements Initializable {
 
 
             /** ---------------------------Adds Ship on new Position ------------------------------------ */
-
+            battleShipGui.setPosition(res.getPosition());
             ButtonShip button = generateNewBattleship(battleShipGui);
             shipArrayListGui.add(button);
 
