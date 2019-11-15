@@ -33,19 +33,6 @@ import java.util.ResourceBundle;
 
 public class ControllerShipPlacement implements Initializable {
 
-    @FXML
-    private GridPane dataGridBattleship;
-
-    @FXML
-    private VBox vBoxShips;
-
-    @FXML
-    private Button buttonBack;
-
-    private final int playgroundSize;
-    private final GameManager GAME_MANAGER;
-    private final ShipList SHIP_LIST;
-
 
     class ShipCounterPair {
         private String text;
@@ -87,17 +74,31 @@ public class ControllerShipPlacement implements Initializable {
     }
 
 
-    //ToDO Schiff muss noch per Drag and Drop verschoben werden können
+    @FXML
+    private GridPane dataGridBattleship;
 
-    //ToDo Dynamisches anpassen der Spielfeldgröße....
+    @FXML
+    private VBox vBoxShips;
+
+    @FXML
+    private Button buttonBack;
+
+    private final int playgroundSize;
+    private double CELL_PERCENTAGE_WIDTH;
+
+    private final GameManager GAME_MANAGER;
+    private final ShipList SHIP_LIST;
 
     private HashMap<Integer, ShipCounterPair> hashMapShipLabels = new HashMap<>();
+
+    private ArrayList<ButtonShip> shipArrayListGui = new ArrayList<>();
 
     private static final String filepathBackNewGame = "../newGame/GameType.fxml";
     private static final String filepathPlayground = "../";
 
-    private ArrayList<ButtonShip> shipArrayListGui = new ArrayList<>();
-
+    /**
+     * ################################################   Constructors  ################################################
+     */
 
     public ControllerShipPlacement(GameSettings settings) {
         this.GAME_MANAGER = new GameManager();
@@ -105,6 +106,12 @@ public class ControllerShipPlacement implements Initializable {
         this.SHIP_LIST = res.getSHIP_LIST();
         this.playgroundSize = settings.getPlaygroundSize();
     }
+
+
+    /**
+     * ################################################   init methods  ################################################
+     */
+
 
     /**
      * Gui is dynamically generated in the init method and adapted according to the specifications.
@@ -119,9 +126,8 @@ public class ControllerShipPlacement implements Initializable {
 
     }
 
-
     /**
-     * ################################################   init methods  ############################################
+     *
      */
 
     private void generateShips() {
@@ -135,18 +141,24 @@ public class ControllerShipPlacement implements Initializable {
         vBoxShips.getChildren().addAll(list);
     }
 
+    /**
+     * GridPane is automatically generated based on predefined parameters
+     */
+
     private void generateGridPane() {
 
-        //ToDO cell value is 0 ?? Why
+        CELL_PERCENTAGE_WIDTH = 100 / playgroundSize;
 
-        double cellPercentage = 400 / playgroundSize;
-        double cellWidth = dataGridBattleship.getWidth() / this.playgroundSize;
-        double cellHeight = dataGridBattleship.getHeight() / this.playgroundSize;
+        for (int i = 0; i < playgroundSize; i++) {
+            ColumnConstraints col = new ColumnConstraints();
+            col.setPercentWidth(CELL_PERCENTAGE_WIDTH);
+            dataGridBattleship.getColumnConstraints().add(col);
+        }
 
-        for (int y = 0; y < this.playgroundSize; y++) {
-            for (int x = 0; x < this.playgroundSize; x++) {
-
-            }
+        for (int i = 0; i < playgroundSize; i++) {
+            RowConstraints row = new RowConstraints();
+            row.setPercentHeight(CELL_PERCENTAGE_WIDTH);
+            dataGridBattleship.getRowConstraints().add(row);
         }
     }
 
