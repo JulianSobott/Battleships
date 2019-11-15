@@ -33,71 +33,20 @@ import java.util.ResourceBundle;
 
 public class ControllerShipPlacement implements Initializable {
 
-
-    //TODO auslagern in eigene Klasse --> Übersichtlichkeit ????
-
-    class ShipCounterPair {
-        private String text;
-        private Label textLabel;
-        private int counter;
-        private final int size;
-
-        public ShipCounterPair(int counter, int size) {
-            this.counter = counter;
-            this.size = size;
-            this.textLabel = new Label(this.getText());
-        }
-
-        public Label getTextLabel() {
-            return textLabel;
-        }
-
-        public int getCounter() {
-            return counter;
-        }
-
-        private void setCounter(int counter) {
-            this.counter = counter;
-            this.textLabel.setText(this.getText());
-        }
-
-        public void decreaseCounter() {
-            this.setCounter(this.counter - 1);
-        }
-
-        public void increaseCounter() {
-            this.setCounter(this.counter + 1);
-        }
-
-        private String getText() {
-            this.text = this.counter + " x " + this.size + "-er Shiffe";
-            return this.text;
-        }
-    }
-
-
-    @FXML
-    private GridPane dataGridBattleship;
-
-    @FXML
-    private VBox vBoxShips;
-
-    @FXML
-    private Button buttonBack;
-
-    private final int playgroundSize;
-    private double CELL_PERCENTAGE_WIDTH;
-
-    private final GameManager GAME_MANAGER;
-    private final ShipList SHIP_LIST;
-
-    private HashMap<Integer, ShipCounterPair> hashMapShipLabels = new HashMap<>();
-
-    private ArrayList<ButtonShip> shipArrayListGui = new ArrayList<>();
-
     private static final String filepathBackNewGame = "../newGame/GameType.fxml";
     private static final String filepathPlayground = "../";
-
+    private final int playgroundSize;
+    private final GameManager GAME_MANAGER;
+    private final ShipList SHIP_LIST;
+    @FXML
+    private GridPane dataGridBattleship;
+    @FXML
+    private VBox vBoxShips;
+    @FXML
+    private Button buttonBack;
+    private double CELL_PERCENTAGE_WIDTH;
+    private HashMap<Integer, ShipCounterPair> hashMapShipLabels = new HashMap<>();
+    private ArrayList<ButtonShip> shipArrayListGui = new ArrayList<>();
     /**
      * ################################################   Constructors  ################################################
      */
@@ -108,12 +57,6 @@ public class ControllerShipPlacement implements Initializable {
         this.SHIP_LIST = res.getSHIP_LIST();
         this.playgroundSize = settings.getPlaygroundSize();
     }
-
-
-    /**
-     * ################################################   init methods  ################################################
-     */
-
 
     /**
      * Gui is dynamically generated in the init method and adapted according to the specifications.
@@ -126,6 +69,11 @@ public class ControllerShipPlacement implements Initializable {
         generateShips();
         preallocateFieldsWithWater();
     }
+
+
+    /**
+     * ################################################   init methods  ################################################
+     */
 
     /**
      * Ships are dynamically generated depending on the size of the playing field
@@ -216,10 +164,6 @@ public class ControllerShipPlacement implements Initializable {
         return hBox;
     }
 
-
-    /** #########################################   DRAG & Drop-Feature  ############################################ */
-
-
     /**
      * This Method makes it possible to move Ships
      *
@@ -242,6 +186,9 @@ public class ControllerShipPlacement implements Initializable {
         });
     }
 
+
+    /** #########################################   DRAG & Drop-Feature  ############################################ */
+
     /**
      * This Method makes it possible to shift Ships on the Playground
      *
@@ -263,7 +210,6 @@ public class ControllerShipPlacement implements Initializable {
         });
     }
 
-
     /**
      * This Method makes it possible to move Ships
      *
@@ -275,7 +221,6 @@ public class ControllerShipPlacement implements Initializable {
 
         imageView.setOnDragOver(dragEvent -> dragEvent.acceptTransferModes(TransferMode.ANY));
     }
-
 
     /**
      * This Method makes it possible to move Ships
@@ -359,6 +304,10 @@ public class ControllerShipPlacement implements Initializable {
 
         ShipPosition oldPos = battleShipGui.getPosition();
         ShipPosition pos = new ShipPosition(col, row, oldPos.getDirection(), oldPos.getLength());
+
+        Logger.debug("Old: ", oldPos);
+        Logger.debug("New: ", pos);
+
         PlaceShipResult res = this.GAME_MANAGER.moveShip(battleShipGui.getShipID(), pos);
         if (res.isSuccessfullyPlaced()) {
             ButtonShip buttonShipDelete = null;
@@ -394,7 +343,6 @@ public class ControllerShipPlacement implements Initializable {
         }
     }
 
-
     /**
      * generates a new Gui Ship on Playground
      *
@@ -410,10 +358,6 @@ public class ControllerShipPlacement implements Initializable {
 
         return button;
     }
-
-
-    /** ##########################################   SHIPS CONTEXT-MENU  ############################################ */
-
 
     /**
      * add ContextMenu to Ships on Battlefield
@@ -434,6 +378,9 @@ public class ControllerShipPlacement implements Initializable {
         contextMenu.getItems().addAll(item1, item2);
         button.setContextMenu(contextMenu);
     }
+
+
+    /** ##########################################   SHIPS CONTEXT-MENU  ############################################ */
 
     /**
      * add functionality to MenuItemDeleteShip
@@ -494,6 +441,8 @@ public class ControllerShipPlacement implements Initializable {
                 ShipPosition posOld = battleShipGui.getPosition();
                 ShipPosition position = new ShipPosition(posOld.getX(), posOld.getY(),
                         directionNew, posOld.getLength());
+                Logger.debug("Old: ", posOld);
+                Logger.debug("New: ", position);
                 PlaceShipResult res = GAME_MANAGER.moveShip(battleShipGui.getShipID(), position);
 
                 if (res.isSuccessfullyPlaced()) {
@@ -504,9 +453,6 @@ public class ControllerShipPlacement implements Initializable {
             }
         });
     }
-
-
-    /** ###########################################   Window Navigation  ############################################ */
 
     /**
      * go back to previous Scene
@@ -519,6 +465,48 @@ public class ControllerShipPlacement implements Initializable {
         SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathBackNewGame, controllerGameType);
         sceneLoader.loadSceneInExistingWindow();
 
+    }
+
+
+    /**
+     * ###########################################   Window Navigation  ############################################
+     */
+
+    static class ShipCounterPair {
+        private final int size;
+        private Label textLabel;
+        private int counter;
+
+        ShipCounterPair(int counter, int size) {
+            this.counter = counter;
+            this.size = size;
+            this.textLabel = new Label(this.getText());
+        }
+
+        Label getTextLabel() {
+            return textLabel;
+        }
+
+        public int getCounter() {
+            return counter;
+        }
+
+        private void setCounter(int counter) {
+            this.counter = counter;
+            this.textLabel.setText(this.getText());
+        }
+
+        void decreaseCounter() {
+            this.setCounter(this.counter - 1);
+        }
+
+        void increaseCounter() {
+            this.setCounter(this.counter + 1);
+        }
+
+        private String getText() {
+            return this.counter + " x " + this.size + "-er Shiffe";
+        }
     }
 
 }
