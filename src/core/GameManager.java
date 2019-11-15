@@ -1,6 +1,8 @@
 package core;
 
 import core.communication_data.*;
+import player.PlayerAI;
+import player.PlayerHuman;
 
 public class GameManager implements GameManagerInterface {
 
@@ -37,6 +39,9 @@ public class GameManager implements GameManagerInterface {
     public NewGameResult newGame(GameSettings settings) {
         this.player1 = settings.getP1();
         this.player2 = settings.getP2();
+        assert this.player1 instanceof PlayerHuman ||
+                (this.player1 instanceof PlayerAI && this.player2 instanceof PlayerAI) : "player1 must be the gui " +
+                "player. Except on Ai vs Ai.";
         // TODO: Set current player properly
         this.currentPlayer = player1;
         ShipList shipList = ShipList.fromSize(settings.getPlaygroundSize());
@@ -67,6 +72,7 @@ public class GameManager implements GameManagerInterface {
 
     @Override
     public TurnResult shoot(Position position) {
+        // TODO: Check if player is allowed to shoot
         TurnResult res = this.shoot(this.currentPlayer, position);
         if (!res.isTURN_AGAIN() && !res.isFINISHED())
             this.nextPlayer();
