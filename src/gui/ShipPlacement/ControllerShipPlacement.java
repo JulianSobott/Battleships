@@ -34,6 +34,8 @@ import java.util.ResourceBundle;
 public class ControllerShipPlacement implements Initializable {
 
 
+    //TODO auslagern in eigene Klasse --> Übersichtlichkeit ????
+
     class ShipCounterPair {
         private String text;
         private Label textLabel;
@@ -123,11 +125,10 @@ public class ControllerShipPlacement implements Initializable {
         generateGridPane();
         generateShips();
         preallocateFieldsWithWater();
-
     }
 
     /**
-     *
+     * Ships are dynamically generated depending on the size of the playing field
      */
 
     private void generateShips() {
@@ -160,6 +161,10 @@ public class ControllerShipPlacement implements Initializable {
             row.setPercentHeight(CELL_PERCENTAGE_WIDTH);
             dataGridBattleship.getRowConstraints().add(row);
         }
+
+        Image battleShipImage = new Image("/gui/ShipIcons/Wasser_Groß.jpg");
+        BackgroundImage im = new BackgroundImage(battleShipImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
+        // dataGridBattleship.setBackground(new Background(im));
     }
 
     /**
@@ -167,11 +172,6 @@ public class ControllerShipPlacement implements Initializable {
      */
 
     private void preallocateFieldsWithWater() {
-        Image battleShipImage = new Image("/gui/ShipIcons/Wasser_Groß.jpg");
-        ImageView imageView = new ImageView(battleShipImage);
-        BackgroundImage im = new BackgroundImage(battleShipImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
-
-        // dataGridBattleship.setBackground(new Background(im));
 
         for (int i = 0; i < this.playgroundSize; i++) {
             for (int j = 0; j < this.playgroundSize; j++) {
@@ -276,6 +276,7 @@ public class ControllerShipPlacement implements Initializable {
         imageView.setOnDragOver(dragEvent -> dragEvent.acceptTransferModes(TransferMode.ANY));
     }
 
+
     /**
      * This Method makes it possible to move Ships
      *
@@ -289,90 +290,125 @@ public class ControllerShipPlacement implements Initializable {
 
             Object o;
             if (null != dragboard.getContent(DataFormat.lookupMimeType("BattleShip"))) {
-                o = dragboard.getContent(DataFormat.lookupMimeType("BattleShip"));
 
-                BattleShipGui battleShipGui = null;
-                if (o instanceof BattleShipGui) {
-                    battleShipGui = (BattleShipGui) o;
-                }
+                shipPlacementOnPlayground(dragboard, panePlaygroundCell);
 
-                int horizontalIndex = GridPane.getColumnIndex(panePlaygroundCell);
-                int verticalIndex = GridPane.getRowIndex(panePlaygroundCell);
-
-                ButtonShip button = new ButtonShip(battleShipGui);
-                button.setStyle("-fx-background-color: #00ff00");
-                addEventDragDetectedPlacedShip(button);
-
-                addContextMenu(button);
-
-                PlaceShipResult res = this.GAME_MANAGER.placeShip(new ShipPosition(horizontalIndex, verticalIndex,
-                        battleShipGui.getPosition().getDirection(), battleShipGui.getPosition().getLength()));
-                Logger.debug(res);
-                if (res.isSuccessfullyPlaced()) {
-                    battleShipGui.setPosition(res.getPosition());
-                    battleShipGui.setShipID(res.getShipID());
-                    dataGridBattleship.add(button, horizontalIndex, verticalIndex, battleShipGui.getPosition().getLength(), 1);
-                    button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-                    shipArrayListGui.add(button);
-
-                    this.hashMapShipLabels.get(battleShipGui.getPosition().getLength()).decreaseCounter();
-                } else {
-                    // TODO: inform user about failure
-                }
             } else if (null != dragboard.getContent(DataFormat.lookupMimeType("PlacedBattleShip"))) {
-                Object o1 = dragboard.getContent(DataFormat.lookupMimeType("PlacedBattleShip"));
-                BattleShipGui battleShipGui = null;
-                if (o1 instanceof BattleShipGui) {
-                    battleShipGui = (BattleShipGui) o1;
-                } else {
-                    throw new NullPointerException("BattleshipGui object not set");
-                }
 
-                int col = GridPane.getColumnIndex(panePlaygroundCell);
-                int row = GridPane.getRowIndex(panePlaygroundCell);
-
-                ShipPosition oldPos = battleShipGui.getPosition();
-                ShipPosition pos = new ShipPosition(col, row, oldPos.getDirection(), oldPos.getLength());
-                PlaceShipResult res = this.GAME_MANAGER.moveShip(battleShipGui.getShipID(), pos);
-                if (res.isSuccessfullyPlaced()) {
-                    ButtonShip buttonShipDelete = null;
-
-                    /*  -----------------------------deletes Ship on old Position --------------------------------- */
-                    //TODO löschsen mithilfe des Objects Button .. Woher bekommen ?? Button nicht im Gridpane ?? Warum ??
-                    for (ButtonShip buttonShip : shipArrayListGui) {
-
-                        if (battleShipGui.getShipID().equals(buttonShip.getBattleShipGui().getShipID())) {
-                            buttonShipDelete = buttonShip;
-                            dataGridBattleship.getChildren().remove(buttonShipDelete);
-                        }
-                    }
-
-
-                    /** ---------------------------Adds Ship on new Position ------------------------------------ */
-
-                    ButtonShip button = new ButtonShip(battleShipGui);
-                    shipArrayListGui.add(button);
-                    button.setStyle("-fx-background-color: #00ff00");
-                    addEventDragDetectedPlacedShip(button);
-                    addContextMenu(button);
-
-
-                    if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.HORIZONTAL)
-                        dataGridBattleship.add(button, col, row, battleShipGui.getPosition().getLength(), 1);
-                    button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-                    if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.VERTICAL) {
-                        dataGridBattleship.add(button, col, row, 1, battleShipGui.getPosition().getLength());
-                        button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-                    }
-
-                    shipArrayListGui.remove(buttonShipDelete);
-                } else {
-                    Logger.debug("[USER HINT] Cannot move ship to new position: " + res.getERROR());
-                    // TODO: inform user
-                }
-
+                shipShiftOnPlayground(dragboard, panePlaygroundCell);
             }
         });
+    }
+
+    /**
+     * method places Ship on Playground if possible
+     *
+     * @param dragboard          contains the data about the ship to be placed in the buffer memory
+     * @param panePlaygroundCell Cell where the ship begins
+     */
+
+    private void shipPlacementOnPlayground(Dragboard dragboard, Pane panePlaygroundCell) {
+
+        Object o = dragboard.getContent(DataFormat.lookupMimeType("BattleShip"));
+
+        BattleShipGui battleShipGui = null;
+        if (o instanceof BattleShipGui) {
+            battleShipGui = (BattleShipGui) o;
+        }
+
+        int horizontalIndex = GridPane.getColumnIndex(panePlaygroundCell);
+        int verticalIndex = GridPane.getRowIndex(panePlaygroundCell);
+
+        ButtonShip button = generateNewBattleship(battleShipGui);
+
+        PlaceShipResult res = this.GAME_MANAGER.placeShip(new ShipPosition(horizontalIndex, verticalIndex,
+                battleShipGui.getPosition().getDirection(), battleShipGui.getPosition().getLength()));
+        Logger.debug(res);
+        if (res.isSuccessfullyPlaced()) {
+            battleShipGui.setPosition(res.getPosition());
+            battleShipGui.setShipID(res.getShipID());
+            dataGridBattleship.add(button, horizontalIndex, verticalIndex, battleShipGui.getPosition().getLength(), 1);
+            button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+            shipArrayListGui.add(button);
+
+            this.hashMapShipLabels.get(battleShipGui.getPosition().getLength()).decreaseCounter();
+        } else {
+            // TODO: inform user about failure
+        }
+    }
+
+    /**
+     * method shifts Ship on a new Playground position if possible
+     *
+     * @param dragboard          contains the data about the ship to be placed in the buffer memory
+     * @param panePlaygroundCell Cell where the ship begins
+     */
+
+    private void shipShiftOnPlayground(Dragboard dragboard, Pane panePlaygroundCell) {
+
+        Object o1 = dragboard.getContent(DataFormat.lookupMimeType("PlacedBattleShip"));
+        BattleShipGui battleShipGui = null;
+        if (o1 instanceof BattleShipGui) {
+            battleShipGui = (BattleShipGui) o1;
+        } else {
+            throw new NullPointerException("BattleshipGui object not set");
+        }
+
+        int col = GridPane.getColumnIndex(panePlaygroundCell);
+        int row = GridPane.getRowIndex(panePlaygroundCell);
+
+        ShipPosition oldPos = battleShipGui.getPosition();
+        ShipPosition pos = new ShipPosition(col, row, oldPos.getDirection(), oldPos.getLength());
+        PlaceShipResult res = this.GAME_MANAGER.moveShip(battleShipGui.getShipID(), pos);
+        if (res.isSuccessfullyPlaced()) {
+            ButtonShip buttonShipDelete = null;
+
+            /**  -----------------------------deletes Ship on old Position --------------------------------- */
+
+            for (ButtonShip buttonShip : shipArrayListGui) {
+
+                if (battleShipGui.getShipID().equals(buttonShip.getBattleShipGui().getShipID())) {
+                    buttonShipDelete = buttonShip;
+                    dataGridBattleship.getChildren().remove(buttonShipDelete);
+                }
+            }
+
+
+            /** ---------------------------Adds Ship on new Position ------------------------------------ */
+
+            ButtonShip button = generateNewBattleship(battleShipGui);
+            shipArrayListGui.add(button);
+
+            if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.HORIZONTAL)
+                dataGridBattleship.add(button, col, row, battleShipGui.getPosition().getLength(), 1);
+            button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+            if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.VERTICAL) {
+                dataGridBattleship.add(button, col, row, 1, battleShipGui.getPosition().getLength());
+                button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+            }
+
+            shipArrayListGui.remove(buttonShipDelete);
+        } else {
+            Logger.debug("[USER HINT] Cannot move ship to new position: " + res.getERROR());
+            // TODO: inform user
+        }
+    }
+
+
+    /**
+     * generates a new Gui Ship on Playground
+     *
+     * @param battleShipGui holds all information about the ship
+     */
+
+    private ButtonShip generateNewBattleship(BattleShipGui battleShipGui) {
+
+        ButtonShip button = new ButtonShip(battleShipGui);
+        button.setStyle("-fx-background-color: #00ff00");
+        addEventDragDetectedPlacedShip(button);
+        addContextMenu(button);
+
+        return button;
     }
 
 
