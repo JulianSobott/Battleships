@@ -13,7 +13,7 @@ class TestShipList {
     void fromSize() {
         ShipList list = ShipList.fromSize(5);
         HashMap<Integer, Integer> ships = list.getShips();
-        HashMap<Integer, Integer> expectedShips = new HashMap<>() {{
+        HashMap<Integer, Integer> expectedShips = new HashMap<Integer, Integer>() {{
             put(2, 1);
             put(3, 1);
             put(4, 0);

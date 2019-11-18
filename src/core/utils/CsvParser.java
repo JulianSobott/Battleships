@@ -8,7 +8,7 @@ public class CsvParser {
             java.io.BufferedReader FileReader=
                     new java.io.BufferedReader(
                             new java.io.FileReader(
-                                    new java.io.File("../../ship_table.csv")
+                                    new java.io.File("assets/ship_table.csv")
                             )
                     );
 
