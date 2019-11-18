@@ -1,35 +1,32 @@
 package core.utils;
+public class CsvParser {
 
-public class CsvParser<T> {
+    public static int[] readCSVships(int size) {
+        int [] res = new int [4];
 
-    private final String PATH;
-    private final String DELIMITER;
+        try {
+            java.io.BufferedReader FileReader=
+                    new java.io.BufferedReader(
+                            new java.io.FileReader(
+                                    new java.io.File("../../ship_table.csv")
+                            )
+                    );
 
-    enum Delimiter {
-        COMMA(","), SEMICOLON(";"), WHITESPACE(" ");
+            String zeile;
 
-        String delimiter;
+            while(null!=(zeile=FileReader.readLine())){
+                String[] split=zeile.split(";");
 
-        Delimiter(String del){
-            this.delimiter = del;
+                if (split[4].equals(size+"")){
+                    for(int i=0; i<4; i++){
+                        res[i]= Integer.parseInt(split[i]);
+                    }
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        public String getDelimiter() {
-            return delimiter;
-        }
+       return res;
     }
-
-    public CsvParser(String file_path, String delimiter){
-        this.PATH = file_path;
-        this.DELIMITER = delimiter;
-    }
-
-    public CsvParser(String file_Path){
-        this(file_Path, Delimiter.SEMICOLON.getDelimiter());
-    }
-
-    public CsvParser(String file_path, Delimiter delimiter){
-        this(file_path, delimiter.getDelimiter());
-    }
-
 }

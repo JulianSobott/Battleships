@@ -1,5 +1,7 @@
 package core.communication_data;
 
+import core.utils.CsvParser;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -57,12 +59,13 @@ public class ShipList implements Iterable<ShipList.Pair>{
     }
 
     public static ShipList fromSize(int size){
-        // TODO: Replace with real implementation
-        return new ShipList(new HashMap<Integer, Integer>(){{
-            for (int i = 1; i <= size; i++) {
-                put(i, 5);
-            }
-        }});
+        int[] shipArray = CsvParser.readCSVships(size);
+
+        HashMap<Integer, Integer> shiphm = new HashMap<Integer, Integer>();
+        for(int i =0; i<shipArray.length;i++){
+            shiphm.put(5-i, shipArray[i]);
+        }
+        return new ShipList(shiphm);
     }
 
     public HashMap<Integer, Integer> getShips(){
