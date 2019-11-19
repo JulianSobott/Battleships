@@ -97,7 +97,7 @@ class TestPlaygroundOwn{
 
     @Test
     void placeShipsRandom(){
-        ShipList list = new ShipList(new HashMap<>(){
+        ShipList list = new ShipList(new HashMap<Integer, Integer>(){
             {
                 put(1, 1);
                 put(2, 2);

@@ -1,6 +1,7 @@
 package core;
 
 import core.communication_data.*;
+import core.utils.Logger;
 
 public abstract class Player {
 
@@ -18,13 +19,25 @@ public abstract class Player {
     public abstract TurnResult makeTurn();
 
     public PlaceShipResult placeShip(ShipPosition position){
-        return this.playgroundOwn.placeShip(position);
+        Logger.debug("Place: ", position);
+        PlaceShipResult res = this.playgroundOwn.placeShip(position);
+        this.playgroundOwn.printField();
+        Logger.debug(res);
+        return res;
     }
     public PlaceShipResult moveShip(ShipID id, ShipPosition position){
-        return this.playgroundOwn.moveShip(id, position);
+        Logger.debug("Move: ", id, position);
+        PlaceShipResult res = this.playgroundOwn.moveShip(id, position);
+        this.playgroundOwn.printField();
+        Logger.debug(res);
+        return res;
     }
     public boolean deleteShip(ShipID id){
-        return this.playgroundOwn.deleteShip(id);
+        Logger.debug("Delete: ", id);
+        boolean res = this.playgroundOwn.deleteShip(id);
+        this.playgroundOwn.printField();
+        Logger.debug(res);
+        return res;
     }
 
     public ShotResult gotHit(Position position){
