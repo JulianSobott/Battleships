@@ -44,6 +44,8 @@ public class ControllerShipPlacement implements Initializable {
     private VBox vBoxShips;
     @FXML
     private Button buttonBack;
+    @FXML
+    private Button buttonPlaceShipsRandom;
     private double CELL_PERCENTAGE_WIDTH;
     private HashMap<Integer, ShipCounterPair> hashMapShipLabels = new HashMap<>();
     private ArrayList<ButtonShip> shipArrayListGui = new ArrayList<>();
@@ -467,6 +469,32 @@ public class ControllerShipPlacement implements Initializable {
         });
     }
 
+    /** ######################################   random Ship Placement  ############################################## */
+
+
+    public void placeShipsRandom(){
+
+        //TODO Woher Liste bekommen ??
+
+        ArrayList arrayListShips = new ArrayList();
+
+     /**
+        for (:) {
+        BattleShipGui battleShipGui = new BattleShipGui();      // Parameter aus der Shiplist
+        ButtonShip button = generateNewBattleship(battleShipGui);
+
+      //Ship den Gridpane hinzufügen
+
+      dataGridBattleship.add(button, horizontalIndex, verticalIndex, battleShipGui.getPosition().getLength(), 1);   //Parameter ersetzen mit Possitions Object
+      button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+      shipArrayListGui.add(button);
+
+        } */
+    }
+
+
+    /** ##########################################   Window Navigation  ############################################## */
+
     /**
      * go back to previous Scene
      */
@@ -481,9 +509,9 @@ public class ControllerShipPlacement implements Initializable {
     }
 
 
-    /**
-     * ###########################################   Window Navigation  ############################################
-     */
+
+    /**  #########################################   ShipCounterPair class############################################ */
+
 
     static class ShipCounterPair {
         private final int size;
