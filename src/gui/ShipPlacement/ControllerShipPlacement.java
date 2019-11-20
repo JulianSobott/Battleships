@@ -200,6 +200,7 @@ public class ControllerShipPlacement implements Initializable {
     private void addEventDragDetectedPlacedShip(ButtonShip buttonShip) {
 
         buttonShip.setOnDragDetected(mouseEvent -> {
+            Logger.debug("Enter addEventDragDetectedPlacedShip:");
             Dragboard dragboard = buttonShip.startDragAndDrop(TransferMode.ANY);
 
             ClipboardContent clipboardContent = new ClipboardContent();
@@ -234,25 +235,20 @@ public class ControllerShipPlacement implements Initializable {
     private void handleDrop(Pane panePlaygroundCell) {
 
         panePlaygroundCell.setOnDragDropped(dragEvent -> {
-            Logger.debug("Enter: HandleDrop");
-            Dragboard dragboard = dragEvent.getDragboard();
-
-            Object o;
-            if (null != dragboard.getContent(DataFormat.lookupMimeType("BattleShip"))) {
-                try {
+            try {
+                Logger.debug("Enter: HandleDrop");
+                Dragboard dragboard = dragEvent.getDragboard();
+                if (DataFormat.lookupMimeType("BattleShip") != null &&
+                        null != dragboard.getContent(DataFormat.lookupMimeType("BattleShip"))) {
                     shipPlacementOnPlayground(dragboard, panePlaygroundCell);
-                }catch (Exception e){
-                    Logger.error("Placed Failed");
-                    e.printStackTrace();
-                }
-
-            } else if (null != dragboard.getContent(DataFormat.lookupMimeType("PlacedBattleShip"))) {
-                try {
+                } else if (DataFormat.lookupMimeType("PlacedBattleShip") != null &&
+                        null != dragboard.getContent(DataFormat.lookupMimeType("PlacedBattleShip"))) {
                     shipShiftOnPlayground(dragboard, panePlaygroundCell);
-                }catch (Exception e){
-                    Logger.error("Drop Failed");
-                    e.printStackTrace();
+                } else {
+                    Logger.debug("handleDrop: dragboard Content is null", dragboard.getContentTypes());
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }
@@ -271,6 +267,9 @@ public class ControllerShipPlacement implements Initializable {
         BattleShipGui battleShipGui = null;
         if (o instanceof BattleShipGui) {
             battleShipGui = (BattleShipGui) o;
+        } else{
+            Logger.error("Dragboard content is not instanceof BattleshipGui. Type is: ", o.getClass());
+            throw new ClassCastException("Dragboard content is not instanceof BattleshipGui");
         }
 
         int horizontalIndex = GridPane.getColumnIndex(panePlaygroundCell);
@@ -372,6 +371,7 @@ public class ControllerShipPlacement implements Initializable {
         return button;
     }
 
+
     /**
      * add ContextMenu to Ships on Battlefield
      *
@@ -463,6 +463,7 @@ public class ControllerShipPlacement implements Initializable {
                     dataGridBattleship.add(buttonShip, horizontalIndex, verticalIndex, colspan, rowspan);
                     battleShipGui.getPosition().setDirection(directionNew);
                 } else{
+                    Logger.debug(dataGridBattleship.getChildren());
                     Logger.info("User Info: Not allowed to rotate ship");
                 }
             }
