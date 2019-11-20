@@ -475,22 +475,27 @@ public class ControllerShipPlacement implements Initializable {
 
     public void placeShipsRandom(){
 
-        //TODO Woher Liste bekommen ??
+        PlaceShipsRandomRes res = GAME_MANAGER.placeShipsRandom();
+        if(res.isSuccessfully()){
+            for(PlaceShipsRandomRes.ShipData ship : res.getShipData()){
+                // this.placeShip(ship.getPOSITION(), ship.getId());
+            }
+        }else{
+            Logger.debug("[USER HINT]: Can not place ships random");
+        }
 
-        ArrayList arrayListShips = new ArrayList();
+        /**
+           for (:) {
+           BattleShipGui battleShipGui = new BattleShipGui();      // Parameter aus der Shiplist
+           ButtonShip button = generateNewBattleship(battleShipGui);
 
-     /**
-        for (:) {
-        BattleShipGui battleShipGui = new BattleShipGui();      // Parameter aus der Shiplist
-        ButtonShip button = generateNewBattleship(battleShipGui);
+         //Ship den Gridpane hinzufügen
 
-      //Ship den Gridpane hinzufügen
+         dataGridBattleship.add(button, horizontalIndex, verticalIndex, battleShipGui.getPosition().getLength(), 1);   //Parameter ersetzen mit Possitions Object
+         button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+         shipArrayListGui.add(button);
 
-      dataGridBattleship.add(button, horizontalIndex, verticalIndex, battleShipGui.getPosition().getLength(), 1);   //Parameter ersetzen mit Possitions Object
-      button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-      shipArrayListGui.add(button);
-
-        } */
+           } */
     }
 
 
