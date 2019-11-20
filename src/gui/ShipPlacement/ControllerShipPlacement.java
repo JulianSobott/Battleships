@@ -205,6 +205,7 @@ public class ControllerShipPlacement implements Initializable {
             if (dataFormat == null) {
                 dataFormat = new DataFormat("PlacedBattleShip");
             }
+            Logger.debug("addEventDragDetectedPlacedShip: " + buttonShip.getBattleShipGui());
             clipboardContent.put(dataFormat, buttonShip.getBattleShipGui());
             dragboard.setContent(clipboardContent);
         });
@@ -231,16 +232,25 @@ public class ControllerShipPlacement implements Initializable {
     private void handleDrop(Pane panePlaygroundCell) {
 
         panePlaygroundCell.setOnDragDropped(dragEvent -> {
+            Logger.debug("Enter: HandleDrop");
             Dragboard dragboard = dragEvent.getDragboard();
 
             Object o;
             if (null != dragboard.getContent(DataFormat.lookupMimeType("BattleShip"))) {
-
-                shipPlacementOnPlayground(dragboard, panePlaygroundCell);
+                try {
+                    shipPlacementOnPlayground(dragboard, panePlaygroundCell);
+                }catch (Exception e){
+                    Logger.error("Placed Failed");
+                    e.printStackTrace();
+                }
 
             } else if (null != dragboard.getContent(DataFormat.lookupMimeType("PlacedBattleShip"))) {
-
-                shipShiftOnPlayground(dragboard, panePlaygroundCell);
+                try {
+                    shipShiftOnPlayground(dragboard, panePlaygroundCell);
+                }catch (Exception e){
+                    Logger.error("Drop Failed");
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -290,7 +300,7 @@ public class ControllerShipPlacement implements Initializable {
      */
 
     private void shipShiftOnPlayground(Dragboard dragboard, Pane panePlaygroundCell) {
-
+        Logger.debug("Enter: shipShiftOnPlayground");
         Object o1 = dragboard.getContent(DataFormat.lookupMimeType("PlacedBattleShip"));
         BattleShipGui battleShipGui = null;
         if (o1 instanceof BattleShipGui) {
@@ -353,6 +363,7 @@ public class ControllerShipPlacement implements Initializable {
 
         ButtonShip button = new ButtonShip(battleShipGui);
         button.setStyle("-fx-background-color: #00ff00");
+        // FIXME: Differ between addEventDragDetectedPlaceShip and addEventDragDetectedMoveShip.
         addEventDragDetectedPlacedShip(button);
         addContextMenu(button);
 
@@ -449,6 +460,8 @@ public class ControllerShipPlacement implements Initializable {
                     dataGridBattleship.getChildren().remove(buttonShip);
                     dataGridBattleship.add(buttonShip, horizontalIndex, verticalIndex, colspan, rowspan);
                     battleShipGui.getPosition().setDirection(directionNew);
+                } else{
+                    Logger.info("User Info: Not allowed to rotate ship");
                 }
             }
         });
