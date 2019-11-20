@@ -1,30 +1,46 @@
 package core.communication_data;
 
-import core.Playground;
-
 public class PlaceShipsRandomRes {
 
-    private final Playground.Field[][] elements;
+    private final ShipData[] shipData;
     private final boolean successfully;
 
-    private PlaceShipsRandomRes(Playground.Field[][] elements, boolean successfully) {
-        this.elements = elements;
+    private PlaceShipsRandomRes(ShipData[] shipData, boolean successfully) {
+        this.shipData = shipData;
         this.successfully = successfully;
     }
 
-    public PlaceShipsRandomRes(Playground.Field[][] elements) {
-        this(elements, true);
+    public PlaceShipsRandomRes(ShipData[] shipData) {
+        this(shipData, true);
     }
 
     public static PlaceShipsRandomRes failure() {
         return new PlaceShipsRandomRes(null, false);
     }
 
-    public Playground.Field[][] getElements() {
-        return elements;
+    public ShipData[] getShipData() {
+        return shipData;
     }
 
     public boolean isSuccessfully() {
         return successfully;
+    }
+
+    public static class ShipData {
+        final ShipPosition POSITION;
+        final ShipID id;
+
+        public ShipData(ShipPosition POSITION, ShipID id) {
+            this.POSITION = POSITION;
+            this.id = id;
+        }
+
+        public ShipPosition getPOSITION() {
+            return POSITION;
+        }
+
+        public ShipID getId() {
+            return id;
+        }
     }
 }
