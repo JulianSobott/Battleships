@@ -8,8 +8,6 @@ import gui.UiClasses.ButtonShip;
 import gui.UiClasses.HBoxExends;
 import gui.WindowChange.SceneLoader;
 import gui.newGame.ControllerGameType;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -81,22 +79,6 @@ public class ControllerShipPlacement implements Initializable {
 
 
     /**
-     * Ships are dynamically generated depending on the size of the playing field
-     */
-
-    private void generateShips() {
-        ArrayList<Node> list = new ArrayList<>();
-        for (ShipList.Pair pair : this.SHIP_LIST) {
-            ShipCounterPair shipPair = new ShipCounterPair(pair.getNum(), pair.getSize());
-            this.hashMapShipLabels.put(pair.getSize(), shipPair);
-            HBoxExends hBox = createNewGuiShip(pair.getSize(), pair.getNum());
-            list.add(hBox);
-        }
-        vBoxShips.getChildren().addAll(list);
-    }
-
-
-    /**
      * GridPane is automatically generated based on predefined parameters
      */
 
@@ -120,6 +102,23 @@ public class ControllerShipPlacement implements Initializable {
         BackgroundImage im = new BackgroundImage(battleShipImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
         // dataGridBattleship.setBackground(new Background(im));
     }
+
+
+    /**
+     * Ships are dynamically generated depending on the size of the playing field
+     */
+
+    private void generateShips() {
+        ArrayList<Node> list = new ArrayList<>();
+        for (ShipList.Pair pair : this.SHIP_LIST) {
+            ShipCounterPair shipPair = new ShipCounterPair(pair.getNum(), pair.getSize());
+            this.hashMapShipLabels.put(pair.getSize(), shipPair);
+            HBoxExends hBox = createNewGuiShipType(pair.getSize());
+            list.add(hBox);
+        }
+        vBoxShips.getChildren().addAll(list);
+    }
+
 
 
     /**
@@ -150,13 +149,13 @@ public class ControllerShipPlacement implements Initializable {
 
 
     /**
-     * generates the available graphical ship elements for the GUI.
+     * This method generates the different types of ships that the player sees on the right side of the board
+     * and can then distribute on the board.
      *
      * @param shipSize      length of the ship type
-     * @param numberOfShips number of ships
      */
 
-    private HBoxExends createNewGuiShip(int shipSize, int numberOfShips) {
+    private HBoxExends createNewGuiShipType(int shipSize) {
 
         BattleShipGui battleShipGui = new BattleShipGui(shipSize);
         HBoxExends hBox = new HBoxExends(battleShipGui);
@@ -177,7 +176,7 @@ public class ControllerShipPlacement implements Initializable {
     /** #########################################   DRAG & Drop-Feature  ############################################ */
 
     /**
-     * This Method makes it possible to move Ships
+     * This method makes it possible to place ships on the playground.
      *
      * @param hBoxBattleship ShipImage which player will place on the playground
      */
@@ -200,7 +199,7 @@ public class ControllerShipPlacement implements Initializable {
 
 
     /**
-     * This Method makes it possible to shift Ships on the Playground
+     * This Method makes it possible to shift Ships on the playground.
      *
      * @param buttonShip Placed ship on the Playground
      */
@@ -224,15 +223,15 @@ public class ControllerShipPlacement implements Initializable {
 
 
     /**
-     * This Method makes it possible to move Ships
+     * This method tells the player whether and where to place his ship. // neu Formulieren
      *
-     * @param imageView Element witch receives the Drag and Drop element.
+     * @param pane Element witch receives the Drag and Drop element.
      */
 
     //ToDO Felder einfärben in denen das Schiff platziert wird
-    private void handleDragOver(Pane imageView) {
+    private void handleDragOver(Pane pane) {
 
-        imageView.setOnDragOver(dragEvent -> dragEvent.acceptTransferModes(TransferMode.ANY));
+        pane.setOnDragOver(dragEvent -> dragEvent.acceptTransferModes(TransferMode.ANY));
     }
 
     /**
@@ -283,11 +282,8 @@ public class ControllerShipPlacement implements Initializable {
                 battleShipGui.getPosition().getDirection(), battleShipGui.getPosition().getLength()));
         Logger.debug(res);
         if (res.isSuccessfullyPlaced()) {
-            battleShipGui.setPosition(res.getPosition());
-            battleShipGui.setShipID(res.getShipID());
-            dataGridBattleship.add(button, horizontalIndex, verticalIndex, battleShipGui.getPosition().getLength(), 1);
-            button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-            shipArrayListGui.add(button);
+
+            addShipToPlayground(button, battleShipGui, res);
 
             this.hashMapShipLabels.get(battleShipGui.getPosition().getLength()).decreaseCounter();
         } else {
@@ -319,22 +315,10 @@ public class ControllerShipPlacement implements Initializable {
         PlaceShipResult res = this.GAME_MANAGER.moveShip(battleShipGui.getShipID(), pos);
         if (res.isSuccessfullyPlaced()) {
 
-            /**  -----------------------------deletes Ship on old Position --------------------------------- */
-
             deleteShipFromPlayground(battleShipGui);
 
-            /** ---------------------------Adds Ship on new Position ------------------------------------ */
-            battleShipGui.setPosition(res.getPosition());
-            ButtonShip button = generateNewBattleship(battleShipGui);
-            shipArrayListGui.add(button);
-
-            if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.HORIZONTAL)
-                dataGridBattleship.add(button, col, row, battleShipGui.getPosition().getLength(), 1);
-            button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-            if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.VERTICAL) {
-                dataGridBattleship.add(button, col, row, 1, battleShipGui.getPosition().getLength());
-                button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-            }
+            ButtonShip buttonShip = generateNewBattleship(battleShipGui);
+            addShipToPlayground(buttonShip, battleShipGui, res);
 
         } else {
             Logger.debug("[USER HINT] Cannot move ship to new position: " + res.getERROR());
@@ -346,7 +330,7 @@ public class ControllerShipPlacement implements Initializable {
     /**
      * Method deletes GuiShip from playground
      *
-     * @param battleShipGui contains the information which ship is to be discharged
+     * @param battleShipGui contains the information which ship has to be discharged
      */
 
     private void deleteShipFromPlayground(BattleShipGui battleShipGui) {
@@ -364,7 +348,32 @@ public class ControllerShipPlacement implements Initializable {
 
 
     /**
-     * gets the object from the Dragboard.
+     * The method places the graphic object on the surface.
+     *
+     * @param buttonShip    Graphical object to be placed
+     * @param battleShipGui Object that holds all important information about the graphical object.
+     * @param result        the result contains the new information about the graphical object.
+     */
+
+    private void addShipToPlayground(ButtonShip buttonShip, BattleShipGui battleShipGui, PlaceShipResult result) {
+
+        battleShipGui.setPosition(result.getPosition());
+        battleShipGui.setShipID(result.getShipID());
+
+
+        if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.HORIZONTAL) {
+            dataGridBattleship.add(buttonShip, result.getPosition().getX(), result.getPosition().getY(), battleShipGui.getPosition().getLength(), 1);
+        }
+        if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.VERTICAL) {
+            dataGridBattleship.add(buttonShip, result.getPosition().getX(), result.getPosition().getY(), 1, battleShipGui.getPosition().getLength());
+        }
+        buttonShip.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        shipArrayListGui.add(buttonShip);
+    }
+
+
+    /**
+     * The method gets the object from the Dragboard.
      *
      * @param identifier holds the key to get Object
      */
