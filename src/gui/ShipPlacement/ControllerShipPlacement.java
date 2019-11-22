@@ -49,6 +49,7 @@ public class ControllerShipPlacement implements Initializable {
     private double CELL_PERCENTAGE_WIDTH;
     private HashMap<Integer, ShipCounterPair> hashMapShipLabels = new HashMap<>();
     private ArrayList<ButtonShip> shipArrayListGui = new ArrayList<>();
+
     /**
      * ################################################   Constructors  ################################################
      */
@@ -262,15 +263,7 @@ public class ControllerShipPlacement implements Initializable {
 
     private void shipPlacementOnPlayground(Dragboard dragboard, Pane panePlaygroundCell) {
 
-        Object o = dragboard.getContent(DataFormat.lookupMimeType("BattleShip"));
-
-        BattleShipGui battleShipGui = null;
-        if (o instanceof BattleShipGui) {
-            battleShipGui = (BattleShipGui) o;
-        } else{
-            Logger.error("Dragboard content is not instanceof BattleshipGui. Type is: ", o.getClass());
-            throw new ClassCastException("Dragboard content is not instanceof BattleshipGui");
-        }
+        BattleShipGui battleShipGui = getBattleshipGIUObjectFromDragboard("BattleShip", dragboard);
 
         int horizontalIndex = GridPane.getColumnIndex(panePlaygroundCell);
         int verticalIndex = GridPane.getRowIndex(panePlaygroundCell);
@@ -294,6 +287,27 @@ public class ControllerShipPlacement implements Initializable {
     }
 
     /**
+     *gets the object from the dragboard.
+     *
+     * @param identifier holds the key to get Object
+     */
+
+        private BattleShipGui getBattleshipGIUObjectFromDragboard(String identifier, Dragboard dragboard){
+
+            Object o = dragboard.getContent(DataFormat.lookupMimeType(identifier));
+
+            BattleShipGui battleShipGui = null;
+            if (o instanceof BattleShipGui) {
+                battleShipGui = (BattleShipGui) o;
+            } else {
+                Logger.error("Dragboard content is not instanceof BattleshipGui. Type is: ", o.getClass());
+                throw new ClassCastException("Dragboard content is not instanceof BattleshipGui");
+            }
+            return battleShipGui;
+        }
+
+
+    /**
      * method shifts Ship on a new Playground position if possible
      *
      * @param dragboard          contains the data about the ship to be placed in the buffer memory
@@ -301,7 +315,7 @@ public class ControllerShipPlacement implements Initializable {
      */
 
     private void shipShiftOnPlayground(Dragboard dragboard, Pane panePlaygroundCell) {
-        Logger.debug("Enter: shipShiftOnPlayground");
+
         Object o1 = dragboard.getContent(DataFormat.lookupMimeType("PlacedBattleShip"));
         BattleShipGui battleShipGui = null;
         if (o1 instanceof BattleShipGui) {
@@ -364,7 +378,6 @@ public class ControllerShipPlacement implements Initializable {
 
         ButtonShip button = new ButtonShip(battleShipGui);
         button.setStyle("-fx-background-color: #00ff00");
-        // FIXME: Differ between addEventDragDetectedPlaceShip and addEventDragDetectedMoveShip.
         addEventDragDetectedPlacedShip(button);
         addContextMenu(button);
 
@@ -462,7 +475,7 @@ public class ControllerShipPlacement implements Initializable {
                     dataGridBattleship.getChildren().remove(buttonShip);
                     dataGridBattleship.add(buttonShip, horizontalIndex, verticalIndex, colspan, rowspan);
                     battleShipGui.getPosition().setDirection(directionNew);
-                } else{
+                } else {
                     Logger.debug(dataGridBattleship.getChildren());
                     Logger.info("User Info: Not allowed to rotate ship");
                 }
@@ -470,32 +483,22 @@ public class ControllerShipPlacement implements Initializable {
         });
     }
 
-    /** ######################################   random Ship Placement  ############################################## */
+    /**
+     * ######################################   random Ship Placement  ##############################################
+     */
 
 
-    public void placeShipsRandom(){
+    public void placeShipsRandom() {
 
         PlaceShipsRandomRes res = GAME_MANAGER.placeShipsRandom();
-        if(res.isSuccessfully()){
-            for(PlaceShipsRandomRes.ShipData ship : res.getShipData()){
+        if (res.isSuccessfully()) {
+            for (PlaceShipsRandomRes.ShipData ship : res.getShipData()) {
                 // this.placeShip(ship.getPOSITION(), ship.getId());
             }
-        }else{
+        } else {
             Logger.debug("[USER HINT]: Can not place ships random");
         }
 
-        /**
-           for (:) {
-           BattleShipGui battleShipGui = new BattleShipGui();      // Parameter aus der Shiplist
-           ButtonShip button = generateNewBattleship(battleShipGui);
-
-         //Ship den Gridpane hinzufügen
-
-         dataGridBattleship.add(button, horizontalIndex, verticalIndex, battleShipGui.getPosition().getLength(), 1);   //Parameter ersetzen mit Possitions Object
-         button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-         shipArrayListGui.add(button);
-
-           } */
     }
 
 
@@ -515,8 +518,9 @@ public class ControllerShipPlacement implements Initializable {
     }
 
 
-
-    /**  #########################################   ShipCounterPair class############################################ */
+    /**
+     * #########################################   ShipCounterPair class   #############################################
+     */
 
 
     static class ShipCounterPair {

@@ -145,7 +145,7 @@ public class PlaygroundOwn extends Playground {
         }
         if(foundPlace){
             Logger.debug("Successfully placed ships");
-            return new PlaceShipsRandomRes(this.elements);
+            return null; // new PlaceShipsRandomRes(this.elements);
         }else{
             Logger.debug("Could not place ships");
             return PlaceShipsRandomRes.failure();
