@@ -355,11 +355,12 @@ public class ControllerShipPlacement implements Initializable {
      * @param result        the result contains the new information about the graphical object.
      */
 
+    //ToDO PlaceShipReslult möglicherweiße durch anderen Datentypen ersetzen ??
+
     private void addShipToPlayground(ButtonShip buttonShip, BattleShipGui battleShipGui, PlaceShipResult result) {
 
         battleShipGui.setPosition(result.getPosition());
         battleShipGui.setShipID(result.getShipID());
-
 
         if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.HORIZONTAL) {
             dataGridBattleship.add(buttonShip, result.getPosition().getX(), result.getPosition().getY(), battleShipGui.getPosition().getLength(), 1);
