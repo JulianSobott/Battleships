@@ -72,4 +72,12 @@ public class ShipList implements Iterable<ShipList.Pair>{
         return this.ships;
     }
 
+    public int getTotalNumberOfShips(){
+        int sum = 0;
+        for(Pair p : this){
+            sum += p.num;
+        }
+        return sum;
+    }
+
 }

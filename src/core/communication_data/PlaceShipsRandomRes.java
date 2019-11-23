@@ -10,8 +10,8 @@ public class PlaceShipsRandomRes {
         this.successfully = successfully;
     }
 
-    public PlaceShipsRandomRes(ShipData[] shipData) {
-        this(shipData, true);
+    public static PlaceShipsRandomRes success(ShipData[] shipData) {
+        return new PlaceShipsRandomRes(shipData, true);
     }
 
     public static PlaceShipsRandomRes failure() {

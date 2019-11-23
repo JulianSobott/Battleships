@@ -145,7 +145,13 @@ public class PlaygroundOwn extends Playground {
         }
         if(foundPlace){
             Logger.debug("Successfully placed ships");
-            return null; // new PlaceShipsRandomRes(this.elements);
+            this.printField();
+            PlaceShipsRandomRes.ShipData[] data = new PlaceShipsRandomRes.ShipData[shipList.getTotalNumberOfShips()];
+            int i = 0;
+            for(Ship s : this.shipHashMap.values()){
+                data[i] = new PlaceShipsRandomRes.ShipData(new ShipPosition(s.getShipPosition()), s.getId());
+            }
+            return PlaceShipsRandomRes.success(data);
         }else{
             Logger.debug("Could not place ships");
             return PlaceShipsRandomRes.failure();

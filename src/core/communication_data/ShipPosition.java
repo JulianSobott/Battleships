@@ -4,6 +4,10 @@ import java.io.Serializable;
 
 public class ShipPosition extends Position implements Serializable {
 
+    public ShipPosition(ShipPosition pos) {
+        this(pos.x, pos.y, pos.direction, pos.length);
+    }
+
     public enum Direction {
         HORIZONTAL, VERTICAL,
     }
