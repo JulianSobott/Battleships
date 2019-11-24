@@ -508,6 +508,14 @@ public class ControllerShipPlacement implements Initializable {
 
     public void placeShipsRandom() {
 
+        if(shipArrayListGui.size() > 0)
+        {
+            while ( shipArrayListGui.size() > 0) {
+               BattleShipGui battleShipGui =  shipArrayListGui.get(0).getBattleShipGui();
+                deleteShipFromPlayground(battleShipGui);
+            }
+        }
+
         PlaceShipsRandomRes res = GAME_MANAGER.placeShipsRandom();
         if (res.isSuccessfully()) {
             for (PlaceShipsRandomRes.ShipData ship : res.getShipData()) {
