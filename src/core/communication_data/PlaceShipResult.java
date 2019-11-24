@@ -10,7 +10,9 @@ public class PlaceShipResult {
     public enum Error{
         NONE, ID_NOT_EXIST, SPACE_TAKEN, NOT_ON_PLAYGROUND, NO_MORE_SHIPS
     }
-    private PlaceShipResult(boolean successfullyPlaced, ShipPosition position, ShipID shipID, Error error){
+
+    //TODO Anpassung von Private auf Public : Begründung: Datentyp würd auch von Gui derezeit verwendet beim erstellen von Schiffen;
+    public PlaceShipResult(boolean successfullyPlaced, ShipPosition position, ShipID shipID, Error error){
         this.successfullyPlaced = successfullyPlaced;
         this.position = position;
         this.shipID = shipID;

@@ -511,7 +511,11 @@ public class ControllerShipPlacement implements Initializable {
         PlaceShipsRandomRes res = GAME_MANAGER.placeShipsRandom();
         if (res.isSuccessfully()) {
             for (PlaceShipsRandomRes.ShipData ship : res.getShipData()) {
-                // this.placeShip(ship.getPOSITION(), ship.getId());
+
+                BattleShipGui battleShipGui = new BattleShipGui(ship.getId(), ship.getPOSITION());
+                ButtonShip buttonShip = generateNewBattleship(battleShipGui);
+                PlaceShipResult placeShipResult = new PlaceShipResult(true, ship.getPOSITION(), ship.getId(), PlaceShipResult.Error.NONE);
+                addShipToPlayground(buttonShip, battleShipGui, placeShipResult);
             }
         } else {
             Logger.debug("[USER HINT]: Can not place ships random");

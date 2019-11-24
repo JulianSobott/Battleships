@@ -1,11 +1,9 @@
 package gui.UiClasses;
 
-import core.Ship;
 import core.communication_data.ShipID;
 import core.communication_data.ShipPosition;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class BattleShipGui implements Serializable {
 
@@ -17,9 +15,9 @@ public class BattleShipGui implements Serializable {
     }
 
 
-    public BattleShipGui(ShipID ShipID, int shipSize){
-        this(shipSize);
-        this.shipID = ShipID;
+    public BattleShipGui(ShipID shipID, ShipPosition shipPosition){
+        this.shipID = shipID;
+        this.position = shipPosition;
     }
 
     public ShipID getShipID() {
