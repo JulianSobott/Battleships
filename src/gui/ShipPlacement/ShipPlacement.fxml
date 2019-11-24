@@ -10,7 +10,7 @@
       <GridPane fx:id="dataGridBattleship" gridLinesVisible="true" layoutX="115.0" layoutY="105.0" prefHeight="489.0" prefWidth="529.0" AnchorPane.bottomAnchor="120.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="400.0" AnchorPane.topAnchor="100.0">
       </GridPane>
       <VBox fx:id="vBoxShips" alignment="CENTER" layoutX="893.0" layoutY="103.0" prefHeight="547.0" prefWidth="300.0" spacing="10.0" AnchorPane.bottomAnchor="100.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="103.0" />
-      <Button fx:id="buttonBack" layoutX="100.0" layoutY="668.0" mnemonicParsing="false" onMouseClicked="#BackToSettings" prefHeight="25.0" prefWidth="99.0" text="zurrück" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="1000.0" />
-      <Button fx:id="buttonPlaceShipsRandom" layoutX="850.0" layoutY="669.0" mnemonicParsing="false" onMouseClicked="#placeShipsRandom" prefHeight="25.0" prefWidth="121.0" text="place Ships random" AnchorPane.bottomAnchor="55.66666666666667" AnchorPane.rightAnchor="228.66666666666669" />
+      <Button fx:id="buttonBack" layoutX="100.0" layoutY="668.0" mnemonicParsing="false" onMouseClicked="#BackToSettings" prefHeight="25.0" prefWidth="99.0" text="zurrück" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="100.0" />
+      <Button fx:id="buttonPlaceShipsRandom" layoutX="850.0" layoutY="669.0" mnemonicParsing="false" onMouseClicked="#placeShipsRandom" prefHeight="25.0" prefWidth="150.0" text="Schiffe zufällig platzieren" AnchorPane.bottomAnchor="56.0" AnchorPane.rightAnchor="200.0" />
    </children>
 </AnchorPane>

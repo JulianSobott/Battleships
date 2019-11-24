@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Button fx:id="BackToMenu" layoutX="78.0" layoutY="668.0" mnemonicParsing="false" onMouseClicked="#goBacktoMainMenus" prefHeight="25.0" prefWidth="118.0" text="Back" />
+      <Button fx:id="BackToMenu" layoutX="78.0" layoutY="668.0" mnemonicParsing="false" onMouseClicked="#goBacktoMainMenus" prefHeight="25.0" prefWidth="118.0" text="zurrück" />
       <Label layoutX="253.0" layoutY="73.0" text="Gegenspieler:" />
       <ImageView fitHeight="440.0" fitWidth="493.0" layoutX="597.0" layoutY="144.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -41,6 +48,8 @@
       </VBox>
       <Label layoutX="46.0" layoutY="193.0" text="Schwierigkeitsgrad:" />
       <Button layoutX="956.0" layoutY="668.0" mnemonicParsing="false" onMouseClicked="#loadShipPöacementScene" prefHeight="25.0" prefWidth="133.0" text="Spiel starten" AnchorPane.bottomAnchor="60.0" AnchorPane.rightAnchor="100.0" />
-      <TextField fx:id="textfieldPlaygroundSize" layoutX="287.0" layoutY="544.0" promptText="Spielfeld größe" text="5" />
+      <TextField fx:id="textfieldPlaygroundSize" alignment="CENTER" layoutX="212.0" layoutY="543.0" promptText="Spielfeld größe" text="5" />
+      <Label layoutX="116.0" layoutY="547.0" text="Spielfeldgröße:" />
+      <Separator layoutX="40.0" layoutY="513.0" prefHeight="0.0" prefWidth="539.0" />
    </children>
 </AnchorPane>
