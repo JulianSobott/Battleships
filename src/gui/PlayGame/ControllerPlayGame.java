@@ -1,9 +1,7 @@
 package gui.PlayGame;
 
-import core.communication_data.PlaceShipResult;
 import core.communication_data.ShipPosition;
 import gui.UiClasses.BattleShipGui;
-import gui.UiClasses.ButtonShip;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -64,6 +62,9 @@ public class ControllerPlayGame implements Initializable {
         generateGridPane(gridPaneOwnField);
         generateGridPane(gridPaneEnemyField);
 
+        preallocateFieldsWithWater(gridPaneOwnField);
+        preallocateFieldsWithWater(gridPaneEnemyField);
+
         placeOwnShipsOnOwnPlayground();
 
     }
@@ -90,6 +91,33 @@ public class ControllerPlayGame implements Initializable {
         }
 
     }
+
+
+    /**
+     * Water is pre-populated on the playing fields
+     */
+
+    private void preallocateFieldsWithWater(GridPane gridPane) {
+
+        for (int i = 0; i < this.playgroundSize; i++) {
+            for (int j = 0; j < this.playgroundSize; j++) {
+                generateWater(i, j, gridPane);
+            }
+        }
+    }
+
+
+    /**
+     * Gui is dynamically generated in the init method and adapted according to the specifications.
+     */
+
+    private void generateWater(int possHorizontal, int possVertical, GridPane gridPane) {
+
+        Pane p = new Pane();
+        p.setStyle("-fx-background-color: #2E64FE");
+        gridPane.add(p, possHorizontal, possVertical);
+    }
+
 
     /**
      * place own ships on own Playground in the GUI

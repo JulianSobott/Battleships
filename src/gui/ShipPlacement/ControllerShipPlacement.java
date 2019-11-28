@@ -142,6 +142,7 @@ public class ControllerShipPlacement implements Initializable {
 
     private void generateWater(int possHorizontal, int possVertical) {
         Pane p = new Pane();
+        p.setStyle("-fx-background-color: #2E64FE");
         dataGridBattleship.add(p, possHorizontal, possVertical);
         handleDragOver(p);
         handleDrop(p);
