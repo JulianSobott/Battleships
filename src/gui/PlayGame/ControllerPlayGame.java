@@ -1,6 +1,9 @@
 package gui.PlayGame;
 
+import core.communication_data.PlaceShipResult;
+import core.communication_data.ShipPosition;
 import gui.UiClasses.BattleShipGui;
+import gui.UiClasses.ButtonShip;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -10,13 +13,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class ControllerPlayGame  implements Initializable {
+public class ControllerPlayGame implements Initializable {
 
     @FXML
     public GridPane gridPaneOwnField;
 
     @FXML
-    public  GridPane gridPaneEnemyField;
+    public GridPane gridPaneEnemyField;
 
 
     @FXML
@@ -37,13 +40,15 @@ public class ControllerPlayGame  implements Initializable {
 
     ArrayList<BattleShipGui> shipPositionList;
 
-    public ControllerPlayGame(int playgroudSize, ArrayList<BattleShipGui> shipPositionList){
+    public ControllerPlayGame(int playgroudSize, ArrayList<BattleShipGui> shipPositionList) {
 
         this.playgroundSize = playgroudSize;
         this.shipPositionList = shipPositionList;
     }
 
-    /** #############################################   init methods  ################################################ */
+    /**
+     * #############################################   init methods  ################################################
+     */
 
 
     @Override
@@ -90,24 +95,35 @@ public class ControllerPlayGame  implements Initializable {
      * place own ships on own Playground in the GUI
      */
 
-    private void placeOwnShipsOnOwnPlayground(){
+    private void placeOwnShipsOnOwnPlayground() {
 
-        for (BattleShipGui battleShipGui: shipPositionList) {
+        for (BattleShipGui battleShipGui : shipPositionList) {
 
-            generateGuiShip(battleShipGui);
+            addShipToPlayground(battleShipGui);
         }
 
     }
 
+
     /**
-     * generates a Gui Ship for Gui
+     * The method places the graphic object on the surface.
+     *
+     * @param battleShipGui Object that holds all important information about the graphical object.
      */
 
-    private void generateGuiShip(BattleShipGui battleShipGui){
+    private void addShipToPlayground( BattleShipGui battleShipGui) {
 
+        Button buttonShip = new Button();
+        buttonShip.setStyle("-fx-background-color: #00ff00");
 
+        if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.HORIZONTAL) {
+            gridPaneOwnField.add(buttonShip, battleShipGui.getPosition().getX(), battleShipGui.getPosition().getY(), battleShipGui.getPosition().getLength(), 1);
+        }
+        if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.VERTICAL) {
+            gridPaneOwnField.add(buttonShip, battleShipGui.getPosition().getX(), battleShipGui.getPosition().getY(), 1, battleShipGui.getPosition().getLength());
+        }
+        buttonShip.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
     }
-
 
 
     /** ##########################################   Window Navigation  ############################################## */
