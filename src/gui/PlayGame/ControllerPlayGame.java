@@ -1,11 +1,13 @@
 package gui.PlayGame;
 
+import gui.UiClasses.BattleShipGui;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class ControllerPlayGame  implements Initializable {
@@ -33,9 +35,12 @@ public class ControllerPlayGame  implements Initializable {
     private double CELL_PERCENTAGE_WIDTH;
     private int playgroundSize;
 
-    public ControllerPlayGame(int playgroudSize){
+    ArrayList<BattleShipGui> shipPositionList;
+
+    public ControllerPlayGame(int playgroudSize, ArrayList<BattleShipGui> shipPositionList){
 
         this.playgroundSize = playgroudSize;
+        this.shipPositionList = shipPositionList;
     }
 
     /** #############################################   init methods  ################################################ */
@@ -53,6 +58,8 @@ public class ControllerPlayGame  implements Initializable {
 
         generateGridPane(gridPaneOwnField);
         generateGridPane(gridPaneEnemyField);
+
+        placeOwnShipsOnOwnPlayground();
 
     }
 
@@ -76,6 +83,28 @@ public class ControllerPlayGame  implements Initializable {
             row.setPercentHeight(CELL_PERCENTAGE_WIDTH);
             gridPane.getRowConstraints().add(row);
         }
+
+    }
+
+    /**
+     * place own ships on own Playground in the GUI
+     */
+
+    private void placeOwnShipsOnOwnPlayground(){
+
+        for (BattleShipGui battleShipGui: shipPositionList) {
+
+            generateGuiShip(battleShipGui);
+        }
+
+    }
+
+    /**
+     * generates a Gui Ship for Gui
+     */
+
+    private void generateGuiShip(BattleShipGui battleShipGui){
+
 
     }
 

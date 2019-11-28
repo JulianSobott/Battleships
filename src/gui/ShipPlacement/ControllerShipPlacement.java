@@ -555,7 +555,13 @@ public class ControllerShipPlacement implements Initializable {
     @FXML
     public void startGame(){
 
-        ControllerPlayGame controllerPlayGame = new ControllerPlayGame(playgroundSize);
+        ArrayList<BattleShipGui> shipPositionList = new ArrayList<>();
+        for (ButtonShip buttonShip :shipArrayListGui) {
+
+         shipPositionList.add(buttonShip.getBattleShipGui());
+        }
+
+        ControllerPlayGame controllerPlayGame = new ControllerPlayGame(playgroundSize, shipPositionList);
         SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathPlayGame, controllerPlayGame);
         sceneLoader.loadSceneInExistingWindow();
 
