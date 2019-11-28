@@ -3,6 +3,7 @@ package gui.ShipPlacement;
 import core.GameManager;
 import core.communication_data.*;
 import core.utils.Logger;
+import gui.PlayGame.ControllerPlayGame;
 import gui.UiClasses.BattleShipGui;
 import gui.UiClasses.ButtonShip;
 import gui.UiClasses.HBoxExends;
@@ -32,7 +33,7 @@ import java.util.ResourceBundle;
 public class ControllerShipPlacement implements Initializable {
 
     private static final String filepathBackNewGame = "../newGame/GameType.fxml";
-    private static final String filepathPlayground = "../";
+    private static final String filepathPlayGame = "../PlayGame/PlayGame.fxml";
     private final int playgroundSize;
     private final GameManager GAME_MANAGER;
     private final ShipList SHIP_LIST;
@@ -543,6 +544,19 @@ public class ControllerShipPlacement implements Initializable {
 
         ControllerGameType controllerGameType = new ControllerGameType();
         SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathBackNewGame, controllerGameType);
+        sceneLoader.loadSceneInExistingWindow();
+
+    }
+
+    /**
+     * Start game against enemy
+     */
+
+    @FXML
+    public void startGame(){
+
+        ControllerPlayGame controllerPlayGame = new ControllerPlayGame();
+        SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathPlayGame, controllerPlayGame);
         sceneLoader.loadSceneInExistingWindow();
 
     }
