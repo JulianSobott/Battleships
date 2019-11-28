@@ -555,7 +555,7 @@ public class ControllerShipPlacement implements Initializable {
     @FXML
     public void startGame(){
 
-        ControllerPlayGame controllerPlayGame = new ControllerPlayGame();
+        ControllerPlayGame controllerPlayGame = new ControllerPlayGame(playgroundSize);
         SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathPlayGame, controllerPlayGame);
         sceneLoader.loadSceneInExistingWindow();
 
