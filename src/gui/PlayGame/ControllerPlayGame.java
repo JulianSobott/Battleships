@@ -1,6 +1,7 @@
 package gui.PlayGame;
 
 import core.GameManager;
+import core.Playground;
 import core.communication_data.Position;
 import core.communication_data.ShipPosition;
 import core.communication_data.TurnResult;
@@ -174,9 +175,40 @@ public class ControllerPlayGame implements Initializable {
             int row = GridPane.getRowIndex(p);
             Position pos = new Position(col, row);
             TurnResult res = this.gameManager.shootP1(pos);
-            // TODO: update
             Logger.debug(res);
+            if(res.getError() == TurnResult.Error.NONE){
+                if(res.getSHOT_RESULT().getType() == Playground.FieldType.SHIP){
+                    p.setStyle("-fx-background-color: #ff0000");
+                }else if(res.getSHOT_RESULT().getType() == Playground.FieldType.WATER){
+                    p.setStyle("-fx-background-color: #ffff00");
+                }
+            }else{
+                Logger.warning(res);
+            }
+            if(!res.isTURN_AGAIN() && !res.isFINISHED()){
+                this.getEnemyTurn();
+            }
         });
+    }
+
+    private void getEnemyTurn() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                TurnResult res = gameManager.getTurnPlayer2();
+                Logger.debug("AI TURN res in GUI: ", res);
+                if(res.getError() == TurnResult.Error.NONE){
+                    Position position = res.getSHOT_RESULT().getPosition();
+                    int index = position.getY() * playgroundSize + position.getX();
+                    Pane p = (Pane)gridPaneOwnField.getChildren().get(index);
+                    if(res.getSHOT_RESULT().getType() == Playground.FieldType.SHIP){
+                        p.setStyle("-fx-background-color: #ff0000");
+                    }else if(res.getSHOT_RESULT().getType() == Playground.FieldType.WATER){
+                        p.setStyle("-fx-background-color: #ffff00");
+                    }
+                }
+            }
+        }).start();
     }
 
     /** ##########################################   Window Navigation  ############################################## */

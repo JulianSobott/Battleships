@@ -8,6 +8,8 @@ public class GameManager implements GameManagerInterface {
     private Player player1, player2;
     private Player currentPlayer;
 
+    private TurnResult lastTurnP2, lastTurnP1;
+
 
     @Override
     public boolean connectToServer(String ip, int port) {
@@ -52,6 +54,7 @@ public class GameManager implements GameManagerInterface {
 
     public TurnResult shootP1(Position pos){
         TurnResult res = this.turn(this.player1, pos);
+        this.lastTurnP1 = res;
         if (!res.isTURN_AGAIN() && !res.isFINISHED()){
             Logger.info("Theoretical move of next player");
             // TODO start in new thread
@@ -65,6 +68,7 @@ public class GameManager implements GameManagerInterface {
 
     public TurnResult shootP2(Position pos){
         TurnResult res = this.turn(this.player2, pos);
+        this.lastTurnP2 = res;
         if (!res.isTURN_AGAIN() && !res.isFINISHED()){
             this.nextPlayer();
         }else{
@@ -74,17 +78,34 @@ public class GameManager implements GameManagerInterface {
     }
 
 
-    private boolean isAllowedToShoot(Player player1) {
-        if(this.player1 != this.currentPlayer) return false;
+    private boolean isAllowedToShoot(Player player) {
+        if(player != this.currentPlayer) return false;
         return true;
     }
 
-    private TurnResult turn(Player player, Position position){
-        if(!this.isAllowedToShoot(player)){
-            return TurnResult.failure(TurnResult.Error.NOT_YOUR_TURN);
-        }else{
-            return this.shoot(player, position);
+    public TurnResult getTurnPlayer2() {
+        while (this.lastTurnP2 == null) {
+            try {
+                long milliSecondsPause = 100;
+                Thread.sleep(milliSecondsPause);
+            } catch (InterruptedException e) {
+                // TODO: Handle?
+                e.printStackTrace();
+            }
         }
+        TurnResult lastResult = this.lastTurnP2;
+        this.lastTurnP2 = null;
+        return lastResult;
+    }
+
+    private TurnResult turn(Player player, Position position){
+        TurnResult res;
+        if(!this.isAllowedToShoot(player)){
+            res = TurnResult.failure(TurnResult.Error.NOT_YOUR_TURN);
+        }else{
+            res = this.shoot(player, position);
+        }
+        return res;
     }
     /**
      * Player is shooting at position.
