@@ -50,37 +50,42 @@ public class GameManager implements GameManagerInterface {
     }
 
 
-    public TurnResult shootP1(Position position) {
-        if(!this.isAllowedToShoot(this.player1)){
-            return TurnResult.failure(TurnResult.Error.NOT_YOUR_TURN);
-        }else{
-            TurnResult res = this.shoot(this.player1, position);
-            if (!res.isTURN_AGAIN() && !res.isFINISHED()){
-                Logger.info("Theoretical move of next player");
-                // TODO start in new thread
-                //this.nextPlayer();
-            }else{
-                // TODO?
-            }
-            return res;
-        }
-
-    }
-
-    public TurnResult shootP2(Position position) {
-        // TODO: Check if player is allowed to shoot
-        TurnResult res = this.shoot(this.currentPlayer, position);
-        if (!res.isTURN_AGAIN() && !res.isFINISHED())
+    public TurnResult shootP1(Position pos){
+        TurnResult res = this.turn(this.player1, pos);
+        if (!res.isTURN_AGAIN() && !res.isFINISHED()){
+            Logger.info("Theoretical move of next player");
+            // TODO start in new thread
             this.nextPlayer();
+            this.player2Turn();
+        }else{
+            // TODO?
+        }
         return res;
     }
+
+    public TurnResult shootP2(Position pos){
+        TurnResult res = this.turn(this.player2, pos);
+        if (!res.isTURN_AGAIN() && !res.isFINISHED()){
+            this.nextPlayer();
+        }else{
+            // TODO?
+        }
+        return res;
+    }
+
 
     private boolean isAllowedToShoot(Player player1) {
         if(this.player1 != this.currentPlayer) return false;
         return true;
     }
 
-
+    private TurnResult turn(Player player, Position position){
+        if(!this.isAllowedToShoot(player)){
+            return TurnResult.failure(TurnResult.Error.NOT_YOUR_TURN);
+        }else{
+            return this.shoot(player, position);
+        }
+    }
     /**
      * Player is shooting at position.
      * Validation checks are made here.
@@ -110,7 +115,15 @@ public class GameManager implements GameManagerInterface {
      */
     private void nextPlayer() {
         this.currentPlayer = this.otherPlayer(this.currentPlayer);
-        this.currentPlayer.makeTurn();
+    }
+
+    private void player2Turn(){
+        TurnResult res;
+        do {
+            Position pos = this.currentPlayer.makeTurn();
+            res = this.shootP2(pos);
+            Logger.debug(res);
+        }while (res.isTURN_AGAIN());
     }
 
     private Player otherPlayer(Player player) {

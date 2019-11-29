@@ -5,10 +5,10 @@ import core.utils.Logger;
 
 public abstract class Player {
 
-    private PlaygroundOwn playgroundOwn;
-    private PlaygroundEnemy playgroundEnemy;
+    protected PlaygroundOwn playgroundOwn;
+    protected PlaygroundEnemy playgroundEnemy;
 
-    private String name;
+    protected String name;
 
     public Player(String name, int playgroundSize) {
         this.name = name;
@@ -16,7 +16,7 @@ public abstract class Player {
         this.playgroundEnemy = new PlaygroundEnemy(playgroundSize);
     }
 
-    public abstract TurnResult makeTurn();
+    public abstract Position makeTurn();
 
     public PlaceShipResult placeShip(ShipPosition position){
         Logger.debug("Place: ", position);

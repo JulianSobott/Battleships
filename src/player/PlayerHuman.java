@@ -1,7 +1,7 @@
 package player;
 
 import core.Player;
-import core.communication_data.TurnResult;
+import core.communication_data.Position;
 
 public class PlayerHuman extends Player {
 
@@ -10,7 +10,7 @@ public class PlayerHuman extends Player {
     }
 
     @Override
-    public TurnResult makeTurn() {
+    public Position makeTurn() {
         return null;
     }
 }

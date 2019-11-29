@@ -19,7 +19,10 @@ public class TurnResult {
     }
 
     public static TurnResult failure(Error error) {
-        return new TurnResult(null, true, false, error);
+        if(error == Error.NOT_YOUR_TURN)
+            return new TurnResult(null, false, false, error);
+        else
+            return new TurnResult(null, true, false, error);
     }
 
     public ShotResult getSHOT_RESULT() {

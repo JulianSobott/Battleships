@@ -78,4 +78,7 @@ public abstract class Playground {
         // TODO: Maybe add build factories: e.g. newWater(),
     }
 
+    public int getSize() {
+        return size;
+    }
 }
