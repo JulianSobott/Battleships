@@ -562,7 +562,7 @@ public class ControllerShipPlacement implements Initializable {
          shipPositionList.add(buttonShip.getBattleShipGui());
         }
 
-        ControllerPlayGame controllerPlayGame = new ControllerPlayGame(playgroundSize, shipPositionList);
+        ControllerPlayGame controllerPlayGame = new ControllerPlayGame(playgroundSize, shipPositionList, this.GAME_MANAGER);
         SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathPlayGame, controllerPlayGame);
         sceneLoader.loadSceneInExistingWindow();
 

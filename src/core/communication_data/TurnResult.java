@@ -41,4 +41,14 @@ public class TurnResult {
     public enum Error {
         NONE, NOT_ON_PLAYGROUND, FIELD_ALREADY_DISCOVERED, NOT_YOUR_TURN;
     }
+
+    @Override
+    public String toString() {
+        return "TurnResult{" +
+                "SHOT_RESULT=" + SHOT_RESULT +
+                ", TURN_AGAIN=" + TURN_AGAIN +
+                ", FINISHED=" + FINISHED +
+                ", error=" + error +
+                '}';
+    }
 }

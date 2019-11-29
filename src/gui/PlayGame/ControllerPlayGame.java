@@ -1,10 +1,19 @@
 package gui.PlayGame;
 
+import core.GameManager;
+import core.communication_data.Position;
 import core.communication_data.ShipPosition;
+import core.communication_data.TurnResult;
+import core.utils.Logger;
 import gui.UiClasses.BattleShipGui;
+import gui.UiClasses.HBoxExends;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 
 import java.net.URL;
@@ -37,11 +46,13 @@ public class ControllerPlayGame implements Initializable {
     private int playgroundSize;
 
     ArrayList<BattleShipGui> shipPositionList;
+    GameManager gameManager;
 
-    public ControllerPlayGame(int playgroudSize, ArrayList<BattleShipGui> shipPositionList) {
+    public ControllerPlayGame(int playgroudSize, ArrayList<BattleShipGui> shipPositionList, GameManager gameManager) {
 
         this.playgroundSize = playgroudSize;
         this.shipPositionList = shipPositionList;
+        this.gameManager = gameManager;
     }
 
     /**
@@ -116,6 +127,9 @@ public class ControllerPlayGame implements Initializable {
         Pane p = new Pane();
         p.setStyle("-fx-background-color: #2E64FE");
         gridPane.add(p, possHorizontal, possVertical);
+        if(gridPane == this.gridPaneEnemyField) {
+            this.addClickFieldEvent(p);
+        }
     }
 
 
@@ -152,7 +166,18 @@ public class ControllerPlayGame implements Initializable {
         }
         buttonShip.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
     }
+    /** ############################################# Turn ####################################################### */
 
+    private void addClickFieldEvent(Pane p) {
+        p.setOnMouseClicked(mouseEvent -> {
+            int col = GridPane.getColumnIndex(p);
+            int row = GridPane.getRowIndex(p);
+            Position pos = new Position(col, row);
+            TurnResult res = this.gameManager.shootP1(pos);
+            // TODO: update
+            Logger.debug(res);
+        });
+    }
 
     /** ##########################################   Window Navigation  ############################################## */
 
@@ -163,7 +188,8 @@ public class ControllerPlayGame implements Initializable {
     //TODO wo soll der Spieler beim Spielabruch landen ?? Wieder im Hauptmenü??
     public void goBackToShipPlacement() {
 
-
     }
+
+
 
 }
