@@ -49,12 +49,27 @@ public class GameManager implements GameManagerInterface {
     }
 
     @Override
-    public TurnResult ownTurn(Position position) {
-        return null;
+    public TurnResult ownTurn(Position position){
+        // P1
+        if(this.allowedToShoot(this.player1)){
+            ShotResult resShot = this.player2.gotHit(position);
+            this.player1.update(resShot);
+            boolean isFinished = this.player1.allEnemyShipsSunken();
+            boolean shootAgain = resShot.getType() == Playground.FieldType.SHIP;
+            TurnResult resTurn = new TurnResult(resShot, shootAgain, isFinished);
+            if(!shootAgain && !isFinished){
+                // TODO: start thread: makeTurn
+            }
+            return resTurn;
+        }else{
+            return
+        }
+
     }
 
-    @Override
-    public TurnResult enemyTurn() {
-        return null;
+    private boolean allowedToShoot(Player p){
+        if(this.currentPlayer != p) return false;
+        return true;
     }
+
 }

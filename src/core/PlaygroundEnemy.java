@@ -23,4 +23,9 @@ public class PlaygroundEnemy extends Playground{
     private Ship getShipAtPosition(int x, int y){
         return null;
     }
+
+    public boolean areAllShipsSunken(){
+        // TODO: Implement
+        return false;
+    }
 }

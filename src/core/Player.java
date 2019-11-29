@@ -51,4 +51,8 @@ public abstract class Player {
     public PlaceShipsRandomRes placeShipsRandom() {
         return this.playgroundOwn.placeShipsRandom();
     }
+
+    public boolean allEnemyShipsSunken(){
+        return this.playgroundEnemy.areAllShipsSunken();
+    }
 }

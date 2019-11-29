@@ -42,6 +42,5 @@ public interface GameManagerInterface {
     boolean deleteShip(ShipID id);
 
     // turn
-    public TurnResult ownTurn(Position position);
-    public TurnResult enemyTurn();
+    TurnResult ownTurn(Position position);
 }
