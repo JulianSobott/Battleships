@@ -1,8 +1,15 @@
 package core;
 
 import core.communication_data.*;
+import core.utils.Logger;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Random;
 
 public class PlaygroundOwn extends Playground {
+
+    private HashMap<ShipID, Ship> shipHashMap = new HashMap<>();
 
     public PlaygroundOwn(int size) {
         super(size);
@@ -15,8 +22,12 @@ public class PlaygroundOwn extends Playground {
      * @return An result that indicates whether it was successfully placed or not.
      */
     public PlaceShipResult placeShip(ShipPosition position){
-        Ship ship = this.shipPool.getShip(position.getLENGTH());
-        return this.placeShip(position, ship);
+        Ship ship = this.shipPool.getShip(position.getLength());
+        PlaceShipResult res = this.placeShip(position, ship);
+        if(!res.isSuccessfullyPlaced()){
+            this.shipPool.releaseShip(ship);
+        }
+        return res;
     }
 
     /**
@@ -25,18 +36,21 @@ public class PlaygroundOwn extends Playground {
      * @return An result that indicates whether it was successfully placed or not.
      */
     private PlaceShipResult placeShip(ShipPosition position, Ship ship){
+        if(ship == null)
+            return PlaceShipResult.failed(position, null, PlaceShipResult.Error.NO_MORE_SHIPS);
         if(position.isOutsideOfPlayground(this.size))
             return PlaceShipResult.failed(position, null, PlaceShipResult.Error.NOT_ON_PLAYGROUND);
-        if(this.canPlaceShip(position)){
+        if(!this.canPlaceShip(position)){
+            return PlaceShipResult.failed(position, null, PlaceShipResult.Error.SPACE_TAKEN);
+        }else{
             for(Position p : position.generateIndices()){
                 Field f = new Field(FieldType.SHIP, ship);
                 this.elements[p.getY()][p.getX()] = f;
             }
             ShipID shipID = ship.getId();
             ship.setShipPosition(position);
+            this.shipHashMap.put(shipID, ship);
             return PlaceShipResult.success(position, shipID);
-        }else{
-            return PlaceShipResult.failed(position, null, PlaceShipResult.Error.SPACE_TAKEN);
         }
     }
 
@@ -68,11 +82,13 @@ public class PlaygroundOwn extends Playground {
      */
     public boolean deleteShip(ShipID id){
         Ship ship = this.getShipByID(id);
-        if(ship == null)
+        if(ship == null) {
             return false;
+        }
         else {
             this.resetFields(FieldType.WATER, ship.getShipPosition().generateIndices());
             this.shipPool.releaseShip(ship);
+            this.shipHashMap.remove(id);
             return true;
         }
     }
@@ -104,24 +120,103 @@ public class PlaygroundOwn extends Playground {
         return true;
     }
 
-    public void placeShipsRandom(ShipList shipList){
+    public PlaceShipsRandomRes placeShipsRandom() {
+        ShipList shipList = ShipList.fromSize(this.size);
+        return this.placeShipsRandom(shipList);
+    }
 
+    public PlaceShipsRandomRes placeShipsRandom(ShipList shipList) {
+        int max_tries = 10000;
+        Random random = new Random();
+        boolean foundPlace = true;
+        for (int iteration = 0; iteration < max_tries; iteration++) {
+            this.resetAll(FieldType.WATER);
+            foundPlace = true;
+            for(ShipList.Pair pair : shipList){
+                for(int i = 0; i < pair.getNum() && foundPlace; i++){
+                    foundPlace = this.placeSingleShipRandom(pair.getSize(), random);
+                }
+                if(!foundPlace) break;
+            }
+            if(foundPlace) {
+                Logger.debug("Found in iteration: " + iteration);
+                break;
+            }
+        }
+        if(foundPlace){
+            Logger.debug("Successfully placed ships");
+            this.printField();
+            PlaceShipsRandomRes.ShipData[] data = new PlaceShipsRandomRes.ShipData[shipList.getTotalNumberOfShips()];
+            int i = 0;
+            for(Ship s : this.shipHashMap.values()){
+                data[i++] = new PlaceShipsRandomRes.ShipData(new ShipPosition(s.getShipPosition()), s.getId());
+            }
+            return PlaceShipsRandomRes.success(data);
+        }else{
+            Logger.debug("Could not place ships");
+            return PlaceShipsRandomRes.failure();
+        }
+
+    }
+
+    private boolean placeSingleShipRandom(int length, Random rand){
+        int max_iterations = 100;
+        for(int i = 0; i < max_iterations; i++){
+            int x = rand.nextInt(this.size);
+            int y = rand.nextInt(this.size);
+            ShipPosition.Direction dir = rand.nextBoolean() ? ShipPosition.Direction.HORIZONTAL :
+                    ShipPosition.Direction.VERTICAL;
+            ShipPosition pos = new ShipPosition(x, y, dir, length);
+            if(this.placeShip(pos).isSuccessfullyPlaced())
+                return true;
+        }
+        return false;
     }
 
     /**
      *
      * @param position x, y coordinates of the shot.
-     * @return
+     * @return A ShotResult, with information about what field was hit
      */
     public ShotResult gotHit(Position position){
         Field f = this.elements[position.getY()][position.getX()];
         f.hit = true;
         f.element.gotHit();
         if(f.type == FieldType.SHIP){
-            return new ShotResultShip(position, FieldType.SHIP, ((Ship)f.element).getStatus());
+            Ship s = (Ship) f.element;
+            if (s.getStatus() == Ship.LifeStatus.SUNKEN) {
+                Position[] surroundingWaterPositions = this.getSurroundingWaterPositions(s);
+                return new ShotResultShip(position, FieldType.SHIP, s.getStatus(), surroundingWaterPositions);
+            } else {
+                return new ShotResultShip(position, FieldType.SHIP, s.getStatus());
+            }
         }else{
             return new ShotResultWater(position, f.type);
         }
+    }
+
+    /**
+     * Get a list of all Positions around a ship that are water.
+     * When a ship is sunken it is known, that these fields are water.
+     *
+     * @param s A ship. Most likely a ship that is sunken.
+     * @return All positions around this ship
+     */
+    private Position[] getSurroundingWaterPositions(Ship s) {
+        HashSet<Position> waterPositions = new HashSet<Position>();
+        int[][] surroundingFields = {{-1, -1}, {-1, 0}, {0, -1}, {0, 0}, {0, 1}, {1, 0}, {1, 1}, {-1, 1}, {1, -1}};
+        for (Position shipPosition : s.getShipPosition().generateIndices()) {
+            for (int[] surrPos : surroundingFields) {
+                int x = surrPos[0] + shipPosition.getX();
+                int y = surrPos[1] + shipPosition.getY();
+                Position pos = new Position(x, y);
+                if (!pos.isOutsideOfPlayground(this.size) && this.elements[y][x].type == FieldType.WATER) {
+                    waterPositions.add(pos);
+                }
+            }
+        }
+        Position[] positions = new Position[waterPositions.size()];
+        return waterPositions.toArray(positions);
     }
 
     /**
@@ -130,13 +225,27 @@ public class PlaygroundOwn extends Playground {
      * @return An Ship object if the ID exists, null otherwise
      */
     private Ship getShipByID(ShipID shipID){
+        return this.shipHashMap.get(shipID);
+    }
+
+    public void printField(){
+        StringBuilder s = new StringBuilder();
         for(Field[] row : this.elements){
             for(Field f : row){
-                if(f.type == FieldType.SHIP && ((Ship)f.element).getId().equals(shipID)){
-                    return (Ship)f.element;
+                if(f == null){
+                    s.append("N");
+                }
+                else if(f.type == FieldType.SHIP){
+                    s.append("S");
+                }
+                else if(f.type == FieldType.WATER){
+                    s.append("~");
+                }else if(f.type == FieldType.FOG){
+                    s.append("=");
                 }
             }
+            s.append("\n");
         }
-        return null;
+        Logger.debug(s);
     }
 }

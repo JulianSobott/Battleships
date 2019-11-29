@@ -20,13 +20,22 @@ public class GameManager implements GameManagerInterface {
 
     @Override
     public NewGameResult newGame(GameSettings settings) {
-
-        return null;
+        this.player1 = settings.getP1();
+        this.player2 = settings.getP2();
+        // TODO: Set current player properly
+        this.currentPlayer = player1;
+        ShipList shipList = ShipList.fromSize(settings.getPlaygroundSize());
+        return new NewGameResult(shipList);
     }
 
     @Override
     public PlaceShipResult placeShip(ShipPosition pos) {
         return currentPlayer.placeShip(pos);
+    }
+
+    @Override
+    public PlaceShipsRandomRes placeShipsRandom() {
+        return this.currentPlayer.placeShipsRandom();
     }
 
     @Override

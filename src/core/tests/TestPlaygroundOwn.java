@@ -3,9 +3,12 @@ package core.tests;
 import core.PlaygroundOwn;
 import core.communication_data.PlaceShipResult;
 import core.communication_data.ShipID;
+import core.communication_data.ShipList;
 import core.communication_data.ShipPosition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
 
 class TestPlaygroundOwn{
 
@@ -38,7 +41,7 @@ class TestPlaygroundOwn{
         PlaceShipResult res = playground.placeShip(p1);
         assert res.isSuccessfullyPlaced(): "Ship should be placed";
 
-        ShipPosition p2 = new ShipPosition(0, 2, ShipPosition.Direction.HORIZONTAL, 7);
+        ShipPosition p2 = new ShipPosition(4, 2, ShipPosition.Direction.HORIZONTAL, 3);
         res = playground.placeShip(p2);
         assert !res.isSuccessfullyPlaced(): "Ship shouldn't be placed";
         assert res.getERROR() == PlaceShipResult.Error.NOT_ON_PLAYGROUND: "Error not correctly set";
@@ -90,5 +93,18 @@ class TestPlaygroundOwn{
         PlaceShipResult res = playground.moveShip(id, pos);
         assert !res.isSuccessfullyPlaced();
         assert res.getERROR() == PlaceShipResult.Error.ID_NOT_EXIST;
+    }
+
+    @Test
+    void placeShipsRandom(){
+        ShipList list = new ShipList(new HashMap<Integer, Integer>(){
+            {
+                put(1, 1);
+                put(2, 2);
+                put(3, 2);
+                put(4, 1);
+            }
+        });
+        playground.placeShipsRandom(list);
     }
 }

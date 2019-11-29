@@ -3,7 +3,9 @@ package core;
 import core.communication_data.ShipID;
 import core.communication_data.ShipPosition;
 
-public class Ship extends PlaygroundElement{
+import java.io.Serializable;
+
+public class Ship extends PlaygroundElement implements Serializable {
 
     private int lives;
     private ShipID id;
