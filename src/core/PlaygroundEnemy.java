@@ -33,7 +33,7 @@ public class PlaygroundEnemy extends Playground{
     public TurnResult.Error canShootAt(Position position) {
         if (position.isOutsideOfPlayground(this.size))
             return TurnResult.Error.NOT_ON_PLAYGROUND;
-        if (this.elements[position.getY()][position.getX()].type == FieldType.FOG)
+        if (this.elements[position.getY()][position.getX()].type != FieldType.FOG)
             return TurnResult.Error.FIELD_ALREADY_DISCOVERED;
         return TurnResult.Error.NONE;
     }

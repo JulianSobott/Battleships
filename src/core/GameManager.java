@@ -51,7 +51,7 @@ public class GameManager implements GameManagerInterface {
 
 
     public TurnResult shootP1(Position position) {
-        if(this.isAllowedToShoot(this.player1)){
+        if(!this.isAllowedToShoot(this.player1)){
             return TurnResult.failure(TurnResult.Error.NOT_YOUR_TURN);
         }else{
             TurnResult res = this.shoot(this.player1, position);
