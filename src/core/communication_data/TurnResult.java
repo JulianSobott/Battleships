@@ -39,6 +39,6 @@ public class TurnResult {
     }
 
     public enum Error {
-        NONE, NOT_ON_PLAYGROUND, FIELD_ALREADY_DISCOVERED;
+        NONE, NOT_ON_PLAYGROUND, FIELD_ALREADY_DISCOVERED, NOT_YOUR_TURN;
     }
 }

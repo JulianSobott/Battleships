@@ -55,4 +55,8 @@ public abstract class Player {
     public boolean allEnemyShipsSunken(){
         return this.playgroundEnemy.areAllShipsSunken();
     }
+
+    TurnResult.Error canShootAt(Position position) {
+        return this.playgroundEnemy.canShootAt(position);
+    }
 }
