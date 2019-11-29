@@ -8,4 +8,8 @@ public class ShotResultWater extends ShotResult {
         super(position, type);
     }
 
+    @Override
+    public String toString() {
+        return "ShotResultWater{} " + super.toString();
+    }
 }

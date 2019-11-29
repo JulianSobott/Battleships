@@ -3,6 +3,8 @@ package core.communication_data;
 import core.Playground;
 import core.Ship;
 
+import java.util.Arrays;
+
 public class ShotResultShip extends ShotResult {
 
     private final Ship.LifeStatus status;
@@ -27,5 +29,13 @@ public class ShotResultShip extends ShotResult {
 
     public Position[] getWaterFields() {
         return waterFields;
+    }
+
+    @Override
+    public String toString() {
+        return "ShotResultShip{" +
+                "status=" + status +
+                ", waterFields=" + Arrays.toString(waterFields) +
+                "} " + super.toString();
     }
 }
