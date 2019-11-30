@@ -4,6 +4,7 @@ import core.GameManager;
 import core.Player;
 import core.communication_data.GameSettings;
 import core.communication_data.NewGameResult;
+import core.utils.Logger;
 import gui.ControllerMainMenu;
 import gui.ShipPlacement.ControllerShipPlacement;
 import gui.WindowChange.SceneLoader;
@@ -18,7 +19,10 @@ import player.PlayerAI;
 import player.PlayerHuman;
 import player.PlayerNetwork;
 
+import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ResourceBundle;
 
 
@@ -34,7 +38,7 @@ public class ControllerGameType implements Initializable {
     public RadioButton radioButtonNetzwerk;
 
     @FXML
-    public  RadioButton radioButtonLocal;
+    public RadioButton radioButtonLocal;
 
     @FXML
     public RadioButton radioButtonServer;
@@ -49,10 +53,13 @@ public class ControllerGameType implements Initializable {
     public RadioButton radioButtonMedium;
 
     @FXML
-    public  RadioButton radioButtonHard;
+    public RadioButton radioButtonHard;
 
     @FXML
     public TextField textfieldPlaygroundSize;
+
+    @FXML
+    public TextField textFieldIpAddress;
 
 
     private static final String filepathBackMainMenu = "../Main_Menu.fxml";
@@ -80,8 +87,65 @@ public class ControllerGameType implements Initializable {
     }
 
 
+    /** #################################################   JavaFX Events  ############################################*/
+
     @FXML
-    public void goBacktoMainMenus (MouseEvent event){
+    private void determineLocalIpAddress() {
+
+        InetAddress localIp = null;
+        try {
+            localIp = Inet4Address.getLocalHost();
+
+        } catch (UnknownHostException exception) {
+            //TODO Loggen
+        }
+        if (localIp != null) {
+            String[] s = localIp.toString().split("/");
+            textFieldIpAddress.setText(s[1]);
+        } else {
+            //TODO logger
+        }
+    }
+
+    @FXML
+    private void setClientInformation(){
+
+        textFieldIpAddress.clear();
+    }
+
+
+
+
+
+    /**
+     * ##########################################   generate Settings  ###############################################
+     */
+
+
+
+
+    private GameSettings buildGameSettings() {
+        // TODO: Surface validation
+        int playgroundSize = Integer.parseInt(this.textfieldPlaygroundSize.getText());
+        Player p1 = new PlayerHuman("TODO", playgroundSize);
+        Player p2;
+        if (this.radioButtonKI.isSelected() && this.radioButtonEasy.isSelected()) {
+            p2 = new PlayerAI("KI", playgroundSize);
+        } else if (this.radioButtonNetzwerk.isSelected()) {
+            p2 = new PlayerNetwork("KI", playgroundSize);
+        } else {
+            p2 = new PlayerHuman("KI", playgroundSize);
+        }
+        return new GameSettings(playgroundSize, p1, p2);
+    }
+
+
+    /**
+     * ##########################################   Window Navigation  ##############################################
+     */
+
+    @FXML
+    public void goBacktoMainMenus(MouseEvent event) {
 
         ControllerMainMenu controllerMainMenu = new ControllerMainMenu();
         SceneLoader sceneLoader = new SceneLoader(BackToMenu, filepathBackMainMenu, controllerMainMenu);
@@ -91,7 +155,7 @@ public class ControllerGameType implements Initializable {
     }
 
     @FXML
-    public void loadShipPöacementScene(){
+    public void loadShipPöacementScene() {
         GameSettings settings = buildGameSettings();
 
         ControllerShipPlacement controllerShipPlacement = new ControllerShipPlacement(settings);
@@ -100,21 +164,6 @@ public class ControllerGameType implements Initializable {
 
     }
 
-
-    private GameSettings buildGameSettings() {
-        // TODO: Surface validation
-        int playgroundSize = Integer.parseInt(this.textfieldPlaygroundSize.getText());
-        Player p1 = new PlayerHuman("TODO", playgroundSize);
-        Player p2;
-        if(this.radioButtonKI.isSelected()){
-            p2 = new PlayerAI("KI", playgroundSize);
-        }else if(this.radioButtonNetzwerk.isSelected()){
-            p2 = new PlayerNetwork("KI", playgroundSize);
-        }else{
-            p2 = new PlayerHuman("KI", playgroundSize);
-        }
-        return new GameSettings(playgroundSize, p1, p2);
-    }
 }
 
 
