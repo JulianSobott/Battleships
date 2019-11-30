@@ -148,6 +148,7 @@ public class ControllerPlayGame implements Initializable {
     }
 
 
+
     /**
      * The method places the graphic object on the surface.
      *
@@ -156,17 +157,30 @@ public class ControllerPlayGame implements Initializable {
 
     private void addShipToPlayground( BattleShipGui battleShipGui) {
 
-        Button buttonShip = new Button();
-        buttonShip.setStyle("-fx-background-color: #00ff00");
-
         if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.HORIZONTAL) {
-            gridPaneOwnField.add(buttonShip, battleShipGui.getPosition().getX(), battleShipGui.getPosition().getY(), battleShipGui.getPosition().getLength(), 1);
+
+            int index = battleShipGui.getPosition().getX() * playgroundSize + battleShipGui.getPosition().getY();
+            for (int i = 0; i < battleShipGui.getPosition().getLength() ; i++) {
+                Pane pane = (Pane) gridPaneOwnField.getChildren().get(index);
+                pane.setStyle("-fx-background-color: #00ff00");
+                index+= playgroundSize;
+            }
         }
         if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.VERTICAL) {
-            gridPaneOwnField.add(buttonShip, battleShipGui.getPosition().getX(), battleShipGui.getPosition().getY(), 1, battleShipGui.getPosition().getLength());
+
+          int index = battleShipGui.getPosition().getX() * playgroundSize + battleShipGui.getPosition().getY();
+            for (int i = 0; i < battleShipGui.getPosition().getLength() ; i++) {
+
+                Pane pane = (Pane) gridPaneOwnField.getChildren().get(index);
+                pane.setStyle("-fx-background-color: #00ff00");
+                index++;
+
+            }
         }
-        buttonShip.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
     }
+
+
+
     /** ############################################# Turn ####################################################### */
 
     private void addClickFieldEvent(Pane p) {
