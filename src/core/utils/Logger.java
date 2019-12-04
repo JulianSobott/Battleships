@@ -26,6 +26,28 @@ public final class Logger {
     public final static int WARNING = 3;
     public final static int ERROR = 4;
 
+    public enum Topic {
+        GUI("GUI"),
+        Network("Network"),
+        General("General"),
+        Logic("Logic");
+
+        public String name;
+        Topic(String name){
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return "[" + this.name + "]";
+        }
+    }
+
+    public final static Topic GUI = Topic.GUI;
+    public final static Topic Network = Topic.Network;
+    public final static Topic General = Topic.General;
+    public final static Topic Logic = Topic.Logic;
+
     private Logger() {}
 
     public interface Printer {
@@ -37,8 +59,7 @@ public final class Logger {
         public void print(int level, String tag, String msg) {
             int logMethodsBefore = 5;
             int lineNumber = Thread.currentThread().getStackTrace()[logMethodsBefore].getLineNumber();
-            System.out.println("" + LEVELS[level] + "  " + tag + "(" + lineNumber + "): \t" + msg);
-
+            System.out.println("" + LEVELS[level] + "" + msg + "\t\t(" + tag + " " + lineNumber + ") " + Thread.currentThread().getName());
         }
     }
 
