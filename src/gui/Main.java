@@ -1,5 +1,6 @@
 package gui;
 
+import core.utils.Logger;
 import gui.WindowChange.SceneLoader;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -18,7 +19,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-
         ControllerMainMenu controllerMainMenu = new ControllerMainMenu();
         SceneLoader sceneLoader = new SceneLoader(null, "../Main_Menu.fxml", controllerMainMenu);
         sceneLoader.loadSceneInNewWindow("Battleship");
