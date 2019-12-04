@@ -2,6 +2,7 @@ package core;
 
 import core.communication_data.Position;
 import core.communication_data.ShipList;
+import core.utils.logging.LoggerLogic;
 
 public abstract class Playground {
 
@@ -80,5 +81,27 @@ public abstract class Playground {
 
     public int getSize() {
         return size;
+    }
+
+    public void printField(){
+        StringBuilder s = new StringBuilder();
+        s.append("\n");
+        for(Field[] row : this.elements){
+            for(Field f : row){
+                if(f == null){
+                    s.append("N");
+                }
+                else if(f.type == FieldType.SHIP){
+                    s.append("S");
+                }
+                else if(f.type == FieldType.WATER){
+                    s.append("~");
+                }else if(f.type == FieldType.FOG){
+                    s.append("=");
+                }
+            }
+            s.append("\n");
+        }
+        LoggerLogic.debug(s.toString());
     }
 }
