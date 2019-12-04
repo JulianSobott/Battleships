@@ -70,3 +70,9 @@ State of the program
 
 ## GUI
 
+
+
+- Switch state to play
+- Player makes Turn
+- Shot position
+- Result of shot

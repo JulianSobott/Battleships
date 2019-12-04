@@ -3,6 +3,7 @@ package gui.ShipPlacement;
 import core.GameManager;
 import core.communication_data.*;
 import core.utils.logging.LoggerGUI;
+import core.utils.logging.LoggerState;
 import gui.PlayGame.ControllerPlayGame;
 import gui.UiClasses.BattleShipGui;
 import gui.UiClasses.ButtonShip;
@@ -558,7 +559,7 @@ public class ControllerShipPlacement implements Initializable {
         ControllerPlayGame controllerPlayGame = new ControllerPlayGame(playgroundSize, shipPositionList, this.GAME_MANAGER);
         SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathPlayGame, controllerPlayGame);
         sceneLoader.loadSceneInExistingWindow();
-
+        LoggerState.info("Switch state to In_Game");
     }
 
 

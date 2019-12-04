@@ -45,7 +45,6 @@ public class ControllerPlayGame implements Initializable {
     GameManager gameManager;
 
     public ControllerPlayGame(int playgroudSize, ArrayList<BattleShipGui> shipPositionList, GameManager gameManager) {
-
         this.playgroundSize = playgroudSize;
         this.shipPositionList = shipPositionList;
         this.gameManager = gameManager;
@@ -58,7 +57,6 @@ public class ControllerPlayGame implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
 
         HBox.setHgrow(vBoxOwnPlayground, Priority.ALWAYS);
         HBox.setHgrow(vBoxEnemyPlayground, Priority.ALWAYS);

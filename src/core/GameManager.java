@@ -69,11 +69,6 @@ public class GameManager implements GameManagerInterface {
     public TurnResult shootP2(Position pos){
         TurnResult res = this.turn(this.player2, pos);
         this.lastTurnP2 = res;
-        if (!res.isTURN_AGAIN() && !res.isFINISHED()){
-            this.nextPlayer();
-        }else{
-            // TODO?
-        }
         return res;
     }
 
@@ -99,12 +94,14 @@ public class GameManager implements GameManagerInterface {
     }
 
     private TurnResult turn(Player player, Position position){
+        LoggerLogic.info("turn: player=" + player + ", position=" + position);
         TurnResult res;
         if(!this.isAllowedToShoot(player)){
             res = TurnResult.failure(TurnResult.Error.NOT_YOUR_TURN);
         }else{
             res = this.shoot(player, position);
         }
+        LoggerLogic.info("turn result: TurnResult=" + res);
         return res;
     }
     /**
@@ -146,6 +143,8 @@ public class GameManager implements GameManagerInterface {
             res = this.shootP2(pos);
             LoggerLogic.info("player2Turn result: " + res);
         }while (res.isTURN_AGAIN());
+        // TODO: handle game_over
+        this.nextPlayer();
     }
 
     private Player otherPlayer(Player player) {

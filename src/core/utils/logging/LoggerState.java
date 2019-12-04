@@ -42,7 +42,7 @@ public class LoggerState {
     }
 
     private void _log(Level level, String msg) {
-        logger.log(level, msg.toUpperCase());
+        logger.log(level, "======= " + msg.toUpperCase() + " =======");
     }
 
 }
