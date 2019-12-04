@@ -191,20 +191,24 @@ public class PlaygroundOwn extends Playground {
      * @return A ShotResult, with information about what field was hit
      */
     public ShotResult gotHit(Position position){
+        Logger.info(Logger.Logic, "gotHit: position=" + position);
         Field f = this.elements[position.getY()][position.getX()];
         f.hit = true;
         f.element.gotHit();
+        ShotResult res;
         if(f.type == FieldType.SHIP){
             Ship s = (Ship) f.element;
             if (s.getStatus() == Ship.LifeStatus.SUNKEN) {
                 Position[] surroundingWaterPositions = this.getSurroundingWaterPositions(s);
-                return new ShotResultShip(position, FieldType.SHIP, s.getStatus(), surroundingWaterPositions);
+                res = new ShotResultShip(position, FieldType.SHIP, s.getStatus(), surroundingWaterPositions);
             } else {
-                return new ShotResultShip(position, FieldType.SHIP, s.getStatus());
+                res = new ShotResultShip(position, FieldType.SHIP, s.getStatus());
             }
         }else{
-            return new ShotResultWater(position, f.type);
+            res = new ShotResultWater(position, f.type);
         }
+        Logger.info(Logger.Logic, "gotHit return: ShotResult=" + res);
+        return res;
     }
 
     /**

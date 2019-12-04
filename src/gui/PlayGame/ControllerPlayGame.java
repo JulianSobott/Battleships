@@ -213,7 +213,7 @@ public class ControllerPlayGame implements Initializable {
                 Logger.debug("AI TURN res in GUI: ", res);
                 if(res.getError() == TurnResult.Error.NONE){
                     Position position = res.getSHOT_RESULT().getPosition();
-                    int index = position.getY() * playgroundSize + position.getX();
+                    int index = position.getX() * playgroundSize + position.getY();
                     Pane p = (Pane)gridPaneOwnField.getChildren().get(index);
                     if(res.getSHOT_RESULT().getType() == Playground.FieldType.SHIP){
                         p.setStyle("-fx-background-color: #ff0000");

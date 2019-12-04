@@ -18,7 +18,8 @@ public class PlayerAI extends Player {
         Random r =  new Random();
         int x = r.nextInt(this.playgroundOwn.getSize());
         int y = r.nextInt(this.playgroundOwn.getSize());
-        Logger.debug("Pos", x, y);
-        return new Position(x, y);
+        Position pos = new Position(x, y);
+        Logger.info(Logger.Logic,  "PlayerAI.makeTurn: position=" + pos);
+        return pos;
     }
 }
