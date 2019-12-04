@@ -193,27 +193,30 @@ public class ControllerPlayGame implements Initializable {
                 LoggerGUI.warning("Show this message to the user: " + res);
             }
             if(!res.isTURN_AGAIN() && !res.isFINISHED()){
-                this.getEnemyTurn();
+                this.getEnemyTurns();
             }
         });
     }
 
-    private void getEnemyTurn() {
+    private void getEnemyTurns() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                TurnResult res = gameManager.getTurnPlayer2();
-                LoggerGUI.info("getTurnPlayer2 result: " + res);
-                if(res.getError() == TurnResult.Error.NONE){
-                    Position position = res.getSHOT_RESULT().getPosition();
-                    int index = position.getX() * playgroundSize + position.getY();
-                    Pane p = (Pane)gridPaneOwnField.getChildren().get(index);
-                    if(res.getSHOT_RESULT().getType() == Playground.FieldType.SHIP){
-                        p.setStyle("-fx-background-color: #ff0000");
-                    }else if(res.getSHOT_RESULT().getType() == Playground.FieldType.WATER){
-                        p.setStyle("-fx-background-color: #ffff00");
+                TurnResult res;
+                do {
+                    res = gameManager.getTurnPlayer2();
+                    LoggerGUI.info("getTurnPlayer2 result: " + res);
+                    if(res.getError() == TurnResult.Error.NONE){
+                        Position position = res.getSHOT_RESULT().getPosition();
+                        int index = position.getX() * playgroundSize + position.getY();
+                        Pane p = (Pane)gridPaneOwnField.getChildren().get(index);
+                        if(res.getSHOT_RESULT().getType() == Playground.FieldType.SHIP){
+                            p.setStyle("-fx-background-color: #ff0000");
+                        }else if(res.getSHOT_RESULT().getType() == Playground.FieldType.WATER){
+                            p.setStyle("-fx-background-color: #ffff00");
+                        }
                     }
-                }
+                }while (res.isTURN_AGAIN());
             }
         }).start();
     }

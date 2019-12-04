@@ -4,12 +4,15 @@ import core.communication_data.*;
 import core.utils.logging.LoggerLogic;
 import core.utils.logging.LoggerState;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class GameManager implements GameManagerInterface {
 
     private Player player1, player2;
     private Player currentPlayer;
 
-    private TurnResult lastTurnP2, lastTurnP1;
+    private Queue<TurnResult> lastTurnsP2 = new LinkedList<>(), lastTurnsP1 = new LinkedList<>();
 
 
     @Override
@@ -55,7 +58,7 @@ public class GameManager implements GameManagerInterface {
 
     public TurnResult shootP1(Position pos){
         TurnResult res = this.turn(this.player1, pos);
-        this.lastTurnP1 = res;
+        lastTurnsP1.add(res);
         if (!res.isTURN_AGAIN() && !res.isFINISHED()){
             // TODO start in new thread
             this.nextPlayer();
@@ -68,7 +71,7 @@ public class GameManager implements GameManagerInterface {
 
     public TurnResult shootP2(Position pos){
         TurnResult res = this.turn(this.player2, pos);
-        this.lastTurnP2 = res;
+        this.lastTurnsP2.add(res);
         return res;
     }
 
@@ -79,7 +82,7 @@ public class GameManager implements GameManagerInterface {
     }
 
     public TurnResult getTurnPlayer2() {
-        while (this.lastTurnP2 == null) {
+        while (this.lastTurnsP2.isEmpty()) {
             try {
                 long milliSecondsPause = 100;
                 Thread.sleep(milliSecondsPause);
@@ -88,9 +91,7 @@ public class GameManager implements GameManagerInterface {
                 e.printStackTrace();
             }
         }
-        TurnResult lastResult = this.lastTurnP2;
-        this.lastTurnP2 = null;
-        return lastResult;
+        return this.lastTurnsP2.poll();
     }
 
     private TurnResult turn(Player player, Position position){

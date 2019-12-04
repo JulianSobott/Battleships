@@ -8,6 +8,7 @@ public class TurnResult {
     private final Error error;
 
     public TurnResult(ShotResult SHOT_RESULT, boolean TURN_AGAIN, boolean FINISHED, Error error) {
+        assert !(FINISHED && TURN_AGAIN) : "Invalid parameters: TURN_AGAIN and FINISHED";
         this.SHOT_RESULT = SHOT_RESULT;
         this.TURN_AGAIN = TURN_AGAIN;
         this.FINISHED = FINISHED;
