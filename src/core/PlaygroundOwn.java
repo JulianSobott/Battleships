@@ -36,12 +36,14 @@ public class PlaygroundOwn extends Playground {
      * @return An result that indicates whether it was successfully placed or not.
      */
     private PlaceShipResult placeShip(ShipPosition position, Ship ship){
+        Logger.info(Logger.Logic, "placeShip: position=" + position + ", ship=" + ship);
+        PlaceShipResult res;
         if(ship == null)
-            return PlaceShipResult.failed(position, null, PlaceShipResult.Error.NO_MORE_SHIPS);
-        if(position.isOutsideOfPlayground(this.size))
-            return PlaceShipResult.failed(position, null, PlaceShipResult.Error.NOT_ON_PLAYGROUND);
-        if(!this.canPlaceShip(position)){
-            return PlaceShipResult.failed(position, null, PlaceShipResult.Error.SPACE_TAKEN);
+            res = PlaceShipResult.failed(position, null, PlaceShipResult.Error.NO_MORE_SHIPS);
+        else if(position.isOutsideOfPlayground(this.size))
+            res = PlaceShipResult.failed(position, null, PlaceShipResult.Error.NOT_ON_PLAYGROUND);
+        else if(!this.canPlaceShip(position)){
+            res =  PlaceShipResult.failed(position, null, PlaceShipResult.Error.SPACE_TAKEN);
         }else{
             for(Position p : position.generateIndices()){
                 Field f = new Field(FieldType.SHIP, ship);
@@ -50,8 +52,10 @@ public class PlaygroundOwn extends Playground {
             ShipID shipID = ship.getId();
             ship.setShipPosition(position);
             this.shipHashMap.put(shipID, ship);
-            return PlaceShipResult.success(position, shipID);
+            res =  PlaceShipResult.success(position, shipID);
         }
+        Logger.info(Logger.Logic, "placeShip return: PlaceShipResult=" + res);
+        return res;
     }
 
     /**
@@ -62,16 +66,20 @@ public class PlaygroundOwn extends Playground {
      * @return PlaceShipResult of the placeShip method.
      */
     public PlaceShipResult moveShip(ShipID id, ShipPosition newPosition){
+        Logger.info(Logger.Logic, "moveShip: id=" + id + "newPosition=" + newPosition );
         Ship ship = this.getShipByID(id);
+        PlaceShipResult res;
         if(ship == null) {
-            return PlaceShipResult.failed(newPosition, id, PlaceShipResult.Error.ID_NOT_EXIST);
+            res = PlaceShipResult.failed(newPosition, id, PlaceShipResult.Error.ID_NOT_EXIST);
+        }else{
+            ShipPosition oldPosition = ship.getShipPosition();
+            this.resetFields(FieldType.WATER, oldPosition.generateIndices());
+            res = this.placeShip(newPosition, ship);
+            if(!res.isSuccessfullyPlaced()){
+                this.placeShip(oldPosition, ship);
+            }
         }
-        ShipPosition oldPosition = ship.getShipPosition();
-        this.resetFields(FieldType.WATER, oldPosition.generateIndices());
-        PlaceShipResult res = this.placeShip(newPosition, ship);
-        if(!res.isSuccessfullyPlaced()){
-            this.placeShip(oldPosition, ship);
-        }
+        Logger.info(Logger.Logic, "moveShip return: PlaceShipResult=" + res);
         return res;
     }
 
@@ -81,16 +89,20 @@ public class PlaygroundOwn extends Playground {
      * @return true if the id exists, false otherwise
      */
     public boolean deleteShip(ShipID id){
+        Logger.info(Logger.Logic, "deleteShip: id=" + id);
         Ship ship = this.getShipByID(id);
+        boolean res;
         if(ship == null) {
-            return false;
+            res = false;
         }
         else {
             this.resetFields(FieldType.WATER, ship.getShipPosition().generateIndices());
             this.shipPool.releaseShip(ship);
             this.shipHashMap.remove(id);
-            return true;
+            res = true;
         }
+        Logger.info(Logger.Logic, "deleteShip return: PlaceShipResult=" + res);
+        return res;
     }
 
     /**
