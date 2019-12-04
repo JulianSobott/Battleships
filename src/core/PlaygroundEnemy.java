@@ -2,6 +2,7 @@ package core;
 
 import core.communication_data.Position;
 import core.communication_data.TurnResult;
+import core.utils.logging.LoggerLogic;
 
 public class PlaygroundEnemy extends Playground{
 
@@ -18,7 +19,7 @@ public class PlaygroundEnemy extends Playground{
         }else {
             element = new WaterElement();
         }
-        this.elements[position.getX()][position.getY()] = new Field(type, element, true);
+        this.elements[position.getY()][position.getX()] = new Field(type, element, true);
     }
 
     private Ship getShipAtPosition(int x, int y){
@@ -31,6 +32,7 @@ public class PlaygroundEnemy extends Playground{
     }
 
     public TurnResult.Error canShootAt(Position position) {
+        this.printField();
         if (position.isOutsideOfPlayground(this.size))
             return TurnResult.Error.NOT_ON_PLAYGROUND;
         if (this.elements[position.getY()][position.getX()].type != FieldType.FOG)
