@@ -2,7 +2,7 @@ package gui.ShipPlacement;
 
 import core.GameManager;
 import core.communication_data.*;
-import core.utils.Logger;
+import core.utils.logging.LoggerGUI;
 import gui.PlayGame.ControllerPlayGame;
 import gui.UiClasses.BattleShipGui;
 import gui.UiClasses.ButtonShip;
@@ -209,7 +209,6 @@ public class ControllerShipPlacement implements Initializable {
     private void addEventDragDetectedPlacedShip(ButtonShip buttonShip) {
 
         buttonShip.setOnDragDetected(mouseEvent -> {
-            Logger.debug("Enter addEventDragDetectedPlacedShip:");
             Dragboard dragboard = buttonShip.startDragAndDrop(TransferMode.ANY);
 
             ClipboardContent clipboardContent = new ClipboardContent();
@@ -217,7 +216,6 @@ public class ControllerShipPlacement implements Initializable {
             if (dataFormat == null) {
                 dataFormat = new DataFormat("PlacedBattleShip");
             }
-            Logger.debug("addEventDragDetectedPlacedShip: " + buttonShip.getBattleShipGui());
             clipboardContent.put(dataFormat, buttonShip.getBattleShipGui());
             dragboard.setContent(clipboardContent);
         });
@@ -246,7 +244,6 @@ public class ControllerShipPlacement implements Initializable {
 
         panePlaygroundCell.setOnDragDropped(dragEvent -> {
             try {
-                Logger.debug("Enter: HandleDrop");
                 Dragboard dragboard = dragEvent.getDragboard();
                 if (DataFormat.lookupMimeType("BattleShip") != null &&
                         null != dragboard.getContent(DataFormat.lookupMimeType("BattleShip"))) {
@@ -255,7 +252,7 @@ public class ControllerShipPlacement implements Initializable {
                         null != dragboard.getContent(DataFormat.lookupMimeType("PlacedBattleShip"))) {
                     shipShiftOnPlayground(dragboard, panePlaygroundCell);
                 } else {
-                    Logger.debug("handleDrop: dragboard Content is null", dragboard.getContentTypes());
+                    LoggerGUI.error("handleDrop: dragboard Content is null: ContentType=" + dragboard.getContentTypes());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -282,7 +279,6 @@ public class ControllerShipPlacement implements Initializable {
 
         PlaceShipResult res = this.GAME_MANAGER.placeShip(new ShipPosition(horizontalIndex, verticalIndex,
                 battleShipGui.getPosition().getDirection(), battleShipGui.getPosition().getLength()));
-        Logger.debug(res);
         if (res.isSuccessfullyPlaced()) {
 
             addShipToPlayground(button, battleShipGui, res);
@@ -301,6 +297,7 @@ public class ControllerShipPlacement implements Initializable {
      * @param panePlaygroundCell Cell where the ship begins
      */
 
+    // TODO: rename
     private void shipShiftOnPlayground(Dragboard dragboard, Pane panePlaygroundCell) {
 
         BattleShipGui battleShipGui = getBattleshipGIUObjectFromDragboard("PlacedBattleShip", dragboard);
@@ -311,9 +308,6 @@ public class ControllerShipPlacement implements Initializable {
         ShipPosition oldPos = battleShipGui.getPosition();
         ShipPosition pos = new ShipPosition(col, row, oldPos.getDirection(), oldPos.getLength());
 
-        Logger.debug("Old: ", oldPos);
-        Logger.debug("New: ", pos);
-
         PlaceShipResult res = this.GAME_MANAGER.moveShip(battleShipGui.getShipID(), pos);
         if (res.isSuccessfullyPlaced()) {
 
@@ -323,7 +317,7 @@ public class ControllerShipPlacement implements Initializable {
             addShipToPlayground(buttonShip, battleShipGui, res);
 
         } else {
-            Logger.debug("[USER HINT] Cannot move ship to new position: " + res.getERROR());
+            LoggerGUI.info("[USER HINT] Cannot move ship to new position: " + res.getERROR());
             // TODO: inform user
         }
     }
@@ -389,7 +383,7 @@ public class ControllerShipPlacement implements Initializable {
         if (o instanceof BattleShipGui) {
             battleShipGui = (BattleShipGui) o;
         } else {
-            Logger.error("Dragboard content is not instanceof BattleshipGui. Type is: ", o.getClass());
+            LoggerGUI.error("Dragboard content is not instanceof BattleshipGui. Type is: " + o.getClass());
             throw new ClassCastException("Dragboard content is not instanceof BattleshipGui");
         }
         return battleShipGui;
@@ -488,8 +482,7 @@ public class ControllerShipPlacement implements Initializable {
             ShipPosition posOld = battleShipGui.getPosition();
             ShipPosition position = new ShipPosition(posOld.getX(), posOld.getY(),
                     directionNew, posOld.getLength());
-            Logger.debug("Old: ", posOld);
-            Logger.debug("New: ", position);
+
             PlaceShipResult res = GAME_MANAGER.moveShip(battleShipGui.getShipID(), position);
 
             if (res.isSuccessfullyPlaced()) {
@@ -497,8 +490,7 @@ public class ControllerShipPlacement implements Initializable {
                 dataGridBattleship.add(buttonShip, horizontalIndex, verticalIndex, colspan, rowspan);
                 battleShipGui.getPosition().setDirection(directionNew);
             } else {
-                Logger.debug(dataGridBattleship.getChildren());
-                Logger.info("User Info: Not allowed to rotate ship");
+                LoggerGUI.info("User Info: Not allowed to rotate ship");
             }
         });
     }
@@ -528,7 +520,8 @@ public class ControllerShipPlacement implements Initializable {
                 addShipToPlayground(buttonShip, battleShipGui, placeShipResult);
             }
         } else {
-            Logger.debug("[USER HINT]: Can not place ships random");
+            LoggerGUI.info("[USER HINT]: Can not place ships random");
+            // TODO: inform user
         }
 
     }

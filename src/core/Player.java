@@ -1,7 +1,6 @@
 package core;
 
 import core.communication_data.*;
-import core.utils.Logger;
 
 public abstract class Player {
 
@@ -18,33 +17,27 @@ public abstract class Player {
 
     public abstract Position makeTurn();
 
-    public PlaceShipResult placeShip(ShipPosition position){
-        Logger.debug("Place: ", position);
+    public PlaceShipResult placeShip(ShipPosition position) {
         PlaceShipResult res = this.playgroundOwn.placeShip(position);
         this.playgroundOwn.printField();
-        Logger.debug(res);
-        return res;
-    }
-    public PlaceShipResult moveShip(ShipID id, ShipPosition position){
-        Logger.debug("Move: ", id, position);
-        PlaceShipResult res = this.playgroundOwn.moveShip(id, position);
-        this.playgroundOwn.printField();
-        Logger.debug(res);
-        return res;
-    }
-    public boolean deleteShip(ShipID id){
-        Logger.debug("Delete: ", id);
-        boolean res = this.playgroundOwn.deleteShip(id);
-        this.playgroundOwn.printField();
-        Logger.debug(res);
         return res;
     }
 
-    public ShotResult gotHit(Position position){
+    public PlaceShipResult moveShip(ShipID id, ShipPosition position) {
+        return this.playgroundOwn.moveShip(id, position);
+    }
+
+    public boolean deleteShip(ShipID id) {
+        boolean res = this.playgroundOwn.deleteShip(id);
+        this.playgroundOwn.printField();
+        return res;
+    }
+
+    public ShotResult gotHit(Position position) {
         return this.playgroundOwn.gotHit(position);
     }
 
-    public void update(ShotResult result){
+    public void update(ShotResult result) {
         this.playgroundEnemy.updateField(result.getPosition(), result.getType());
     }
 
@@ -52,7 +45,7 @@ public abstract class Player {
         return this.playgroundOwn.placeShipsRandom();
     }
 
-    public boolean allEnemyShipsSunken(){
+    public boolean allEnemyShipsSunken() {
         return this.playgroundEnemy.areAllShipsSunken();
     }
 

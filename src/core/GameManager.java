@@ -1,7 +1,8 @@
 package core;
 
 import core.communication_data.*;
-import core.utils.Logger;
+import core.utils.logging.LoggerLogic;
+import core.utils.logging.LoggerState;
 
 public class GameManager implements GameManagerInterface {
 
@@ -56,7 +57,6 @@ public class GameManager implements GameManagerInterface {
         TurnResult res = this.turn(this.player1, pos);
         this.lastTurnP1 = res;
         if (!res.isTURN_AGAIN() && !res.isFINISHED()){
-            Logger.info("Theoretical move of next player");
             // TODO start in new thread
             this.nextPlayer();
             this.player2Turn();
@@ -136,6 +136,7 @@ public class GameManager implements GameManagerInterface {
      */
     private void nextPlayer() {
         this.currentPlayer = this.otherPlayer(this.currentPlayer);
+        LoggerState.info("Next Player: " + this.currentPlayer);
     }
 
     private void player2Turn(){
@@ -143,7 +144,7 @@ public class GameManager implements GameManagerInterface {
         do {
             Position pos = this.currentPlayer.makeTurn();
             res = this.shootP2(pos);
-            Logger.debug(res);
+            LoggerLogic.info("player2Turn result: " + res);
         }while (res.isTURN_AGAIN());
     }
 

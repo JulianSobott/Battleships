@@ -1,6 +1,6 @@
 package gui;
 
-import core.utils.Logger;
+import core.utils.logging.LoggerState;
 import gui.WindowChange.SceneLoader;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +14,9 @@ import java.io.IOException;
 public class Main extends Application {
 
     public static void main(String[] args) {
+        LoggerState.info("Start Program");
         launch(args);
+        LoggerState.info("End Program");
     }
 
     @Override
@@ -22,6 +24,7 @@ public class Main extends Application {
         ControllerMainMenu controllerMainMenu = new ControllerMainMenu();
         SceneLoader sceneLoader = new SceneLoader(null, "../Main_Menu.fxml", controllerMainMenu);
         sceneLoader.loadSceneInNewWindow("Battleship");
+
 
     }
 }

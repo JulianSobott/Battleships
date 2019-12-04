@@ -6,8 +6,9 @@ import java.util.logging.LogRecord;
 
 public class CoreFunctions {
 
-    private static final String format = "[%1$s] [%2$s] %3$s [%4$tF %4$tT] (%5$s.%6$s %7$s %8$s) ";
-    private static final int STACK_TILL_FUNCTION = 10;
+    private static final String format = "[%1$s] [%2$s] %3$s %n \t\t\t\t[%4$tF %4$tT] (%5$s.%6$s Line: %7$s, Thread: " +
+            "%8$s) %n";
+    private static final int STACK_TILL_FUNCTION = 11;
 
     public static Level level = CustomLevel.DEBUG;
 

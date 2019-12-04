@@ -1,7 +1,7 @@
 package core;
 
 import core.communication_data.*;
-import core.utils.Logger;
+import core.utils.logging.LoggerLogic;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,7 +36,7 @@ public class PlaygroundOwn extends Playground {
      * @return An result that indicates whether it was successfully placed or not.
      */
     private PlaceShipResult placeShip(ShipPosition position, Ship ship){
-        Logger.info(Logger.Logic, "placeShip: position=" + position + ", ship=" + ship);
+        LoggerLogic.info("placeShip: position=" + position + ", ship=" + ship);
         PlaceShipResult res;
         if(ship == null)
             res = PlaceShipResult.failed(position, null, PlaceShipResult.Error.NO_MORE_SHIPS);
@@ -54,7 +54,7 @@ public class PlaygroundOwn extends Playground {
             this.shipHashMap.put(shipID, ship);
             res =  PlaceShipResult.success(position, shipID);
         }
-        Logger.info(Logger.Logic, "placeShip return: PlaceShipResult=" + res);
+        LoggerLogic.info( "placeShip return: PlaceShipResult=" + res);
         return res;
     }
 
@@ -66,7 +66,7 @@ public class PlaygroundOwn extends Playground {
      * @return PlaceShipResult of the placeShip method.
      */
     public PlaceShipResult moveShip(ShipID id, ShipPosition newPosition){
-        Logger.info(Logger.Logic, "moveShip: id=" + id + "newPosition=" + newPosition );
+        LoggerLogic.info( "moveShip: id=" + id + "newPosition=" + newPosition );
         Ship ship = this.getShipByID(id);
         PlaceShipResult res;
         if(ship == null) {
@@ -79,7 +79,7 @@ public class PlaygroundOwn extends Playground {
                 this.placeShip(oldPosition, ship);
             }
         }
-        Logger.info(Logger.Logic, "moveShip return: PlaceShipResult=" + res);
+        LoggerLogic.info( "moveShip return: PlaceShipResult=" + res);
         return res;
     }
 
@@ -89,7 +89,7 @@ public class PlaygroundOwn extends Playground {
      * @return true if the id exists, false otherwise
      */
     public boolean deleteShip(ShipID id){
-        Logger.info(Logger.Logic, "deleteShip: id=" + id);
+        LoggerLogic.info( "deleteShip: id=" + id);
         Ship ship = this.getShipByID(id);
         boolean res;
         if(ship == null) {
@@ -101,7 +101,7 @@ public class PlaygroundOwn extends Playground {
             this.shipHashMap.remove(id);
             res = true;
         }
-        Logger.info(Logger.Logic, "deleteShip return: PlaceShipResult=" + res);
+        LoggerLogic.info( "deleteShip return: PlaceShipResult=" + res);
         return res;
     }
 
@@ -151,13 +151,12 @@ public class PlaygroundOwn extends Playground {
                 if(!foundPlace) break;
             }
             if(foundPlace) {
-                Logger.debug("Found in iteration: " + iteration);
+                LoggerLogic.debug("Found in iteration: " + iteration);
                 break;
             }
         }
         if(foundPlace){
-            Logger.debug("Successfully placed ships");
-            this.printField();
+            LoggerLogic.info("Successfully placed ships");
             PlaceShipsRandomRes.ShipData[] data = new PlaceShipsRandomRes.ShipData[shipList.getTotalNumberOfShips()];
             int i = 0;
             for(Ship s : this.shipHashMap.values()){
@@ -165,7 +164,7 @@ public class PlaygroundOwn extends Playground {
             }
             return PlaceShipsRandomRes.success(data);
         }else{
-            Logger.debug("Could not place ships");
+            LoggerLogic.warning("Could not place ships");
             return PlaceShipsRandomRes.failure();
         }
 
@@ -191,7 +190,7 @@ public class PlaygroundOwn extends Playground {
      * @return A ShotResult, with information about what field was hit
      */
     public ShotResult gotHit(Position position){
-        Logger.info(Logger.Logic, "gotHit: position=" + position);
+        LoggerLogic.info("gotHit: position=" + position);
         Field f = this.elements[position.getY()][position.getX()];
         f.hit = true;
         f.element.gotHit();
@@ -207,7 +206,7 @@ public class PlaygroundOwn extends Playground {
         }else{
             res = new ShotResultWater(position, f.type);
         }
-        Logger.info(Logger.Logic, "gotHit return: ShotResult=" + res);
+        LoggerLogic.info("gotHit return: ShotResult=" + res);
         return res;
     }
 
@@ -262,6 +261,6 @@ public class PlaygroundOwn extends Playground {
             }
             s.append("\n");
         }
-        Logger.debug(s);
+        LoggerLogic.debug(s.toString());
     }
 }

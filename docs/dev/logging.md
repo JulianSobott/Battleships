@@ -10,7 +10,8 @@ LoggerState.info("TURN PLAYER " + player);
 
 ## Message structure
 
-\[TOPIC] \[LEVEL] MESSAGE \[TIME] (CODE POSITION) (THREAD_NAME)
+\[TOPIC] \[LEVEL] MESSAGE 
+    \[TIME] (CODE POSITION) (THREAD_NAME)
 
 
 ### LEVEL:

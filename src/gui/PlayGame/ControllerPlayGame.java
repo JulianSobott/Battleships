@@ -5,16 +5,11 @@ import core.Playground;
 import core.communication_data.Position;
 import core.communication_data.ShipPosition;
 import core.communication_data.TurnResult;
-import core.utils.Logger;
+import core.utils.logging.LoggerGUI;
 import gui.UiClasses.BattleShipGui;
-import gui.UiClasses.HBoxExends;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DataFormat;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 
 import java.net.URL;
@@ -189,7 +184,6 @@ public class ControllerPlayGame implements Initializable {
             int row = GridPane.getRowIndex(p);
             Position pos = new Position(col, row);
             TurnResult res = this.gameManager.shootP1(pos);
-            Logger.debug(res);
             if(res.getError() == TurnResult.Error.NONE){
                 if(res.getSHOT_RESULT().getType() == Playground.FieldType.SHIP){
                     p.setStyle("-fx-background-color: #ff0000");
@@ -197,7 +191,8 @@ public class ControllerPlayGame implements Initializable {
                     p.setStyle("-fx-background-color: #ffff00");
                 }
             }else{
-                Logger.warning(res);
+                // TODO: show to user
+                LoggerGUI.warning("Show this message to the user: " + res);
             }
             if(!res.isTURN_AGAIN() && !res.isFINISHED()){
                 this.getEnemyTurn();
@@ -210,7 +205,7 @@ public class ControllerPlayGame implements Initializable {
             @Override
             public void run() {
                 TurnResult res = gameManager.getTurnPlayer2();
-                Logger.debug("AI TURN res in GUI: ", res);
+                LoggerGUI.info("getTurnPlayer2 result: " + res);
                 if(res.getError() == TurnResult.Error.NONE){
                     Position position = res.getSHOT_RESULT().getPosition();
                     int index = position.getX() * playgroundSize + position.getY();

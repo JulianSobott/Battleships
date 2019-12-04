@@ -4,7 +4,6 @@ import core.GameManager;
 import core.Player;
 import core.communication_data.GameSettings;
 import core.communication_data.NewGameResult;
-import core.utils.Logger;
 import gui.ControllerMainMenu;
 import gui.ShipPlacement.ControllerShipPlacement;
 import gui.WindowChange.SceneLoader;
