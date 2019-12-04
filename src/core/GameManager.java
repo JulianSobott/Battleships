@@ -102,6 +102,8 @@ public class GameManager implements GameManagerInterface {
         }else{
             res = this.shoot(player, position);
         }
+        LoggerLogic.info("Enemy playground from player: player=" + player);
+        player.playgroundEnemy.printField();
         LoggerLogic.info("turn result: TurnResult=" + res);
         return res;
     }

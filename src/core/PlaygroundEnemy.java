@@ -1,20 +1,29 @@
 package core;
 
 import core.communication_data.Position;
+import core.communication_data.ShipList;
 import core.communication_data.TurnResult;
 import core.utils.logging.LoggerLogic;
 
 public class PlaygroundEnemy extends Playground{
 
+    private int numShipsFields = 0;
+    private int numHitShipsFields = 0;
 
     public PlaygroundEnemy(int size) {
         super(size);
         this.resetFields(FieldType.FOG);
+
+        ShipList l = ShipList.fromSize(size);
+        for(ShipList.Pair p : l){
+            this.numShipsFields += p.getSize() * p.getNum();
+        }
     }
 
     public void updateField(Position position, FieldType type){
         PlaygroundElement element;
         if(type == FieldType.SHIP){
+            this.numHitShipsFields++;
             element = this.getShipAtPosition(position.getX(), position.getY());
         }else {
             element = new WaterElement();
@@ -27,12 +36,10 @@ public class PlaygroundEnemy extends Playground{
     }
 
     public boolean areAllShipsSunken(){
-        // TODO: Implement
-        return false;
+        return this.numShipsFields == this.numHitShipsFields;
     }
 
     public TurnResult.Error canShootAt(Position position) {
-        this.printField();
         if (position.isOutsideOfPlayground(this.size))
             return TurnResult.Error.NOT_ON_PLAYGROUND;
         if (this.elements[position.getY()][position.getX()].type != FieldType.FOG)

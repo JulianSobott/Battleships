@@ -10,6 +10,7 @@ public class PlayerAI extends Player {
     public PlayerAI(String name, int playgroundSize) {
         super(name, playgroundSize);
         this.playgroundOwn.placeShipsRandom();
+        this.playgroundOwn.printField();
     }
 
     @Override
