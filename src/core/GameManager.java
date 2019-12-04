@@ -121,8 +121,8 @@ public class GameManager implements GameManagerInterface {
         else {
             ShotResult resShot = this.otherPlayer(player).gotHit(position);
             player.update(resShot);
-            boolean shootAgain = resShot.getType() == Playground.FieldType.SHIP;
             boolean isFinished = player.allEnemyShipsSunken();
+            boolean shootAgain = resShot.getType() == Playground.FieldType.SHIP && !isFinished;
             res = new TurnResult(resShot, shootAgain, isFinished);
         }
         return res;
