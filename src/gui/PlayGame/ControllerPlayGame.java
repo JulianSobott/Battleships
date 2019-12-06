@@ -7,6 +7,7 @@ import core.communication_data.ShipPosition;
 import core.communication_data.TurnResult;
 import core.utils.logging.LoggerGUI;
 import gui.UiClasses.BattleShipGui;
+import gui.UiClasses.PaneExtends;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -118,10 +119,10 @@ public class ControllerPlayGame implements Initializable {
 
     private void generateWater(int possHorizontal, int possVertical, GridPane gridPane) {
 
-        Pane p = new Pane();
+        PaneExtends p = new PaneExtends(PaneExtends.FieldType.FOG);
         p.setStyle("-fx-background-color: #2E64FE");
         gridPane.add(p, possHorizontal, possVertical);
-        if(gridPane == this.gridPaneEnemyField) {
+        if (gridPane == this.gridPaneEnemyField) {
             this.addClickFieldEvent(p);
         }
     }
@@ -141,31 +142,32 @@ public class ControllerPlayGame implements Initializable {
     }
 
 
-
     /**
      * The method places the graphic object on the surface.
      *
      * @param battleShipGui Object that holds all important information about the graphical object.
      */
 
-    private void addShipToPlayground( BattleShipGui battleShipGui) {
+    private void addShipToPlayground(BattleShipGui battleShipGui) {
 
         if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.HORIZONTAL) {
 
             int index = battleShipGui.getPosition().getX() * playgroundSize + battleShipGui.getPosition().getY();
-            for (int i = 0; i < battleShipGui.getPosition().getLength() ; i++) {
-                Pane pane = (Pane) gridPaneOwnField.getChildren().get(index);
+            for (int i = 0; i < battleShipGui.getPosition().getLength(); i++) {
+                PaneExtends pane = (PaneExtends) gridPaneOwnField.getChildren().get(index);
                 pane.setStyle("-fx-background-color: #00ff00");
-                index+= playgroundSize;
+                pane.setFieldType(PaneExtends.FieldType.SHIP);
+                index += playgroundSize;
             }
         }
         if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.VERTICAL) {
 
-          int index = battleShipGui.getPosition().getX() * playgroundSize + battleShipGui.getPosition().getY();
-            for (int i = 0; i < battleShipGui.getPosition().getLength() ; i++) {
+            int index = battleShipGui.getPosition().getX() * playgroundSize + battleShipGui.getPosition().getY();
+            for (int i = 0; i < battleShipGui.getPosition().getLength(); i++) {
 
-                Pane pane = (Pane) gridPaneOwnField.getChildren().get(index);
+                PaneExtends pane = (PaneExtends) gridPaneOwnField.getChildren().get(index);
                 pane.setStyle("-fx-background-color: #00ff00");
+                pane.setFieldType(PaneExtends.FieldType.SHIP);
                 index++;
 
             }
@@ -173,26 +175,32 @@ public class ControllerPlayGame implements Initializable {
     }
 
 
+    /**
+     * ############################################# Turn #######################################################
+     */
 
-    /** ############################################# Turn ####################################################### */
-
-    private void addClickFieldEvent(Pane p) {
+    private void addClickFieldEvent(PaneExtends p) {
         p.setOnMouseClicked(mouseEvent -> {
             int col = GridPane.getColumnIndex(p);
             int row = GridPane.getRowIndex(p);
             Position pos = new Position(col, row);
             TurnResult res = this.gameManager.shootP1(pos);
-            if(res.getError() == TurnResult.Error.NONE){
-                if(res.getSHOT_RESULT().getType() == Playground.FieldType.SHIP){
+            if (res.getError() == TurnResult.Error.NONE) {
+                if (res.getSHOT_RESULT().getType() == Playground.FieldType.SHIP) {
                     p.setStyle("-fx-background-color: #ff0000");
-                }else if(res.getSHOT_RESULT().getType() == Playground.FieldType.WATER){
+                    p.setFieldType(PaneExtends.FieldType.SHIP);
+                } else if (res.getSHOT_RESULT().getType() == Playground.FieldType.WATER) {
                     p.setStyle("-fx-background-color: #ffff00");
+                    p.setFieldType(PaneExtends.FieldType.WATER);
+                } else if (false) {
+                    //TODO: Fehlende information, dass Schiff gesunken is
+                    updateGuiShipIsSunken(pos, p, gridPaneEnemyField);
                 }
-            }else{
+            } else {
                 // TODO: show to user
                 LoggerGUI.warning("Show this message to the user: " + res);
             }
-            if(!res.isTURN_AGAIN() && !res.isFINISHED()){
+            if (!res.isTURN_AGAIN() && !res.isFINISHED()) {
                 this.getEnemyTurns();
             }
         });
@@ -206,20 +214,56 @@ public class ControllerPlayGame implements Initializable {
                 do {
                     res = gameManager.getTurnPlayer2();
                     LoggerGUI.info("getTurnPlayer2 result: " + res);
-                    if(res.getError() == TurnResult.Error.NONE){
+                    if (res.getError() == TurnResult.Error.NONE) {
                         Position position = res.getSHOT_RESULT().getPosition();
                         int index = position.getX() * playgroundSize + position.getY();
-                        Pane p = (Pane)gridPaneOwnField.getChildren().get(index);
-                        if(res.getSHOT_RESULT().getType() == Playground.FieldType.SHIP){
+                        PaneExtends p = (PaneExtends) gridPaneOwnField.getChildren().get(index);
+                        if (res.getSHOT_RESULT().getType() == Playground.FieldType.SHIP) {
                             p.setStyle("-fx-background-color: #ff0000");
-                        }else if(res.getSHOT_RESULT().getType() == Playground.FieldType.WATER){
+                            p.setFieldType(PaneExtends.FieldType.SHIP);
+                        } else if (res.getSHOT_RESULT().getType() == Playground.FieldType.WATER) {
                             p.setStyle("-fx-background-color: #ffff00");
+                            p.setFieldType(PaneExtends.FieldType.SHIP);
                         }
                     }
-                }while (res.isTURN_AGAIN());
+                } while (res.isTURN_AGAIN());
             }
         }).start();
     }
+
+
+    /**
+     * This method changes all fields around the sunken ships to the status "water".
+     */
+
+    //TODO: Es wird die Information benötigt, dass das Schiff versenkt wurde
+    private void updateGuiShipIsSunken(Position position, PaneExtends paneExtends, GridPane gridPane) {
+
+        String alignment = "failure";
+        int index = position.getX() * playgroundSize + position.getY();
+        int startIndex = -1;
+
+        PaneExtends paneTestTop = (PaneExtends) gridPane.getChildren().get(index - 1);
+        PaneExtends paneTestDown = (PaneExtends) gridPane.getChildren().get(index + 1);
+        if (paneTestTop.getFieldType().equals(PaneExtends.FieldType.SHIP) || paneTestDown.getFieldType().equals(PaneExtends.FieldType.SHIP)) {
+            alignment = "Vertical";
+        } else {
+            alignment = "Horizontal";
+        }
+
+        if (alignment.equals("Vertical")){
+
+            startIndex = index;
+            PaneExtends paneExtendsFindMinIndex = (PaneExtends) gridPane.getChildren().get(index);
+            while ( paneExtendsFindMinIndex.getFieldType().equals(PaneExtends.FieldType.SHIP) )
+            {
+                //TODO : startindex berechnen + verfahren zum füllen der Felder um Schiff entwickeln..
+                startIndex--;
+            }
+        }
+
+    }
+
 
     /** ##########################################   Window Navigation  ############################################## */
 
@@ -231,7 +275,6 @@ public class ControllerPlayGame implements Initializable {
     public void goBackToShipPlacement() {
 
     }
-
 
 
 }
