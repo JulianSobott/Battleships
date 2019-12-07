@@ -347,6 +347,19 @@ public class ControllerPlayGame implements Initializable {
 
     }
 
+    /**
+     * update Gui fields around sunken Ship
+     */
+
+    private void updateGuiFieldsAroundShip(ArrayList<Integer> waterPosAroundShip, GridPane gridPane){
+
+        for (Integer index : waterPosAroundShip ) {
+
+            PaneExtends paneExtends = (PaneExtends) gridPane.getChildren().get(index);
+            paneExtends.setStyle("-fx-background-color: #ffff00");
+        }
+    }
+
 
     /** ##########################################   Window Navigation  ############################################## */
 
