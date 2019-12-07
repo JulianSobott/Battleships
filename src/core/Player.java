@@ -39,6 +39,12 @@ public abstract class Player {
 
     public void update(ShotResult result) {
         this.playgroundEnemy.updateField(result.getPosition(), result.getType());
+        if(result.getType() == Playground.FieldType.SHIP){
+            ShotResultShip resultShip = (ShotResultShip)result;
+            if(resultShip.getStatus() == Ship.LifeStatus.SUNKEN){
+                this.playgroundEnemy.hitWaterFieldsAroundSunkenShip(resultShip.getWaterFields());
+            }
+        }
     }
 
     public PlaceShipsRandomRes placeShipsRandom() {

@@ -199,6 +199,7 @@ public class PlaygroundOwn extends Playground {
             Ship s = (Ship) f.element;
             if (s.getStatus() == Ship.LifeStatus.SUNKEN) {
                 Position[] surroundingWaterPositions = this.getSurroundingWaterPositions(s);
+                this.hitWaterFieldsAroundSunkenShip(surroundingWaterPositions);
                 res = new ShotResultShip(position, FieldType.SHIP, s.getStatus(), surroundingWaterPositions);
             } else {
                 res = new ShotResultShip(position, FieldType.SHIP, s.getStatus());
@@ -224,9 +225,11 @@ public class PlaygroundOwn extends Playground {
             for (int[] surrPos : surroundingFields) {
                 int x = surrPos[0] + shipPosition.getX();
                 int y = surrPos[1] + shipPosition.getY();
-                Position pos = new Position(x, y);
-                if (!pos.isOutsideOfPlayground(this.size) && this.elements[y][x].type == FieldType.WATER) {
-                    waterPositions.add(pos);
+                if(!(x < 0 || y < 0)){
+                    Position pos = new Position(x, y);
+                    if (!pos.isOutsideOfPlayground(this.size) && this.elements[y][x].type == FieldType.WATER) {
+                        waterPositions.add(pos);
+                    }
                 }
             }
         }

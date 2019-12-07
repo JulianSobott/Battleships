@@ -79,6 +79,22 @@ public abstract class Playground {
         // TODO: Maybe add build factories: e.g. newWater(),
     }
 
+    /**
+     * Call when a ship is sunken and water fields around can no longer be hit.
+     *
+     * @param waterFields All positions around the Ship where water is. All Positions exist and are on the playground
+     */
+    public void hitWaterFieldsAroundSunkenShip(Position[] waterFields){
+        for(Position position : waterFields){
+            Field f = this.elements[position.getY()][position.getX()];
+            f.element = new WaterElement();
+            f.type = FieldType.WATER;
+            f.hit = true;
+            f.element.gotHit();
+        }
+        this.printField();
+    }
+
     public int getSize() {
         return size;
     }

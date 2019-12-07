@@ -31,6 +31,8 @@ public class PlaygroundEnemy extends Playground{
         this.elements[position.getY()][position.getX()] = new Field(type, element, true);
     }
 
+
+
     private Ship getShipAtPosition(int x, int y){
         return null;
     }
@@ -44,6 +46,8 @@ public class PlaygroundEnemy extends Playground{
             return TurnResult.Error.NOT_ON_PLAYGROUND;
         if (this.elements[position.getY()][position.getX()].type != FieldType.FOG)
             return TurnResult.Error.FIELD_ALREADY_DISCOVERED;
+        else
+            assert !this.elements[position.getY()][position.getX()].hit : "When field was hit it can not be fog";
         return TurnResult.Error.NONE;
     }
 
