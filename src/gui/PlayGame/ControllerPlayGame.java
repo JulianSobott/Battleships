@@ -233,7 +233,15 @@ public class ControllerPlayGame implements Initializable {
 
 
     /**
+     * ############################# CHANGE ALL FIELDS AROUND SUNKEN SHIP TO WATER #####################################
+     */
+
+    /**
      * This method changes all fields around the sunken ships to the status "water".
+     *
+     * @param position    Position Where on the playing field was shot
+     * @param paneExtends Gui element which stores information about its state (ship, fog, water)
+     * @param gridPane    The playing field from which the field comes
      */
 
     //TODO: Es wird die Information benötigt, dass das Schiff versenkt wurde
@@ -241,7 +249,7 @@ public class ControllerPlayGame implements Initializable {
 
         String alignment = "failure";
         int index = position.getX() * playgroundSize + position.getY();
-        int startIndex = -1;
+        int startIndex = -1, shipSize = -1;
 
         PaneExtends paneTestTop = (PaneExtends) gridPane.getChildren().get(index - 1);
         PaneExtends paneTestDown = (PaneExtends) gridPane.getChildren().get(index + 1);
@@ -250,17 +258,76 @@ public class ControllerPlayGame implements Initializable {
         } else {
             alignment = "Horizontal";
         }
+        PaneExtends paneExtendsFindMinIndex = (PaneExtends) gridPane.getChildren().get(index);
+        if (alignment.equals("Vertical")) {
+            while (paneExtendsFindMinIndex.getFieldType().equals(PaneExtends.FieldType.SHIP)) {
+                index--;
+                paneExtendsFindMinIndex = (PaneExtends) gridPane.getChildren().get(index);
+            }
+            startIndex = index + 1;
+            shipSize = getShipSize(startIndex, alignment, gridPane);
+            //TODO FELDER ERMITTELN
+            //TODO FELDER EINFÄRBEN
 
-        if (alignment.equals("Vertical")){
+        } else if (alignment.equals("Horizontal")) {
+            while (paneExtendsFindMinIndex.getFieldType().equals(PaneExtends.FieldType.SHIP)) {
+                index = index - playgroundSize;
+                paneExtendsFindMinIndex = (PaneExtends) gridPane.getChildren().get(index);
+            }
+            startIndex = index + playgroundSize;
+            shipSize = getShipSize(startIndex, alignment, gridPane);
+            //TODO FELDER ERMITTELN
+            //TODO FELDER EINFÄRBEN
+        } else {
+            LoggerGUI.warning("Aliment of Ship could be be determined: " + alignment);
+        }
+    }
 
-            startIndex = index;
-            PaneExtends paneExtendsFindMinIndex = (PaneExtends) gridPane.getChildren().get(index);
-            while ( paneExtendsFindMinIndex.getFieldType().equals(PaneExtends.FieldType.SHIP) )
-            {
-                //TODO : startindex berechnen + verfahren zum füllen der Felder um Schiff entwickeln..
-                startIndex--;
+
+    /**
+     * Algorithm for getting Ship size
+     */
+
+    private int getShipSize(int startIndex, String alignment, GridPane gridPane) {
+
+        int shipSize = 0, index = startIndex;
+        PaneExtends paneExtendsFindMinIndex = (PaneExtends) gridPane.getChildren().get(index);
+        if (alignment.equals("Horizontal")) {
+            while (paneExtendsFindMinIndex.getFieldType().equals(PaneExtends.FieldType.SHIP)) {
+                index = index + playgroundSize;
+                paneExtendsFindMinIndex = (PaneExtends) gridPane.getChildren().get(index);
+                shipSize++;
+            }
+            startIndex = index + playgroundSize;
+        } else if (alignment.equals("Horizontal")) {
+            while (paneExtendsFindMinIndex.getFieldType().equals(PaneExtends.FieldType.SHIP)) {
+                index = index + playgroundSize;
+                paneExtendsFindMinIndex = (PaneExtends) gridPane.getChildren().get(index);
+                shipSize++;
             }
         }
+        return shipSize;
+    }
+
+
+    /**
+     * Algorithm for determining the required fields for horizontal ships
+     */
+
+    private void SunkVerticalShipSurroundedByWater(int shipSize, int shipMinIndex) {
+
+        ArrayList<Integer> indexPlaygroundFields = new ArrayList<Integer>();
+        int indexMinWater;
+
+
+    }
+
+    /**
+     * Algorithm for determining the required fields for vertical ships
+     */
+
+    private void SunkHorizontalShipSurroundedByWater() {
+
 
     }
 
