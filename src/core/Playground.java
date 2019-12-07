@@ -4,6 +4,8 @@ import core.communication_data.Position;
 import core.communication_data.ShipList;
 import core.utils.logging.LoggerLogic;
 
+import java.util.Arrays;
+
 public abstract class Playground {
 
     /**
@@ -96,12 +98,12 @@ public abstract class Playground {
      * @param waterFields All positions around the Ship where water is. All Positions exist and are on the playground
      */
     public void hitWaterFieldsAroundSunkenShip(Position[] waterFields){
+        LoggerLogic.info("hitWaterFieldsAroundSunkenShip: waterFields= " + Arrays.toString(waterFields));
         for(Position position : waterFields){
             Field f = Field.newWaterField();
             f.gotHit();
             this.elements[position.getY()][position.getX()] = f;
         }
-        this.printField();
     }
 
     public int getSize() {
