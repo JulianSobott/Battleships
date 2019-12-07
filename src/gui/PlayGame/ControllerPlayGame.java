@@ -314,19 +314,35 @@ public class ControllerPlayGame implements Initializable {
      * Algorithm for determining the required fields for horizontal ships
      */
 
-    private void SunkVerticalShipSurroundedByWater(int shipSize, int shipMinIndex) {
+    private ArrayList<Integer> sunkVerticalShipSurroundedByWater(int shipSize, int shipMinIndex) {
 
+        int indexMinWater = -1;
+        boolean NO_WATER_TOP, NO_WATER_DOWN, NO_WATER_LEFT, NO_WATER_RIGHT;
         ArrayList<Integer> indexPlaygroundFields = new ArrayList<Integer>();
-        int indexMinWater;
+        if (shipMinIndex - (playgroundSize + 1) >= 0) {
+            indexMinWater = shipMinIndex - (playgroundSize + 1);
+        } else if (shipMinIndex - 1 >= 0) {
+            indexMinWater = shipMinIndex - 1;
+        } else {
+            LoggerGUI.error("indexMinWater: " + indexMinWater);
+        }
 
-
+        for (int i = 0; i < shipSize + 2; i++) {
+            indexPlaygroundFields.add(indexMinWater + i);
+        }
+        indexPlaygroundFields.add(shipMinIndex - 1);
+        indexPlaygroundFields.add(shipMinIndex + shipSize + 1);
+        for (int i = 0; i < shipSize + 2; i++) {
+            indexPlaygroundFields.add(shipMinIndex + (playgroundSize - 1 + i));
+        }
+        return indexPlaygroundFields;
     }
 
     /**
      * Algorithm for determining the required fields for vertical ships
      */
 
-    private void SunkHorizontalShipSurroundedByWater() {
+    private void SunkHorizontalShipSurroundedByWater(int shipSize, int shipMinIndex) {
 
 
     }
