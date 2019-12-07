@@ -2,8 +2,10 @@ package gui.PlayGame;
 
 import core.GameManager;
 import core.Playground;
+import core.Ship;
 import core.communication_data.Position;
 import core.communication_data.ShipPosition;
+import core.communication_data.ShotResultShip;
 import core.communication_data.TurnResult;
 import core.utils.logging.LoggerGUI;
 import gui.UiClasses.BattleShipGui;
@@ -189,6 +191,12 @@ public class ControllerPlayGame implements Initializable {
                 if (res.getSHOT_RESULT().getType() == Playground.FieldType.SHIP) {
                     p.setStyle("-fx-background-color: #ff0000");
                     p.setFieldType(PaneExtends.FieldType.SHIP);
+                    ShotResultShip shotResultShip = (ShotResultShip)res.getSHOT_RESULT();
+                    if(shotResultShip.getStatus() == Ship.LifeStatus.SUNKEN){
+                        Position[] waterFields = shotResultShip.getWaterFields();
+                        // TODO: Create CONSTANTS for colors. Or later on images
+                        this.color_fields(waterFields, "#0000ff", this.gridPaneEnemyField);
+                    }
                 } else if (res.getSHOT_RESULT().getType() == Playground.FieldType.WATER) {
                     p.setStyle("-fx-background-color: #ffff00");
                     p.setFieldType(PaneExtends.FieldType.WATER);
@@ -204,6 +212,18 @@ public class ControllerPlayGame implements Initializable {
                 this.getEnemyTurns();
             }
         });
+    }
+
+    private void color_fields(Position[] waterFields, String color, GridPane gridPane) {
+        for(Position position : waterFields){
+            int index = this.position2index(position);
+            PaneExtends p = (PaneExtends) gridPane.getChildren().get(index);
+            p.setStyle("-fx-background-color: " + color);
+        }
+    }
+
+    private int position2index(Position position){
+        return  position.getX() * playgroundSize + position.getY();
     }
 
     private void getEnemyTurns() {
