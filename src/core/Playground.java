@@ -62,7 +62,7 @@ public abstract class Playground {
     }
 
     public static class Field {
-        boolean hit;
+        private boolean hit;
         FieldType type;
         PlaygroundElement element;
 
@@ -76,7 +76,18 @@ public abstract class Playground {
             this(type, element, false);
         }
 
-        // TODO: Maybe add build factories: e.g. newWater(),
+        static Field newWaterField(){
+            return new Field(FieldType.WATER, new WaterElement(), false);
+        }
+
+        void gotHit(){
+            this.hit = true;
+            this.element.gotHit();
+        }
+
+        public boolean isHit() {
+            return hit;
+        }
     }
 
     /**
@@ -86,11 +97,9 @@ public abstract class Playground {
      */
     public void hitWaterFieldsAroundSunkenShip(Position[] waterFields){
         for(Position position : waterFields){
-            Field f = this.elements[position.getY()][position.getX()];
-            f.element = new WaterElement();
-            f.type = FieldType.WATER;
-            f.hit = true;
-            f.element.gotHit();
+            Field f = Field.newWaterField();
+            f.gotHit();
+            this.elements[position.getY()][position.getX()] = f;
         }
         this.printField();
     }

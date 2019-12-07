@@ -192,8 +192,7 @@ public class PlaygroundOwn extends Playground {
     public ShotResult gotHit(Position position){
         LoggerLogic.info("gotHit: position=" + position);
         Field f = this.elements[position.getY()][position.getX()];
-        f.hit = true;
-        f.element.gotHit();
+        f.gotHit();
         ShotResult res;
         if(f.type == FieldType.SHIP){
             Ship s = (Ship) f.element;

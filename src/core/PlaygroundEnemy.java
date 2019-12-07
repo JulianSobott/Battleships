@@ -47,7 +47,7 @@ public class PlaygroundEnemy extends Playground{
         if (this.elements[position.getY()][position.getX()].type != FieldType.FOG)
             return TurnResult.Error.FIELD_ALREADY_DISCOVERED;
         else
-            assert !this.elements[position.getY()][position.getX()].hit : "When field was hit it can not be fog";
+            assert !this.elements[position.getY()][position.getX()].isHit() : "When field was hit it can not be fog";
         return TurnResult.Error.NONE;
     }
 
