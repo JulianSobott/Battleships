@@ -61,13 +61,13 @@ public abstract class Playground {
 
     public enum FieldType{
         SHIP, WATER, FOG;
+
     }
-
     public static class Field {
-        private boolean hit;
-        FieldType type;
-        PlaygroundElement element;
 
+        private boolean hit;
+        public FieldType type;
+        public PlaygroundElement element;
         public Field(FieldType type, PlaygroundElement element, boolean hit){
             this.hit = hit;
             this.type = type;
@@ -78,11 +78,11 @@ public abstract class Playground {
             this(type, element, false);
         }
 
-        static Field newWaterField(){
+        public static Field newWaterField(){
             return new Field(FieldType.WATER, new WaterElement(), false);
         }
 
-        void gotHit(){
+        public void gotHit(){
             this.hit = true;
             this.element.gotHit();
         }
@@ -90,8 +90,8 @@ public abstract class Playground {
         public boolean isHit() {
             return hit;
         }
-    }
 
+    }
     /**
      * Call when a ship is sunken and water fields around can no longer be hit.
      *
@@ -130,5 +130,9 @@ public abstract class Playground {
             s.append("\n");
         }
         LoggerLogic.debug(s.toString());
+    }
+
+    public Field[][] getFields() {
+        return this.elements;
     }
 }

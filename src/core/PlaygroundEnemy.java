@@ -21,6 +21,7 @@ public class PlaygroundEnemy extends Playground{
     }
 
     public void updateField(Position position, FieldType type){
+        // TODO: Handle sunken ships
         PlaygroundElement element;
         if(type == FieldType.SHIP){
             this.numHitShipsFields++;
@@ -34,6 +35,7 @@ public class PlaygroundEnemy extends Playground{
 
 
     private Ship getShipAtPosition(int x, int y){
+        // TODO
         return null;
     }
 

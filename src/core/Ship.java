@@ -30,7 +30,7 @@ public class Ship extends PlaygroundElement implements Serializable {
         this(length, ShipID.getNextShipID(), ShipPosition.DEFAULT(length));
     }
 
-    LifeStatus getStatus() {
+    public LifeStatus getStatus() {
         if(this.lives == 0)
             return LifeStatus.SUNKEN;
         else
