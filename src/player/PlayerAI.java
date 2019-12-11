@@ -1,7 +1,11 @@
 package player;
 
 import core.Player;
+import core.Playground;
+import core.PlaygroundEnemy;
+import core.PlaygroundOwn;
 import core.communication_data.Position;
+import core.communication_data.ShipList;
 import core.communication_data.TurnResult;
 import core.utils.logging.LoggerLogic;
 
@@ -21,7 +25,7 @@ public class PlayerAI extends Player {
         super(name, playgroundSize);
         this.playgroundOwn.placeShipsRandom();
         this.playgroundOwn.printField();
-        this.difficulty = Difficulty.EASY;
+        this.difficulty = Difficulty.MEDIUM;
     }
 
     /**
@@ -49,6 +53,11 @@ public class PlayerAI extends Player {
         return pos;
     }
 
+    /**
+     * Search for a random where it is possible to shoot.
+     * No logic nor intelligence.
+     * @return Position
+     */
     private Position makeTurnEasy() {
         Position pos;
         do {
@@ -60,13 +69,54 @@ public class PlayerAI extends Player {
         return pos;
     }
 
+    /**
+     * Find the most possible fields, by trying many possible solutions.
+     *
+     * <b>Algorithm:</b>
+     * <ul>
+     *     <li>in many iterations</li>
+     *          <ul>
+     *              <li>place ships random (take already discovered fields in account.)</li>
+     *              <li>Every field where a ship is placed increase a counter by one</li>
+     *          </ul>
+     *     <li>Return the field with the highest counter</li>
+     * </ul>
+     *
+     * @return Position
+     */
     private Position makeMoveMedium() {
-        // TODO
+        int size = this.playgroundEnemy.getSize();
+        int[][] fieldCounters = new int[size][size];
+        PlaygroundTempAI tempPlayground = new PlaygroundTempAI(size);
+        tempPlayground.copyPlayground(this.playgroundEnemy);    // TODO: Find alternative to coping it every time
+        int numIterations = 1;
+        for(int iteration = 0; iteration < numIterations; iteration++){
+            // TODO: ensure that ships are placed on exiting hits. write complete new method
+            //tempPlayground.placeShipsRandom();
+            for(int y = 0; y < size; y++){
+                for(int x = 0; x < size; x++) {
+                    fieldCounters[y][x] += tempPlayground.isShipAt(new Position(x, y)) ? 1 : 0;
+                }
+            }
+        }
+        this.printHeatMap(fieldCounters);
         return makeTurnEasy();
     }
 
     private Position makeMoveHard() {
         // TODO
         return makeTurnEasy();
+    }
+
+    private void printHeatMap(int[][] map){
+        StringBuilder s = new StringBuilder();
+        s.append("\n");
+        for(int[] row : map){
+            for(int heat : row){
+                s.append(heat);
+            }
+            s.append("\n");
+        }
+        LoggerLogic.debug(s.toString());
     }
 }
