@@ -12,11 +12,13 @@ import java.util.HashMap;
 
 class TestPlaygroundOwn{
 
+    // TODO: Mock ShipList to pass tests
     private PlaygroundOwn playground;
+    private final int SIZE = 6;
 
     @BeforeEach
     void cleanPlayground(){
-        playground = new PlaygroundOwn(6);
+        playground = new PlaygroundOwn(SIZE);
     }
 
     @Test
@@ -97,14 +99,7 @@ class TestPlaygroundOwn{
 
     @Test
     void placeShipsRandom(){
-        ShipList list = new ShipList(new HashMap<Integer, Integer>(){
-            {
-                put(1, 1);
-                put(2, 2);
-                put(3, 2);
-                put(4, 1);
-            }
-        });
+        ShipList list = ShipList.fromSize(SIZE);
         playground.placeShipsRandom(list);
     }
 }
