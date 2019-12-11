@@ -58,7 +58,7 @@ public class ShipList implements Iterable<ShipList.Pair>{
 
     public static ShipList fromSize(int size){
         // TODO: Replace with real implementation
-        return new ShipList(new HashMap<>(){{
+        return new ShipList(new HashMap<Integer, Integer>(){{
             for (int i = 1; i <= size; i++) {
                 put(i, 5);
             }

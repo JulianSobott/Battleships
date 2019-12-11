@@ -15,7 +15,7 @@ class TestShipPool {
 
     @BeforeEach
     void setUp(){
-        ShipList s = new ShipList(new HashMap<>(){{
+        ShipList s = new ShipList(new HashMap<Integer, Integer>(){{
             put(1, 1);
             put(2, 1);
             put(3, 1);
