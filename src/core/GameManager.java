@@ -6,13 +6,15 @@ import core.utils.logging.LoggerState;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class GameManager implements GameManagerInterface {
 
     private Player player1, player2;
     private Player currentPlayer;
 
-    private Queue<TurnResult> lastTurnsP2 = new LinkedList<>(), lastTurnsP1 = new LinkedList<>();
+    private ConcurrentLinkedQueue<TurnResult> lastTurnsP1 = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<TurnResult> lastTurnsP2 = new ConcurrentLinkedQueue<>();
 
 
     @Override
