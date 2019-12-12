@@ -74,7 +74,9 @@ public class ControllerPlayGame implements Initializable {
         preallocateFieldsWithWater(gridPaneEnemyField);
 
         placeOwnShipsOnOwnPlayground();
-
+        this.gameManager.startGame();
+        this.getEnemyTurns();
+        this.getOwnTurns();
     }
 
 
@@ -186,31 +188,31 @@ public class ControllerPlayGame implements Initializable {
             int col = GridPane.getColumnIndex(p);
             int row = GridPane.getRowIndex(p);
             Position pos = new Position(col, row);
-            TurnResult res = this.gameManager.shootP1(pos);
-            if (res.getError() == TurnResult.Error.NONE) {
-                if (res.getSHOT_RESULT().getType() == Playground.FieldType.SHIP) {
-                    p.setStyle("-fx-background-color: #ff0000");
-                    p.setFieldType(PaneExtends.FieldType.SHIP);
-                    ShotResultShip shotResultShip = (ShotResultShip)res.getSHOT_RESULT();
-                    if(shotResultShip.getStatus() == Ship.LifeStatus.SUNKEN){
-                        Position[] waterFields = shotResultShip.getWaterFields();
-                        // TODO: Create CONSTANTS for colors. Or later on images
-                        this.color_fields(waterFields, "#0000ff", this.gridPaneEnemyField);
-                    }
-                } else if (res.getSHOT_RESULT().getType() == Playground.FieldType.WATER) {
-                    p.setStyle("-fx-background-color: #ffff00");
-                    p.setFieldType(PaneExtends.FieldType.WATER);
-                } else if (false) {
-                    //TODO: Fehlende information, dass Schiff gesunken is
-                    updateGuiShipIsSunken(pos, p, gridPaneEnemyField);
-                }
-            } else {
-                // TODO: show to user
-                LoggerGUI.warning("Show this message to the user: " + res);
-            }
-            if (!res.isTURN_AGAIN() && !res.isFINISHED()) {
-                this.getEnemyTurns();
-            }
+            this.gameManager.shootP1(pos);
+//            if (res.getError() == TurnResult.Error.NONE) {
+//                if (res.getSHOT_RESULT().getType() == Playground.FieldType.SHIP) {
+//                    p.setStyle("-fx-background-color: #ff0000");
+//                    p.setFieldType(PaneExtends.FieldType.SHIP);
+//                    ShotResultShip shotResultShip = (ShotResultShip)res.getSHOT_RESULT();
+//                    if(shotResultShip.getStatus() == Ship.LifeStatus.SUNKEN){
+//                        Position[] waterFields = shotResultShip.getWaterFields();
+//                        // TODO: Create CONSTANTS for colors. Or later on images
+//                        this.color_fields(waterFields, "#0000ff", this.gridPaneEnemyField);
+//                    }
+//                } else if (res.getSHOT_RESULT().getType() == Playground.FieldType.WATER) {
+//                    p.setStyle("-fx-background-color: #ffff00");
+//                    p.setFieldType(PaneExtends.FieldType.WATER);
+//                } else if (false) {
+//                    //TODO: Fehlende information, dass Schiff gesunken is
+//                    updateGuiShipIsSunken(pos, p, gridPaneEnemyField);
+//                }
+//            } else {
+//                // TODO: show to user
+//                LoggerGUI.warning("Show this message to the user: " + res);
+//            }
+//            if (!res.isTURN_AGAIN() && !res.isFINISHED()) {
+//                this.getEnemyTurns();
+//            }
         });
     }
 
@@ -246,7 +248,33 @@ public class ControllerPlayGame implements Initializable {
                             p.setFieldType(PaneExtends.FieldType.SHIP);
                         }
                     }
-                } while (res.isTURN_AGAIN());
+                } while (!res.isFINISHED());
+            }
+        }).start();
+    }
+
+    // TODO: Make one method with enemyTurns
+    private void getOwnTurns() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                TurnResult res;
+                do {
+                    res = gameManager.getTurnPlayer1();
+                    LoggerGUI.info("getTurnPlayer1 result: " + res);
+                    if (res.getError() == TurnResult.Error.NONE) {
+                        Position position = res.getSHOT_RESULT().getPosition();
+                        int index = position.getX() * playgroundSize + position.getY();
+                        PaneExtends p = (PaneExtends) gridPaneEnemyField.getChildren().get(index);
+                        if (res.getSHOT_RESULT().getType() == Playground.FieldType.SHIP) {
+                            p.setStyle("-fx-background-color: #ff0000");
+                            p.setFieldType(PaneExtends.FieldType.SHIP);
+                        } else if (res.getSHOT_RESULT().getType() == Playground.FieldType.WATER) {
+                            p.setStyle("-fx-background-color: #ffff00");
+                            p.setFieldType(PaneExtends.FieldType.SHIP);
+                        }
+                    }
+                } while (!res.isFINISHED());
             }
         }).start();
     }
