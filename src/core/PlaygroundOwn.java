@@ -114,10 +114,10 @@ public class PlaygroundOwn extends Playground {
      */
     public boolean canPlaceShip(ShipPosition position){
         int[][] surroundingFields = {{-1, -1}, {-1, 0}, {0, -1}, {0, 0}, {0, 1}, {1, 0}, {1, 1}, {-1, 1}, {1, -1}};
+        // position not on board
+        if(position.isOutsideOfPlayground(this.size))
+            return false;
         for(Position p : position.generateIndices()){
-            // position not on board
-            if(position.isOutsideOfPlayground(this.size))
-                return false;
             // surrounding field is ship
             for(int[] surroundingField : surroundingFields){
                 // 0 <= x < size
