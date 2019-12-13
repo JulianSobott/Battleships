@@ -175,13 +175,15 @@ public class GameManager implements GameManagerInterface {
      * Loop until game is finished
      */
     private void gameLoop() {
-        new Thread(() -> {
+        Thread mainGameLoop = new Thread(() -> {
             TurnResult res;
             do {
                 res = turnLoop();
                 nextPlayer();
             } while (!res.isFINISHED());
-        }).start();
+        });
+        mainGameLoop.setName("Main_gameLoop");
+        mainGameLoop.start();
     }
 
     /**

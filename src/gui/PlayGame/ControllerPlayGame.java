@@ -1,6 +1,7 @@
 package gui.PlayGame;
 
 import core.GameManager;
+import core.Player;
 import core.Playground;
 import core.Ship;
 import core.communication_data.Position;
@@ -226,6 +227,19 @@ public class ControllerPlayGame implements Initializable {
 
     private int position2index(Position position){
         return  position.getX() * playgroundSize + position.getY();
+    }
+
+    /**
+     * Permanently updates all playgrounds in the background.
+     * Every time a player makes a shot.
+     * @param players Players that were passes to the GameManager
+     */
+    private void startPlaygroundUpdaterThread(Player[] players) {
+        Thread playgroundUpdater = new Thread(() -> {
+            // TODO
+        });
+        playgroundUpdater.setName("GUI_PlaygroundUpdater");
+        playgroundUpdater.start();
     }
 
     private void getEnemyTurns() {

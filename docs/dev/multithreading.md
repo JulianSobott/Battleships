@@ -8,7 +8,7 @@
     - write TurnResults
 - GUI (Thread that starts other threads)
     - Handles user input
-- GUI_playgrounds
+- GUI_PlaygroundUpdater
     - Updates all playgrounds
     - Permanently waiting for a new TurnResult (from both players)
     - Needed information: TurnResult, Player
@@ -19,7 +19,7 @@
  ### GUI
  
  - GUI [Thread writer] -> nextShot [Object] -> Main_gameLoop [Thread reader]
- - Main_gameLoop [Thread writer] -> lastTurns [Object] -> GUI_playgrounds [Thread reader]
+ - Main_gameLoop [Thread writer] -> lastTurns [Object] -> GUI_PlaygroundUpdater [Thread reader]
 
 ### Network
 
