@@ -3,10 +3,7 @@ package gui.PlayGame;
 import core.GameManager;
 import core.Playground;
 import core.Ship;
-import core.communication_data.Position;
-import core.communication_data.ShipPosition;
-import core.communication_data.ShotResultShip;
-import core.communication_data.TurnResult;
+import core.communication_data.*;
 import core.utils.logging.LoggerGUI;
 import gui.UiClasses.BattleShipGui;
 import gui.UiClasses.PaneExtends;
@@ -14,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
+import player.PlaygroundHeatmap;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -44,11 +42,15 @@ public class ControllerPlayGame implements Initializable {
     private double CELL_PERCENTAGE_WIDTH;
     private int playgroundSize;
 
+    private PlaygroundHeatmap playgroundHeatmap;
+    private boolean showHeatMap = true;
+
     ArrayList<BattleShipGui> shipPositionList;
     GameManager gameManager;
 
     public ControllerPlayGame(int playgroudSize, ArrayList<BattleShipGui> shipPositionList, GameManager gameManager) {
         this.playgroundSize = playgroudSize;
+        this.playgroundHeatmap = new PlaygroundHeatmap(playgroudSize);
         this.shipPositionList = shipPositionList;
         this.gameManager = gameManager;
     }
@@ -188,6 +190,8 @@ public class ControllerPlayGame implements Initializable {
             Position pos = new Position(col, row);
             TurnResult res = this.gameManager.shootP1(pos);
             if (res.getError() == TurnResult.Error.NONE) {
+                if (showHeatMap)
+                    this.updateHeatMap(res.getSHOT_RESULT());
                 if (res.getSHOT_RESULT().getType() == Playground.FieldType.SHIP) {
                     p.setStyle("-fx-background-color: #ff0000");
                     p.setFieldType(PaneExtends.FieldType.SHIP);
@@ -251,6 +255,26 @@ public class ControllerPlayGame implements Initializable {
         }).start();
     }
 
+    private void updateHeatMap(ShotResult result) {
+        this.playgroundHeatmap.update(result);
+        int[][] heatMap = this.playgroundHeatmap.buildHeatMap(255);
+        this.playgroundHeatmap.printFields();
+        PlaygroundHeatmap.printHeatMap(heatMap);
+        for (int y = 0; y < playgroundSize; y++) {
+            for (int x = 0; x < playgroundSize; x++) {
+                if(!this.playgroundHeatmap.isAlreadyDiscoveredShipAt(x, y)){
+                    PaneExtends p = getPaneAtPosition(gridPaneEnemyField, x, y);
+                    int w = Math.min(255, heatMap[y][x]);
+                    p.setStyle("-fx-background-color: rgb("+w+", "+w+", "+w+")");
+                }
+            }
+        }
+    }
+
+    private PaneExtends getPaneAtPosition(GridPane gridPane, int x, int y){
+        int index = x * playgroundSize + y;
+       return (PaneExtends) gridPane.getChildren().get(index);
+    }
 
     /**
      * ############################# CHANGE ALL FIELDS AROUND SUNKEN SHIP TO WATER #####################################

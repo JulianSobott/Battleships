@@ -88,7 +88,7 @@ public class PlayerAI extends Player {
         int numPossiblePlacements = 1000;
         int[][] heatMap = this.playgroundHeatmap.buildHeatMap(numPossiblePlacements);
         int xMax = 0, yMax = 0, maxHeat = 0;
-        this.printHeatMap(heatMap);
+        PlaygroundHeatmap.printHeatMap(heatMap);
         for (int y = 0; y < this.playgroundEnemy.getSize(); y++) {
             for (int x = 0; x < this.playgroundEnemy.getSize(); x++) {
                 if(heatMap[y][x] > maxHeat && !this.playgroundHeatmap.isAlreadyDiscoveredShipAt(x, y)) {
@@ -112,17 +112,7 @@ public class PlayerAI extends Player {
         return makeTurnEasy();
     }
 
-    private void printHeatMap(int[][] map){
-        StringBuilder s = new StringBuilder();
-        s.append("\n");
-        for(int[] row : map){
-            for(int heat : row){
-                s.append(String.format("%3d ", heat));
-            }
-            s.append("\n");
-        }
-        LoggerLogic.debug(s.toString());
-    }
+
 
     @Override
     public void update(ShotResult result) {

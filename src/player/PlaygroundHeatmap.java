@@ -206,4 +206,16 @@ public class PlaygroundHeatmap {
             }
         }
     }
+
+    public static void printHeatMap(int[][] map){
+        StringBuilder s = new StringBuilder();
+        s.append("\n");
+        for(int[] row : map){
+            for(int heat : row){
+                s.append(String.format("%3d ", heat));
+            }
+            s.append("\n");
+        }
+        LoggerLogic.debug(s.toString());
+    }
 }
