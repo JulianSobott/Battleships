@@ -126,14 +126,14 @@ public class ControllerGameType implements Initializable {
     private GameSettings buildGameSettings() {
         // TODO: Surface validation
         int playgroundSize = Integer.parseInt(this.textfieldPlaygroundSize.getText());
-        Player p1 = new PlayerHuman("TODO", playgroundSize);
+        Player p1 = new PlayerHuman(0, "TODO", playgroundSize);
         Player p2;
         if (this.radioButtonKI.isSelected() && this.radioButtonEasy.isSelected()) {
-            p2 = new PlayerAI("KI", playgroundSize);
+            p2 = new PlayerAI(1, "KI", playgroundSize);
         } else if (this.radioButtonNetzwerk.isSelected()) {
-            p2 = new PlayerNetwork("KI", playgroundSize);
+            p2 = new PlayerNetwork(1, "KI", playgroundSize);
         } else {
-            p2 = new PlayerHuman("KI", playgroundSize);
+            p2 = new PlayerHuman(1, "KI", playgroundSize);
         }
         return new GameSettings(playgroundSize, p1, p2);
     }

@@ -145,7 +145,7 @@ public class GameManager implements GameManagerInterface {
         LoggerLogic.info("turn: player=" + player + ", position=" + position);
         TurnResult res;
         if (!this.isAllowedToShoot(player)) {
-            res = TurnResult.failure(TurnResult.Error.NOT_YOUR_TURN);
+            res = TurnResult.failure(player, TurnResult.Error.NOT_YOUR_TURN);
         } else {
             res = this.shoot(player, position);
         }
@@ -167,13 +167,13 @@ public class GameManager implements GameManagerInterface {
         TurnResult.Error shootError = player.canShootAt(position);
         TurnResult res;
         if (shootError != TurnResult.Error.NONE)
-            res = TurnResult.failure(shootError);
+            res = TurnResult.failure(player, shootError);
         else {
             ShotResult resShot = this.otherPlayer(player).gotHit(position);
             player.update(resShot);
             boolean isFinished = player.allEnemyShipsSunken();
             boolean shootAgain = resShot.getType() == Playground.FieldType.SHIP && !isFinished;
-            res = new TurnResult(resShot, shootAgain, isFinished);
+            res = new TurnResult(player, resShot, shootAgain, isFinished);
         }
         return res;
     }

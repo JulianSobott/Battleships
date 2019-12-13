@@ -21,8 +21,8 @@ public class PlayerAI extends Player {
     private long seed = 1000;
     private Random r =  new Random(seed);
 
-    public PlayerAI(String name, int playgroundSize) {
-        super(name, playgroundSize);
+    public PlayerAI(int index, String name, int playgroundSize) {
+        super(index, name, playgroundSize);
         this.playgroundOwn.placeShipsRandom();
         this.playgroundOwn.printField();
         this.difficulty = Difficulty.MEDIUM;
