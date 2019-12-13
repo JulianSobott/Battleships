@@ -13,12 +13,15 @@ public class GameManager implements GameManagerInterface {
     // TODO: Remove deprecated methods/attributes
     // TODO: Better names for methods: shoot, makeShoot, turn, ...
     private Player player1, player2;
+    private Player[] players;
     private Player currentPlayer;
 
-    private ConcurrentLinkedQueue<TurnResult> lastTurnsP1 = new ConcurrentLinkedQueue<>();
-    private ConcurrentLinkedQueue<TurnResult> lastTurnsP2 = new ConcurrentLinkedQueue<>();
+    // Player A wants to shoot at position: nextTurns.get(A)
+    // Queue must only contain 0 to 1 item.
     private HashMap<Player, ConcurrentLinkedQueue<Position>> nextTurns = new HashMap<>();
-    private HashMap<Player, ConcurrentLinkedQueue<TurnResult>> lastTurns = new HashMap<>();
+
+    // Player A wants the lastTurns from Player B: lastTurns.get(A).get(B)
+    private HashMap<Player, HashMap<Player, ConcurrentLinkedQueue<TurnResult>>> lastTurns = new HashMap<>();
 
 
     @Override
@@ -35,13 +38,19 @@ public class GameManager implements GameManagerInterface {
     public NewGameResult newGame(GameSettings settings) {
         this.player1 = settings.getP1();
         this.player2 = settings.getP2();
+        this.players = new Player[]{settings.getP1(), settings.getP2()};
+        for(Player p1 : this.players){
+            HashMap<Player, ConcurrentLinkedQueue<TurnResult>> mapPlayerTurn = new HashMap<>();
+            for(Player p2 : this.players) {
+                mapPlayerTurn.put(p2, new ConcurrentLinkedQueue<>());
+            }
+            this.lastTurns.put(p1, mapPlayerTurn);
+            this.nextTurns.put(p1, new ConcurrentLinkedQueue<>());
+        }
+
         // TODO: Set current player properly
         this.currentPlayer = player1;
         ShipList shipList = ShipList.fromSize(settings.getPlaygroundSize());
-        lastTurns.put(this.player1, new ConcurrentLinkedQueue<>());
-        lastTurns.put(this.player2, new ConcurrentLinkedQueue<>());
-        nextTurns.put(this.player1, new ConcurrentLinkedQueue<>());
-        nextTurns.put(this.player2, new ConcurrentLinkedQueue<>());
         return new NewGameResult(shipList);
     }
 
@@ -97,17 +106,24 @@ public class GameManager implements GameManagerInterface {
         this.makeShot(this.player2, pos);
     }
 
-    private TurnResult getTurn(Player player) {
-        synchronized (this.lastTurns.get(player)) {
-            while (this.lastTurns.get(player).isEmpty()) {
+    /**
+     *
+     * @param playerA Player who wants to get the TurnResult
+     * @param playerB Player who made the Turn
+     * @return TurnResult from PlayerB
+     */
+    private TurnResult getTurn(Player playerA, Player playerB) {
+        // TODO: Synchronize on which object
+        synchronized (this.lastTurns.get(playerA).get(playerB)) {
+            while (this.lastTurns.get(playerA).get(playerB).isEmpty()) {
                 try {
-                    this.lastTurns.get(player).wait();
+                    this.lastTurns.get(playerA).get(playerB).wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
             LoggerLogic.debug("Returning player 2 Result:");
-            return this.lastTurns.get(player).poll();
+            return this.lastTurns.get(playerA).get(playerB).poll();
         }
     }
 
@@ -118,11 +134,11 @@ public class GameManager implements GameManagerInterface {
     }
 
     public TurnResult getTurnPlayer2() {
-        return this.getTurn(this.player2);
+        return this.getTurn(this.player1, this.player2);
     }
 
     public TurnResult getTurnPlayer1() {
-        return this.getTurn(this.player1);
+        return this.getTurn(this.player2, this.player1);
     }
 
     private TurnResult turn(Player player, Position position) {
@@ -200,12 +216,24 @@ public class GameManager implements GameManagerInterface {
                 pos = this.getPlayerShootPosition();
             }
             res = this.turn(this.currentPlayer, pos);
-            synchronized (this.lastTurns.get(this.currentPlayer)) {
-                this.lastTurns.get(this.currentPlayer).add(res);
-                this.lastTurns.get(this.currentPlayer).notify();
-            }
+            this.saveTurnResult(res);
         } while (res.isTURN_AGAIN());
         return res;
+    }
+
+    /**
+     * Saves the TurnResult everywhere, where it is needed.
+     *
+     * @param res
+     */
+    private void saveTurnResult(TurnResult res){
+        // TODO: Synchronize on which object
+        for(Player p : this.players){
+            synchronized (this.lastTurns.get(p).get(this.currentPlayer)){
+                this.lastTurns.get(p).get(this.currentPlayer).add(res);
+                this.lastTurns.get(p).get(this.currentPlayer).notifyAll();
+            }
+        }
     }
 
     private Position getPlayerShootPosition() {
