@@ -79,9 +79,10 @@ public class ControllerPlayGame implements Initializable {
         placeOwnShipsOnOwnPlayground();
 
         // TODO: find better solution for HashMap keys
-        this.playerGridPaneHashMap.put(0, gridPaneOwnField);
-        this.playerGridPaneHashMap.put(1, gridPaneEnemyField);
+        this.playerGridPaneHashMap.put(1, gridPaneOwnField);
+        this.playerGridPaneHashMap.put(0, gridPaneEnemyField);
         this.gameManager.startGame();
+        this.startPlaygroundUpdaterThread();
     }
 
 
@@ -129,7 +130,7 @@ public class ControllerPlayGame implements Initializable {
     private void generateWater(int possHorizontal, int possVertical, GridPane gridPane) {
 
         PaneExtends p = new PaneExtends(PaneExtends.FieldType.FOG);
-        p.setStyle("-fx-background-color: #2E64FE");
+        p.setStyle("-fx-background-color: #aaaaaa");
         gridPane.add(p, possHorizontal, possVertical);
         if (gridPane == this.gridPaneEnemyField) {
             this.addClickFieldEvent(p);
@@ -237,13 +238,12 @@ public class ControllerPlayGame implements Initializable {
      * Permanently updates all playgrounds in the background.
      * Every time a player makes a shot.
      *
-     * @param players Players that were passes to the GameManager
      */
-    private void startPlaygroundUpdaterThread(Player[] players) {
+    private void startPlaygroundUpdaterThread() {
         Thread playgroundUpdater = new Thread(() -> {
             TurnResult res;
             do {
-                res = gameManager.pollTurn();
+                res = gameManager.pollTurn("GUI_1");
                 LoggerGUI.info("TurnResult in GUI: " + res);
                 if (res.getError() == TurnResult.Error.NONE) {
                     this.updateByShotResult(this.playerGridPaneHashMap.get(res.getPlayerIndex()), res.getSHOT_RESULT());

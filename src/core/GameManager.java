@@ -21,8 +21,9 @@ public class GameManager implements GameManagerInterface {
     private HashMap<Player, ConcurrentLinkedQueue<Position>> nextTurns = new HashMap<>();
 
     // Player A wants the lastTurns from Player B: lastTurns.get(A).get(B)
-    private HashMap<Player, HashMap<Player, ConcurrentLinkedQueue<TurnResult>>> lastTurns = new HashMap<>();
-
+    private HashMap<Player, ConcurrentLinkedQueue<TurnResult>> lastTurns = new HashMap<>();
+    private HashMap<String, Player> idPlayerHashMap = new HashMap<>();
+    private HashMap<Player, String> playerIdHashMap = new HashMap<>();
 
     @Override
     public boolean connectToServer(String ip, int port) {
@@ -40,13 +41,14 @@ public class GameManager implements GameManagerInterface {
         this.player2 = settings.getP2();
         this.players = new Player[]{settings.getP1(), settings.getP2()};
         for(Player p1 : this.players){
-            HashMap<Player, ConcurrentLinkedQueue<TurnResult>> mapPlayerTurn = new HashMap<>();
-            for(Player p2 : this.players) {
-                mapPlayerTurn.put(p2, new ConcurrentLinkedQueue<>());
-            }
-            this.lastTurns.put(p1, mapPlayerTurn);
+            this.lastTurns.put(p1, new ConcurrentLinkedQueue<>());
             this.nextTurns.put(p1, new ConcurrentLinkedQueue<>());
         }
+        // TODO: find better way
+        idPlayerHashMap.put("GUI_1", this.player1);
+        idPlayerHashMap.put("AI_2", this.player1);
+        this.playerIdHashMap.put(this.player1, "GUI_1");
+        this.playerIdHashMap.put(this.player1, "AI_2");
 
         // TODO: Set current player properly
         this.currentPlayer = player1;
@@ -85,13 +87,15 @@ public class GameManager implements GameManagerInterface {
      * @param position
      */
     private void makeShot(Player player, Position position) {
+        LoggerLogic.debug("Make shot: player=" + player + " position=" + position);
         synchronized (this.nextTurns.get(player)) {
             LoggerLogic.debug("" + this.nextTurns);
             LoggerLogic.debug("" + this.nextTurns.get(player));
             LoggerLogic.debug("" + position);
             if (this.nextTurns.get(player).size() != 1) {
                 this.nextTurns.get(player).add(position);
-                this.nextTurns.get(player).notify();
+                this.nextTurns.get(player).notifyAll();
+                LoggerLogic.debug("Notify on Queue: " + this.nextTurns.get(player));
             } else {
                 LoggerLogic.debug("Player has already made a shot. player=" + player);
             }
@@ -106,24 +110,19 @@ public class GameManager implements GameManagerInterface {
         this.makeShot(this.player2, pos);
     }
 
-    /**
-     *
-     * @param playerA Player who wants to get the TurnResult
-     * @param playerB Player who made the Turn
-     * @return TurnResult from PlayerB
-     */
-    private TurnResult getTurn(Player playerA, Player playerB) {
-        // TODO: Synchronize on which object
-        synchronized (this.lastTurns.get(playerA).get(playerB)) {
-            while (this.lastTurns.get(playerA).get(playerB).isEmpty()) {
+    public TurnResult pollTurn(String id) {
+        Player player = this.idPlayerHashMap.get(id);
+        synchronized (this.lastTurns.get(player)) {
+            while (this.lastTurns.get(player).isEmpty()) {
                 try {
-                    this.lastTurns.get(playerA).get(playerB).wait();
+                    this.lastTurns.get(player).wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-            LoggerLogic.debug("Returning player 2 Result:");
-            return this.lastTurns.get(playerA).get(playerB).poll();
+            TurnResult res = this.lastTurns.get(player).poll();
+            LoggerLogic.debug("Returning player " + res.getPlayerIndex() +" Result:");
+            return res;
         }
     }
 
@@ -131,14 +130,6 @@ public class GameManager implements GameManagerInterface {
     private boolean isAllowedToShoot(Player player) {
         if (player != this.currentPlayer) return false;
         return true;
-    }
-
-    public TurnResult getTurnPlayer2() {
-        return this.getTurn(this.player1, this.player2);
-    }
-
-    public TurnResult getTurnPlayer1() {
-        return this.getTurn(this.player2, this.player1);
     }
 
     private TurnResult turn(Player player, Position position) {
@@ -229,9 +220,10 @@ public class GameManager implements GameManagerInterface {
     private void saveTurnResult(TurnResult res){
         // TODO: Synchronize on which object
         for(Player p : this.players){
-            synchronized (this.lastTurns.get(p).get(this.currentPlayer)){
-                this.lastTurns.get(p).get(this.currentPlayer).add(res);
-                this.lastTurns.get(p).get(this.currentPlayer).notifyAll();
+            synchronized (this.lastTurns.get(p)){
+                this.lastTurns.get(p).add(res);
+                this.lastTurns.get(p).notifyAll();
+                LoggerLogic.debug("LastTurns=" + this.lastTurns.get(p));
             }
         }
     }
@@ -240,7 +232,7 @@ public class GameManager implements GameManagerInterface {
         synchronized (this.nextTurns.get(this.currentPlayer)) {
             while (this.nextTurns.get(this.currentPlayer).isEmpty()) {
                 try {
-                    LoggerLogic.debug("Queue was empty: waiting...");
+                    LoggerLogic.debug("Queue "+ this.nextTurns.get(this.currentPlayer) +" was empty: waiting...");
                     this.nextTurns.get(this.currentPlayer).wait();
                     LoggerLogic.debug("Queue is no longer empty");
                 } catch (InterruptedException e) {
@@ -256,4 +248,5 @@ public class GameManager implements GameManagerInterface {
         if (player == player1) return player2;
         else return player1;
     }
+
 }
