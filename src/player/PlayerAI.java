@@ -84,7 +84,9 @@ public class PlayerAI extends Player {
      * @return Position
      */
     private Position makeMoveMedium() {
-        int[][] heatMap = this.playgroundHeatmap.buildHeatMap(5);
+        // The higher the better the prediction. Too high values can slow down the game
+        int numPossiblePlacements = 1000;
+        int[][] heatMap = this.playgroundHeatmap.buildHeatMap(numPossiblePlacements);
         int xMax = 0, yMax = 0, maxHeat = 0;
         this.printHeatMap(heatMap);
         for (int y = 0; y < this.playgroundEnemy.getSize(); y++) {

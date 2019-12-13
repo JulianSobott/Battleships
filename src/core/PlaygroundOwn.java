@@ -199,7 +199,7 @@ public class PlaygroundOwn extends Playground {
             if (s.getStatus() == Ship.LifeStatus.SUNKEN) {
                 Position[] surroundingWaterPositions = this.getSurroundingWaterPositions(s);
                 this.hitWaterFieldsAroundSunkenShip(surroundingWaterPositions);
-                res = new ShotResultShip(position, FieldType.SHIP, s.getStatus(), surroundingWaterPositions);
+                res = new ShotResultShip(position, FieldType.SHIP, s.getStatus(), surroundingWaterPositions, s.getShipPosition());
             } else {
                 res = new ShotResultShip(position, FieldType.SHIP, s.getStatus());
             }

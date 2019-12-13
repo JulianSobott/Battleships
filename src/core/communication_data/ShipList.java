@@ -80,4 +80,8 @@ public class ShipList implements Iterable<ShipList.Pair>{
         return sum;
     }
 
+    public void decreaseNumShips(int length) {
+        this.ships.replace(length, this.ships.get(length) - 1);
+    }
+
 }

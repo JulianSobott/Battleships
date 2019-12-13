@@ -6,13 +6,16 @@ import core.communication_data.*;
 import core.utils.Random;
 import core.utils.logging.LoggerLogic;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public class PlaygroundHeatmap {
 
     private Playground.FieldType[][] final_fields;
     private Playground.FieldType[][] temp_fields;
+    private List<ShipPosition> discoveredSunkenShips = new LinkedList<>();
     private final int SIZE;
     private ShipList shipList;
     private int finalNumShipsHit = 0;
@@ -42,7 +45,7 @@ public class PlaygroundHeatmap {
             if (succeed)
                 this.addPossiblePlacementsToHeatMap(heatMap);
             else
-                LoggerLogic.error("Could not buildPossiblePlacements");
+                LoggerLogic.debug("Could not buildPossiblePlacements");
         }
         return heatMap;
     }
@@ -57,15 +60,25 @@ public class PlaygroundHeatmap {
     }
 
     private boolean buildPossiblePlacements() {
-        int maxIterations = 100;
+        int maxIterations = 1000;
         for (int i = 0; i < maxIterations; i++) {
             this.clearField(this.temp_fields);
             this.tempNumShipsHit = 0;
+            this.placeAlreadySunkenShips();
             if (this.placeShipsRandom() && this.tempNumShipsHit == this.finalNumShipsHit) {
                 return true;
             }
         }
         return false;
+    }
+
+    private void placeAlreadySunkenShips() {
+        for (ShipPosition pos : this.discoveredSunkenShips) {
+            for (Position p : pos.generateIndices()) {
+                this.temp_fields[p.getY()][p.getX()] = Playground.FieldType.SHIP;
+            }
+            this.tempNumShipsHit += pos.getLength();
+        }
     }
 
     private boolean placeShipsRandom() {
@@ -81,7 +94,7 @@ public class PlaygroundHeatmap {
     }
 
     private boolean placeSingleShipRandom(int shipLength) {
-        int maxIterations = 100;
+        int maxIterations = 50;
         for (int i = 0; i < maxIterations; i++) {
             int x = Random.random.nextInt(SIZE);
             int y = Random.random.nextInt(SIZE);
@@ -182,9 +195,14 @@ public class PlaygroundHeatmap {
 
     public void update(ShotResult result) {
         this.updateField(result.getPosition(), result.getType());
-        if(result instanceof ShotResultShip && ((ShotResultShip)result).getStatus() == Ship.LifeStatus.SUNKEN){
-            for(Position waterPos : ((ShotResultShip)result).getWaterFields()){
-                this.updateField(waterPos, Playground.FieldType.WATER);
+        if(result instanceof ShotResultShip) {
+            ShotResultShip resultShip = (ShotResultShip)result;
+            if(resultShip.getStatus() == Ship.LifeStatus.SUNKEN) {
+                for (Position waterPos : resultShip.getWaterFields()) {
+                    this.updateField(waterPos, Playground.FieldType.WATER);
+                }
+                this.discoveredSunkenShips.add(resultShip.getShipPosition());
+                this.shipList.decreaseNumShips(resultShip.getShipPosition().getLength());
             }
         }
     }
