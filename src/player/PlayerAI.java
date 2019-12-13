@@ -84,7 +84,7 @@ public class PlayerAI extends Player {
      * @return Position
      */
     private Position makeMoveMedium() {
-        int[][] heatMap = this.playgroundHeatmap.buildHeatMap();
+        int[][] heatMap = this.playgroundHeatmap.buildHeatMap(5);
         int xMax = 0, yMax = 0, maxHeat = 0;
         this.printHeatMap(heatMap);
         for (int y = 0; y < this.playgroundEnemy.getSize(); y++) {

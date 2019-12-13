@@ -12,6 +12,8 @@ public class GameManager implements GameManagerInterface {
     private Player player1, player2;
     private Player currentPlayer;
 
+    private int round = 1;
+
     private Queue<TurnResult> lastTurnsP2 = new LinkedList<>(), lastTurnsP1 = new LinkedList<>();
 
 
@@ -146,8 +148,16 @@ public class GameManager implements GameManagerInterface {
             res = this.shootP2(pos);
             LoggerLogic.info("player2Turn result: " + res);
         }while (res.isTURN_AGAIN());
-        // TODO: handle game_over
-        this.nextPlayer();
+        if(res.isFINISHED()){
+            LoggerState.info("====================================================");
+            LoggerState.info("AI won in round=" + this.round);
+            LoggerState.info("====================================================");
+
+        }else{
+            this.round++;
+            // TODO: handle game_over
+            this.nextPlayer();
+        }
     }
 
     private Player otherPlayer(Player player) {

@@ -36,12 +36,14 @@ public class PlaygroundHeatmap {
         this.final_fields[position.getY()][position.getX()] = fieldType;
     }
 
-    public int[][] buildHeatMap() {
+    public int[][] buildHeatMap(int numIterations) {
         int[][] heatMap = new int[SIZE][SIZE];
-        int num_iterations = 1;
-        for (int i = 0; i < num_iterations; i++) {
-            this.buildPossiblePlacements();
-            this.addPossiblePlacementsToHeatMap(heatMap);
+        for (int i = 0; i < numIterations; i++) {
+            boolean succeed = this.buildPossiblePlacements();
+            if (succeed)
+                this.addPossiblePlacementsToHeatMap(heatMap);
+            else
+                LoggerLogic.error("Could not buildPossiblePlacements");
         }
         return heatMap;
     }
@@ -55,16 +57,16 @@ public class PlaygroundHeatmap {
         }
     }
 
-    private void buildPossiblePlacements() {
-        int maxIterations = 20;
+    private boolean buildPossiblePlacements() {
+        int maxIterations = 100;
         for (int i = 0; i < maxIterations; i++) {
             this.clearField(this.temp_fields);
+            this.tempNumShipsHit = 0;
             if (this.placeShipsRandom() && this.tempNumShipsHit == this.finalNumShipsHit) {
-                break;
-            } else {
-                this.tempNumShipsHit = 0;
+                return true;
             }
         }
+        return false;
     }
 
     private boolean placeShipsRandom() {
@@ -80,7 +82,7 @@ public class PlaygroundHeatmap {
     }
 
     private boolean placeSingleShipRandom(int shipLength) {
-        int maxIterations = 20;
+        int maxIterations = 100;
         for (int i = 0; i < maxIterations; i++) {
             int x = Random.random.nextInt(SIZE);
             int y = Random.random.nextInt(SIZE);
