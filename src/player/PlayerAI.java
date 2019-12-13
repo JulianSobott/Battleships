@@ -125,6 +125,6 @@ public class PlayerAI extends Player {
     @Override
     public void update(ShotResult result) {
         super.update(result);
-        this.playgroundHeatmap.updateField(result.getPosition(), result.getType());
+        this.playgroundHeatmap.update(result);
     }
 }

@@ -1,9 +1,8 @@
 package player;
 
 import core.Playground;
-import core.communication_data.Position;
-import core.communication_data.ShipList;
-import core.communication_data.ShipPosition;
+import core.Ship;
+import core.communication_data.*;
 import core.utils.Random;
 import core.utils.logging.LoggerLogic;
 
@@ -179,5 +178,14 @@ public class PlaygroundHeatmap {
 
     public boolean isAlreadyDiscoveredShipAt(int x, int y){
         return this.final_fields[y][x] == Playground.FieldType.SHIP;
+    }
+
+    public void update(ShotResult result) {
+        this.updateField(result.getPosition(), result.getType());
+        if(result instanceof ShotResultShip && ((ShotResultShip)result).getStatus() == Ship.LifeStatus.SUNKEN){
+            for(Position waterPos : ((ShotResultShip)result).getWaterFields()){
+                this.updateField(waterPos, Playground.FieldType.WATER);
+            }
+        }
     }
 }
