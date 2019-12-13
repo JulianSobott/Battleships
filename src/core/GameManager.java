@@ -23,7 +23,6 @@ public class GameManager implements GameManagerInterface {
     // Player A wants the lastTurns from Player B: lastTurns.get(A).get(B)
     private HashMap<Player, ConcurrentLinkedQueue<TurnResult>> lastTurns = new HashMap<>();
     private HashMap<String, Player> idPlayerHashMap = new HashMap<>();
-    private HashMap<Player, String> playerIdHashMap = new HashMap<>();
 
     @Override
     public boolean connectToServer(String ip, int port) {
@@ -47,8 +46,6 @@ public class GameManager implements GameManagerInterface {
         // TODO: find better way
         idPlayerHashMap.put("GUI_1", this.player1);
         idPlayerHashMap.put("AI_2", this.player1);
-        this.playerIdHashMap.put(this.player1, "GUI_1");
-        this.playerIdHashMap.put(this.player1, "AI_2");
 
         // TODO: Set current player properly
         this.currentPlayer = player1;
@@ -223,7 +220,7 @@ public class GameManager implements GameManagerInterface {
             synchronized (this.lastTurns.get(p)){
                 this.lastTurns.get(p).add(res);
                 this.lastTurns.get(p).notifyAll();
-                LoggerLogic.debug("LastTurns=" + this.lastTurns.get(p));
+                // TODO: Poll from all Queues Also AI
             }
         }
     }

@@ -195,43 +195,14 @@ public class ControllerPlayGame implements Initializable {
             int row = GridPane.getRowIndex(p);
             Position pos = new Position(col, row);
             this.gameManager.shootP1(pos);
-            //            if (res.getError() == TurnResult.Error.NONE) {
-            //                if (res.getSHOT_RESULT().getType() == Playground.FieldType.SHIP) {
-            //                    p.setStyle("-fx-background-color: #ff0000");
-            //                    p.setFieldType(PaneExtends.FieldType.SHIP);
-            //                    ShotResultShip shotResultShip = (ShotResultShip)res.getSHOT_RESULT();
-            //                    if(shotResultShip.getStatus() == Ship.LifeStatus.SUNKEN){
-            //                        Position[] waterFields = shotResultShip.getWaterFields();
-            //                        // TODO: Create CONSTANTS for colors. Or later on images
-            //                        this.color_fields(waterFields, "#0000ff", this.gridPaneEnemyField);
-            //                    }
-            //                } else if (res.getSHOT_RESULT().getType() == Playground.FieldType.WATER) {
-            //                    p.setStyle("-fx-background-color: #ffff00");
-            //                    p.setFieldType(PaneExtends.FieldType.WATER);
-            //                } else if (false) {
-            //                    //TODO: Fehlende information, dass Schiff gesunken is
-            //                    updateGuiShipIsSunken(pos, p, gridPaneEnemyField);
-            //                }
-            //            } else {
-            //                // TODO: show to user
-            //                LoggerGUI.warning("Show this message to the user: " + res);
-            //            }
-            //            if (!res.isTURN_AGAIN() && !res.isFINISHED()) {
-            //                this.getEnemyTurns();
-            //            }
         });
     }
 
     private void color_fields(Position[] waterFields, String color, GridPane gridPane) {
         for (Position position : waterFields) {
-            int index = this.position2index(position);
-            PaneExtends p = (PaneExtends) gridPane.getChildren().get(index);
+            PaneExtends p = this.getPaneAtPosition(gridPane, position.getX(), position.getY());
             p.setStyle("-fx-background-color: " + color);
         }
-    }
-
-    private int position2index(Position position) {
-        return position.getX() * playgroundSize + position.getY();
     }
 
     /**
