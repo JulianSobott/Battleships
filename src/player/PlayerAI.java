@@ -1,11 +1,8 @@
 package player;
 
 import core.Player;
-import core.Playground;
-import core.PlaygroundEnemy;
-import core.PlaygroundOwn;
 import core.communication_data.Position;
-import core.communication_data.ShipList;
+import core.communication_data.ShotResult;
 import core.communication_data.TurnResult;
 import core.utils.logging.LoggerLogic;
 
@@ -20,12 +17,14 @@ public class PlayerAI extends Player {
     private Difficulty difficulty;
     private long seed = 1000;
     private Random r =  new Random(seed);
+    PlaygroundHeatmap playgroundHeatmap;
 
     public PlayerAI(String name, int playgroundSize) {
         super(name, playgroundSize);
         this.playgroundOwn.placeShipsRandom();
         this.playgroundOwn.printField();
         this.difficulty = Difficulty.MEDIUM;
+        this.playgroundHeatmap = new PlaygroundHeatmap(playgroundSize);
     }
 
     /**
@@ -85,22 +84,25 @@ public class PlayerAI extends Player {
      * @return Position
      */
     private Position makeMoveMedium() {
-        int size = this.playgroundEnemy.getSize();
-        int[][] fieldCounters = new int[size][size];
-        PlaygroundTempAI tempPlayground = new PlaygroundTempAI(size);
-        tempPlayground.copyPlayground(this.playgroundEnemy);    // TODO: Find alternative to coping it every time
-        int numIterations = 1;
-        for(int iteration = 0; iteration < numIterations; iteration++){
-            // TODO: ensure that ships are placed on exiting hits. write complete new method
-            //tempPlayground.placeShipsRandom();
-            for(int y = 0; y < size; y++){
-                for(int x = 0; x < size; x++) {
-                    fieldCounters[y][x] += tempPlayground.isShipAt(new Position(x, y)) ? 1 : 0;
+        int[][] heatMap = this.playgroundHeatmap.buildHeatMap();
+        int xMax = 0, yMax = 0, maxHeat = 0;
+        this.printHeatMap(heatMap);
+        for (int y = 0; y < this.playgroundEnemy.getSize(); y++) {
+            for (int x = 0; x < this.playgroundEnemy.getSize(); x++) {
+                if(heatMap[y][x] > maxHeat && !this.playgroundHeatmap.isAlreadyDiscoveredShipAt(x, y)) {
+                    xMax = x;
+                    yMax = y;
+                    maxHeat = heatMap[y][x];
                 }
             }
         }
-        this.printHeatMap(fieldCounters);
-        return makeTurnEasy();
+        Position target = new Position(xMax, yMax);
+        LoggerLogic.debug("Picked Position=" + target + " with heat=" + maxHeat);
+        if (maxHeat == 0){
+            LoggerLogic.error("Could not find a clever solution-> Making random move");
+            return this.makeTurnEasy();
+        }
+        return target;
     }
 
     private Position makeMoveHard() {
@@ -113,10 +115,16 @@ public class PlayerAI extends Player {
         s.append("\n");
         for(int[] row : map){
             for(int heat : row){
-                s.append(heat);
+                s.append(String.format("%3d ", heat));
             }
             s.append("\n");
         }
         LoggerLogic.debug(s.toString());
+    }
+
+    @Override
+    public void update(ShotResult result) {
+        super.update(result);
+        this.playgroundHeatmap.updateField(result.getPosition(), result.getType());
     }
 }

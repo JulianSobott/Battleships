@@ -139,7 +139,7 @@ public class PlaygroundOwn extends Playground {
 
     public PlaceShipsRandomRes placeShipsRandom(ShipList shipList) {
         int max_tries = 10000;
-        Random random = new Random();
+        Random random = new Random(1000);
         boolean foundPlace = true;
         for (int iteration = 0; iteration < max_tries; iteration++) {
             this.resetAll(FieldType.WATER);
