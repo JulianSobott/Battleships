@@ -33,11 +33,13 @@ public abstract class EvolutionSystem {
     }
 
     private void outputPerformanceData() {
-        System.out.println(String.format("Epoch %d ended:", this.epochNum));
-        EvolutionAgent[] agents = this.getSortedAgents();
-        System.out.println(String.format("Best score was: %d", agents[0].score));
-        for (EvolutionAgent agent: agents) {
-            System.out.println(agent.getPerformanceData());
+        if (this.epochNum % 100 == 0) {
+            System.out.println(String.format("Epoch %d ended:", this.epochNum));
+            EvolutionAgent[] agents = this.getSortedAgents();
+            System.out.println(String.format("Best score was: %d", agents[0].score));
+            for (EvolutionAgent agent: agents) {
+                System.out.println(agent.getPerformanceData());
+            }
         }
     }
 

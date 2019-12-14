@@ -12,8 +12,8 @@ import java.util.Random;
 public class PassThroughAgent extends EvolutionAgent {
 
     private static Random random = new Random(1000);
-    private List<Double> inValues = new ArrayList<>();
-    private List<Double> outValues = new ArrayList<>();
+    private double inValue;
+    private double outValue;
 
     PassThroughAgent() {
         super(new int[]{1, 5, 1});
@@ -21,30 +21,24 @@ public class PassThroughAgent extends EvolutionAgent {
 
     @Override
     protected void updateScore() {
-        for (int i = 0; i < inValues.size(); i++) {
-            double in = inValues.get(i);
-            double out = outValues.get(i);
-            double diff = Math.abs(out - in);
-            this.score += (1 - diff) * 10;
-        }
+        double diff = Math.abs(outValue - inValue);
+        this.score += (1 - diff) * 10;
+
     }
 
     @Override
     public void initNewEpoch() {
-        this.inValues.clear();
-        this.outValues.clear();
         this.score = 0;
     }
 
     @Override
     public double[] getInputValues() {
-        double value = random.nextDouble();
-        inValues.add(value);
-        return new double[]{value};
+        inValue = random.nextDouble();
+        return new double[]{inValue};
     }
 
     @Override
     public void handleOutputValues(double[] outputValues) {
-        this.outValues.add(outputValues[0]);
+        outValue = outputValues[0];
     }
 }
