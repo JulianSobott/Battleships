@@ -4,9 +4,9 @@ import ai.Agent;
 
 public abstract class EvolutionAgent implements Agent {
 
-    private int epochSurvived = 0;
-    private double mutationFactor;
-    private int score = 0;
+    protected int epochSurvived = 0;
+    protected double mutationFactor;
+    protected int score = 0;
     private EvolutionNeuralNetwork network;
 
     public EvolutionAgent(int[] layers){

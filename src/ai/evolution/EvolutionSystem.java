@@ -2,13 +2,16 @@ package ai.evolution;
 
 import ai.Agent;
 
-public class EvolutionSystem {
+public abstract class EvolutionSystem {
 
-    EvolutionAgent[] agents;
+    protected EvolutionAgent[] agents;
 
     public EvolutionSystem(int numAgents) {
         this.agents = new EvolutionAgent[numAgents];
+        this.createAgentsOnStart();
     }
+
+    protected abstract void createAgentsOnStart();
 
     public void update() {
         for(EvolutionAgent agent : this.agents){
