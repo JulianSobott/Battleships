@@ -11,7 +11,7 @@ public class SimpleExample {
 
     private void mainLoop() {
         EvolutionSystem system = new SandboxEvolutionSystem(10);
-        int maxEpochs = 1000;
+        int maxEpochs = 10;
         for (int epoch = 0; epoch < maxEpochs; epoch++) {
             int numTurns = 100;
             for (int i = 0; i < numTurns; i++) {

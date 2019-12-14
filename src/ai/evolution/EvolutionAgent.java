@@ -8,8 +8,11 @@ public abstract class EvolutionAgent implements Agent {
     protected double mutationFactor;
     protected int score = 0;
     private EvolutionNeuralNetwork network;
+    private final int ID;
+    private static int nextID = 0;
 
     public EvolutionAgent(int[] layers){
+        this.ID = nextID++;
         this.network = new EvolutionNeuralNetwork(layers);
     }
 
@@ -27,4 +30,8 @@ public abstract class EvolutionAgent implements Agent {
     }
 
     public abstract void initNewEpoch();
+
+    public String getPerformanceData() {
+        return String.format("Agent %d: epochSurvived=%d, score=%d", ID, epochSurvived, score);
+    }
 }

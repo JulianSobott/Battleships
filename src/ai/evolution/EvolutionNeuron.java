@@ -17,6 +17,7 @@ public class EvolutionNeuron {
     EvolutionNeuron(double value, double[] out_weights){
         this.value = value;
         this.out_weights = out_weights;
+        this.setWeightsRandom();
     }
 
     @Override

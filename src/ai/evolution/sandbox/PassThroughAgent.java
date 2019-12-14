@@ -45,6 +45,6 @@ public class PassThroughAgent extends EvolutionAgent {
 
     @Override
     public void handleOutputValues(double[] outputValues) {
-        this.outValues.add(outputValues[1]);
+        this.outValues.add(outputValues[0]);
     }
 }
