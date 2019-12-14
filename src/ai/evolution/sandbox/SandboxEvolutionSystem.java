@@ -1,5 +1,6 @@
 package ai.evolution.sandbox;
 
+import ai.evolution.EvolutionAgent;
 import ai.evolution.EvolutionSystem;
 
 public class SandboxEvolutionSystem extends EvolutionSystem {
@@ -9,9 +10,11 @@ public class SandboxEvolutionSystem extends EvolutionSystem {
     }
 
     @Override
-    protected void createAgentsOnStart() {
-        for (int i = 0; i < this.agents.length; i++) {
-            this.agents[i] = new PassThroughAgent();
+    protected EvolutionAgent[] getNewAgents(int numAgents) {
+        EvolutionAgent[] newAgents = new EvolutionAgent[numAgents];
+        for (int i = 0; i < numAgents; i++) {
+            newAgents[i] = new PassThroughAgent();
         }
+        return newAgents;
     }
 }

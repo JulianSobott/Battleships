@@ -2,7 +2,7 @@ package ai.evolution;
 
 import ai.Agent;
 
-public abstract class EvolutionAgent implements Agent {
+public abstract class EvolutionAgent implements Agent, Comparable<EvolutionAgent> {
 
     protected int epochSurvived = 0;
     protected double mutationFactor;
@@ -33,5 +33,10 @@ public abstract class EvolutionAgent implements Agent {
 
     public String getPerformanceData() {
         return String.format("Agent %d: epochSurvived=%d, score=%d", ID, epochSurvived, score);
+    }
+
+    @Override
+    public int compareTo(EvolutionAgent evolutionAgent) {
+        return Integer.compare(this.score, evolutionAgent.score);
     }
 }

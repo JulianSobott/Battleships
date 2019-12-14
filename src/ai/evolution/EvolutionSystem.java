@@ -1,16 +1,23 @@
 package ai.evolution;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+
 public abstract class EvolutionSystem {
 
     protected EvolutionAgent[] agents;
+    protected final int NUM_AGENTS;
     private int epochNum = 0;
 
     public EvolutionSystem(int numAgents) {
+        this.NUM_AGENTS = numAgents;
         this.agents = new EvolutionAgent[numAgents];
-        this.createAgentsOnStart();
+        this.agents = this.getNewAgents(NUM_AGENTS);
     }
 
-    protected abstract void createAgentsOnStart();
+    protected abstract EvolutionAgent[] getNewAgents(int numAgents);
 
     public void update() {
         for(EvolutionAgent agent : this.agents){
@@ -40,12 +47,19 @@ public abstract class EvolutionSystem {
 
     private void evolveAgents() {
         EvolutionAgent[] sortedAgents = getSortedAgents();
-        // TODO: sort agents
-        // TODO: pick agents
+        int numKeep = NUM_AGENTS / 2;
+        int numReplace = NUM_AGENTS - numKeep;
+        for (int i = 0; i < numKeep; i++) {
+            this.agents[i].epochSurvived++;
+            this.agents[i] = sortedAgents[i];
+        }
+        EvolutionAgent[] newAgents = this.getNewAgents(numReplace);
+        System.arraycopy(newAgents, 0, this.agents, numKeep, numReplace);
     }
 
     private EvolutionAgent[] getSortedAgents() {
-        // TODO
-        return this.agents;
+        List<EvolutionAgent> agentsList = Arrays.asList(this.agents);
+        agentsList.sort(Comparator.naturalOrder());
+        return agentsList.toArray(new EvolutionAgent[0]);
     }
 }

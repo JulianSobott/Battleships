@@ -13,7 +13,7 @@ public class SimpleExample {
         EvolutionSystem system = new SandboxEvolutionSystem(10);
         int maxEpochs = 10;
         for (int epoch = 0; epoch < maxEpochs; epoch++) {
-            int numTurns = 100;
+            int numTurns = 5;
             for (int i = 0; i < numTurns; i++) {
                 system.update();
             }
