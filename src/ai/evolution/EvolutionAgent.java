@@ -9,8 +9,8 @@ public abstract class EvolutionAgent implements Agent {
     private int score = 0;
     private EvolutionNeuralNetwork network;
 
-    public EvolutionAgent(){
-        this.network = new EvolutionNeuralNetwork();
+    public EvolutionAgent(int[] layers){
+        this.network = new EvolutionNeuralNetwork(layers);
     }
 
     public void makeMove() {
