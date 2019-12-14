@@ -5,7 +5,7 @@ import ai.Agent;
 public abstract class EvolutionAgent implements Agent, Comparable<EvolutionAgent> {
 
     protected int epochSurvived = 0;
-    protected double mutationFactor;
+    protected double mutationFactor = 0.05;
     protected int score = 0;
     private EvolutionNeuralNetwork network;
     private final int ID;
@@ -25,7 +25,7 @@ public abstract class EvolutionAgent implements Agent, Comparable<EvolutionAgent
 
     protected abstract void updateScore();
 
-    public void mutate(double mutationFactor){
+    public void mutate(){
         this.network.mutate(mutationFactor);
     }
 

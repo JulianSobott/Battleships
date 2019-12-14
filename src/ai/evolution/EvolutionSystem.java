@@ -35,6 +35,7 @@ public abstract class EvolutionSystem {
     private void outputPerformanceData() {
         System.out.println(String.format("Epoch %d ended:", this.epochNum));
         EvolutionAgent[] agents = this.getSortedAgents();
+        System.out.println(String.format("Best score was: %d", agents[0].score));
         for (EvolutionAgent agent: agents) {
             System.out.println(agent.getPerformanceData());
         }
@@ -50,8 +51,9 @@ public abstract class EvolutionSystem {
         int numKeep = NUM_AGENTS / 2;
         int numReplace = NUM_AGENTS - numKeep;
         for (int i = 0; i < numKeep; i++) {
-            this.agents[i].epochSurvived++;
             this.agents[i] = sortedAgents[i];
+            this.agents[i].epochSurvived++;
+            this.agents[i].mutate();
         }
         EvolutionAgent[] newAgents = this.getNewAgents(numReplace);
         System.arraycopy(newAgents, 0, this.agents, numKeep, numReplace);
@@ -59,7 +61,7 @@ public abstract class EvolutionSystem {
 
     private EvolutionAgent[] getSortedAgents() {
         List<EvolutionAgent> agentsList = Arrays.asList(this.agents);
-        agentsList.sort(Comparator.naturalOrder());
+        agentsList.sort(Comparator.reverseOrder());
         return agentsList.toArray(new EvolutionAgent[0]);
     }
 }
