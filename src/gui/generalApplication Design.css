@@ -1,9 +1,14 @@
 
 
-
 .anchorPane{
-
     -fx-background-color: white;
+}
+
+
+.anchorPaneMainMenu{
+    -fx-background-color: white;
+    -fx-background-image: url('Images/Flugzeugtraeger.jpg');
+    -fx-background-size: 100% 100%;
 }
 
 .radio-button{
@@ -15,6 +20,7 @@
 
 .label-h1 {
     -fx-font-size: 21px;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.75) , 5,0,0,1 );
 }
 
 .label-h2 {
@@ -58,7 +64,6 @@
     -fx-background-color: white;
     -fx-text-fill: grey;
     -fx-font-weight: bold;
-    -fx-font-size: 1.0em;
     -fx-padding: 5px;
 }
 
