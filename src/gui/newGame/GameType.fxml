@@ -31,14 +31,14 @@
       <Separator layoutX="391.0" layoutY="183.0" orientation="VERTICAL" prefHeight="306.0" prefWidth="0.0" />
       <RadioButton fx:id="radioButtonClient" layoutX="309.0" layoutY="193.0" mnemonicParsing="false" onMouseClicked="#setClientInformation" text="Client" />
       <RadioButton fx:id="radioButtonServer" layoutX="217.0" layoutY="193.0" mnemonicParsing="false" onMouseClicked="#determineLocalIpAddress" text="Server" />
-      <TextField fx:id="textFieldIpAddress" layoutX="212.0" layoutY="257.0" promptText="192.168.5.34" />
+      <TextField fx:id="textFieldIpAddress" layoutX="214.0" layoutY="270.0" promptText="192.168.5.34" />
       <Label layoutX="214.0" layoutY="234.0" text="IP_Adresse:" />
-      <Label layoutX="214.0" layoutY="299.0" text="Port:" />
-      <TextField alignment="TOP_LEFT" layoutX="212.0" layoutY="325.0" promptText="1578" />
+      <Label layoutX="212.0" layoutY="309.0" text="Port:" />
+      <TextField alignment="TOP_LEFT" layoutX="212.0" layoutY="348.0" promptText="1578" />
       <Label layoutX="417.0" layoutY="193.0" text="Player 1;" />
-      <TextField layoutX="417.0" layoutY="221.0" promptText="Alice " />
+      <TextField layoutX="417.0" layoutY="235.0" promptText="Alice " />
       <Label layoutX="417.0" layoutY="299.0" text="Player 2;" />
-      <TextField layoutX="417.0" layoutY="323.0" promptText="Bob" />
+      <TextField layoutX="417.0" layoutY="335.0" promptText="Bob" />
       <VBox layoutX="67.0" layoutY="234.0" spacing="10.0">
          <children>
             <RadioButton fx:id="radioButtonEasy" mnemonicParsing="false" text="Leicht" />
@@ -48,7 +48,7 @@
       </VBox>
       <Label layoutX="46.0" layoutY="193.0" text="Schwierigkeitsgrad:" />
       <Button layoutX="956.0" layoutY="668.0" mnemonicParsing="false" onMouseClicked="#loadShipPöacementScene" prefHeight="25.0" prefWidth="133.0" text="Spiel starten" AnchorPane.bottomAnchor="60.0" AnchorPane.rightAnchor="100.0" />
-      <TextField fx:id="textfieldPlaygroundSize" alignment="CENTER" layoutX="212.0" layoutY="543.0" promptText="Spielfeld größe" text="5" />
+      <TextField fx:id="textfieldPlaygroundSize" alignment="CENTER" layoutX="222.0" layoutY="548.0" promptText="Spielfeld größe" text="5" />
       <Label layoutX="116.0" layoutY="547.0" text="Spielfeldgröße:" />
       <Separator layoutX="40.0" layoutY="513.0" prefHeight="0.0" prefWidth="539.0" />
    </children>

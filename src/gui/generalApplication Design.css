@@ -12,3 +12,13 @@
     -fx-border-color: grey;
     -fx-border-width: 1px;
 }
+
+.label {
+    -fx-background-radius: 4;
+    -fx-background-color: #C4C4C4;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 1.0em;
+
+    -fx-padding: 5px;
+}
