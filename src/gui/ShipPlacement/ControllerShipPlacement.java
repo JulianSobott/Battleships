@@ -501,6 +501,7 @@ public class ControllerShipPlacement implements Initializable {
      */
 
 
+    @FXML
     public void placeShipsRandom() {
 
         if(shipArrayListGui.size() > 0)
@@ -525,6 +526,15 @@ public class ControllerShipPlacement implements Initializable {
             // TODO: inform user
         }
 
+    }
+
+    @FXML
+    private void deletePlacedShips(){
+
+        for ( ButtonShip buttonShip  :shipArrayListGui) {
+
+            dataGridBattleship.getChildren().remove(buttonShip);
+        }
     }
 
 
