@@ -13,6 +13,6 @@
       <Button fx:id="buttonBack" layoutX="100.0" layoutY="668.0" mnemonicParsing="false" onMouseClicked="#BackToSettings" prefHeight="25.0" prefWidth="99.0" text="zurrück" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="100.0" />
       <Button fx:id="buttonPlaceShipsRandom" layoutX="830.0" layoutY="630.0" mnemonicParsing="false" onMouseClicked="#placeShipsRandom" prefHeight="27.0" prefWidth="170.0" text="Schiffe zufällig platzieren" AnchorPane.bottomAnchor="92.66666666666663" AnchorPane.rightAnchor="200.0" />
       <Button layoutX="1050.0" layoutY="668.0" mnemonicParsing="false" onMouseClicked="#startGame" prefHeight="25.0" prefWidth="99.0" text="Spiel starten" AnchorPane.bottomAnchor="56.66666666666663" AnchorPane.rightAnchor="50.66666666666674" />
-      <Button layoutX="830.0" layoutY="666.0" mnemonicParsing="false" onMouseClicked="#deletePlacedShips" prefHeight="27.0" prefWidth="170.0" text="Platzierung löschen" />
+      <Button layoutX="830.0" layoutY="666.0" mnemonicParsing="false" onMouseClicked="#deletePlacedShips" prefHeight="27.0" prefWidth="170.0" text="Platzierung löschen" AnchorPane.bottomAnchor="56.66666666666667" AnchorPane.rightAnchor="200.0" />
    </children>
 </AnchorPane>

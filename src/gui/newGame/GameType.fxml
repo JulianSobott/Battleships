@@ -15,8 +15,8 @@
 
 <AnchorPane prefHeight="750.0" prefWidth="1200.0" styleClass="anchorPane" stylesheets="@../generalApplication%20Design.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Button fx:id="BackToMenu" layoutX="33.0" layoutY="669.0" mnemonicParsing="false" onMouseClicked="#goBacktoMainMenus" prefHeight="25.0" prefWidth="118.0" text="zurrück" />
-      <Label layoutX="253.0" layoutY="73.0" styleClass="label-h1" text="Gegenspieler:">
+      <Button fx:id="BackToMenu" layoutX="33.0" layoutY="682.0" mnemonicParsing="false" onMouseClicked="#goBacktoMainMenus" prefHeight="25.0" prefWidth="118.0" text="zurrück" AnchorPane.bottomAnchor="40.66666666666663" AnchorPane.leftAnchor="33.0" />
+      <Label layoutX="253.0" layoutY="73.0" styleClass="label-h2" text="Gegenspieler:">
          <font>
             <Font size="18.0" />
          </font></Label>
@@ -25,7 +25,7 @@
             <Image url="@../Images/BattleShip.jpg" />
          </image>
       </ImageView>
-      <HBox layoutX="57.0" layoutY="144.0" spacing="130.0">
+      <HBox layoutX="57.0" layoutY="144.0" spacing="130.0" AnchorPane.leftAnchor="57.0" AnchorPane.rightAnchor="700.0" AnchorPane.topAnchor="144.0">
          <children>
             <RadioButton fx:id="radioButtonKI" mnemonicParsing="false" onMouseClicked="#accentuateSettingsForCurrentGamType" text="KI" />
             <RadioButton fx:id="radioButtonNetzwerk" mnemonicParsing="false" onMouseClicked="#accentuateSettingsForCurrentGamType" text="Netzwerk" />
@@ -34,7 +34,7 @@
       </HBox>
       <Separator layoutX="179.0" layoutY="193.0" orientation="VERTICAL" prefHeight="306.0" prefWidth="0.0" />
       <Separator layoutX="391.0" layoutY="183.0" orientation="VERTICAL" prefHeight="306.0" prefWidth="0.0" />
-      <VBox fx:id="vBoxNetzwerk" layoutX="196.0" layoutY="193.0" prefHeight="306.0" prefWidth="175.0" spacing="10.0" styleClass="vBoxTask">
+      <VBox fx:id="vBoxNetzwerk" layoutX="196.0" layoutY="193.0" prefHeight="306.0" prefWidth="175.0" spacing="10.0" styleClass="vBoxTask" AnchorPane.leftAnchor="196.0" AnchorPane.topAnchor="193.0">
          <children>
             <HBox spacing="15.0">
                <children>
@@ -54,7 +54,7 @@
             <Insets left="5.0" right="5.0" />
          </padding>
       </VBox>
-      <VBox fx:id="vBoxLocal" layoutX="410.0" layoutY="193.0" prefHeight="306.0" prefWidth="175.0" spacing="15.0" styleClass="vBoxTask">
+      <VBox fx:id="vBoxLocal" layoutX="410.0" layoutY="193.0" prefHeight="306.0" prefWidth="175.0" spacing="15.0" styleClass="vBoxTask" AnchorPane.leftAnchor="410.0" AnchorPane.topAnchor="193.0">
          <children>
             <Label text="Player 1:" />
             <TextField promptText="Alice " />
@@ -65,7 +65,7 @@
             <Insets left="5.0" right="5.0" top="10.0" />
          </padding>
       </VBox>
-      <VBox fx:id="vBoxKI" alignment="TOP_CENTER" layoutX="34.0" layoutY="193.0" prefHeight="306.0" prefWidth="133.0" spacing="15.0" styleClass="vBoxTask">
+      <VBox fx:id="vBoxKI" alignment="TOP_CENTER" layoutX="34.0" layoutY="193.0" prefHeight="306.0" prefWidth="133.0" spacing="15.0" styleClass="vBoxTask" AnchorPane.leftAnchor="33.999999999999915" AnchorPane.topAnchor="193.0">
          <children>
             <Label text="Schwierigkeitsgrad:" />
             <VBox alignment="CENTER_LEFT" spacing="10.0">
@@ -86,8 +86,8 @@
             <Insets />
          </opaqueInsets>
       </VBox>
-      <Button layoutX="1020.0" layoutY="669.0" mnemonicParsing="false" onMouseClicked="#loadShipPöacementScene" prefHeight="25.0" prefWidth="133.0" text="Spiel starten" AnchorPane.bottomAnchor="53.66666666666663" AnchorPane.rightAnchor="46.66666666666674" />
-      <VBox alignment="TOP_CENTER" layoutX="33.0" layoutY="529.0" prefHeight="123.0" prefWidth="551.0" spacing="10.0" styleClass="vBoxTask">
+      <Button layoutX="1020.0" layoutY="682.0" mnemonicParsing="false" onMouseClicked="#loadShipPöacementScene" prefHeight="25.0" prefWidth="133.0" text="Spiel starten" AnchorPane.bottomAnchor="40.66666666666663" AnchorPane.rightAnchor="46.66666666666674" />
+      <VBox alignment="TOP_CENTER" layoutX="33.0" layoutY="529.0" prefHeight="123.0" prefWidth="551.0" spacing="10.0" styleClass="vBoxTask" AnchorPane.bottomAnchor="97.66666666666667" AnchorPane.leftAnchor="33.0" AnchorPane.topAnchor="529.0">
          <children>
             <Label text="Spielfeldeinstellungen:">
                <padding>

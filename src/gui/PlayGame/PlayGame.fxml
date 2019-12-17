@@ -14,7 +14,7 @@
          <children>
             <VBox fx:id="vBoxOwnPlayground" alignment="CENTER" spacing="20.0">
                <children>
-                  <Label text="Ihr Spielfeld:" />
+                  <Label styleClass="label-h2" text="Ihr Spielfeld:" />
                   <GridPane fx:id="gridPaneOwnField" hgap="2.0" prefHeight="560.0" prefWidth="521.0" vgap="2.0">
        
       </GridPane>
@@ -22,7 +22,7 @@
             </VBox>
             <VBox fx:id="vBoxEnemyPlayground" alignment="CENTER" spacing="20.0">
                <children>
-                  <Label text="Gegnerisches Spielfeld:" />
+                  <Label styleClass="label-h2" text="Gegnerisches Spielfeld:" />
                   <GridPane fx:id="gridPaneEnemyField" hgap="2.0" prefHeight="560.0" prefWidth="521.0" vgap="2.0">
       </GridPane>
                </children>
