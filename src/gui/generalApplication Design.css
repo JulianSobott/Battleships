@@ -4,7 +4,38 @@
 .anchorPane{
 
     -fx-background-color: white;
+}
 
+.radio-button{
+    -fx-text-fill: darkgrey;
+    -fx-background-color: white;
+    -fx-padding: 5px;
+    -fx-background-radius: 4;
+}
+
+.label-h1 {
+    -fx-font-size: 21px;
+}
+
+.label-h2 {
+    -fx-font-size: 18px;
+}
+
+.vBoxTask{
+    -fx-background-radius: 6;
+    -fx-background-color: linear-gradient(lightgrey 30%, lightgrey 100%);
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.75) , 5,0,0,1 );
+}
+
+.textarea, .text-field {
+    -fx-font-size: 14px;
+    -fx-background-color: white;
+    -fx-border-width: 1;
+    -fx-border-radius: 2;
+    -fx-text-fill: black;
+    -fx-padding: 4px 8px;
+    -fx-content-display: inline-block;
+    -fx-background-radius: 8;
 }
 
 .button {
@@ -19,6 +50,7 @@
 .button:hover {
     -fx-border-color: grey;
     -fx-border-width: 1px;
+    -fx-background-color: orange;
 }
 
 .label {
@@ -27,7 +59,6 @@
     -fx-text-fill: grey;
     -fx-font-weight: bold;
     -fx-font-size: 1.0em;
-
     -fx-padding: 5px;
 }
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
@@ -10,46 +11,103 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="750.0" prefWidth="1200.0" styleClass="anchorPane" stylesheets="@../generalApplication%20Design.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Button fx:id="BackToMenu" layoutX="78.0" layoutY="668.0" mnemonicParsing="false" onMouseClicked="#goBacktoMainMenus" prefHeight="25.0" prefWidth="118.0" text="zurrück" />
-      <Label layoutX="253.0" layoutY="73.0" text="Gegenspieler:" />
-      <ImageView fitHeight="440.0" fitWidth="493.0" layoutX="597.0" layoutY="144.0" pickOnBounds="true" preserveRatio="true">
+      <Button fx:id="BackToMenu" layoutX="33.0" layoutY="669.0" mnemonicParsing="false" onMouseClicked="#goBacktoMainMenus" prefHeight="25.0" prefWidth="118.0" text="zurrück" />
+      <Label layoutX="253.0" layoutY="73.0" styleClass="label-h1" text="Gegenspieler:">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <ImageView fitHeight="393.0" fitWidth="539.0" layoutX="615.0" layoutY="194.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Images/BattleShip.jpg" />
          </image>
       </ImageView>
       <HBox layoutX="57.0" layoutY="144.0" spacing="130.0">
          <children>
-            <RadioButton fx:id="radioButtonKI" mnemonicParsing="false" text="KI" />
-            <RadioButton fx:id="radioButtonNetzwerk" mnemonicParsing="false" text="Netzwerk" />
-            <RadioButton fx:id="radioButtonLocal" mnemonicParsing="false" text="Lokal" />
+            <RadioButton fx:id="radioButtonKI" mnemonicParsing="false" onMouseClicked="#accentuateSettingsForCurrentGamType" text="KI" />
+            <RadioButton fx:id="radioButtonNetzwerk" mnemonicParsing="false" onMouseClicked="#accentuateSettingsForCurrentGamType" text="Netzwerk" />
+            <RadioButton fx:id="radioButtonLocal" mnemonicParsing="false" onMouseClicked="#accentuateSettingsForCurrentGamType" text="Lokal" />
          </children>
       </HBox>
-      <Separator layoutX="176.0" layoutY="183.0" orientation="VERTICAL" prefHeight="306.0" prefWidth="0.0" />
+      <Separator layoutX="179.0" layoutY="193.0" orientation="VERTICAL" prefHeight="306.0" prefWidth="0.0" />
       <Separator layoutX="391.0" layoutY="183.0" orientation="VERTICAL" prefHeight="306.0" prefWidth="0.0" />
-      <RadioButton fx:id="radioButtonClient" layoutX="309.0" layoutY="193.0" mnemonicParsing="false" onMouseClicked="#setClientInformation" text="Client" />
-      <RadioButton fx:id="radioButtonServer" layoutX="217.0" layoutY="193.0" mnemonicParsing="false" onMouseClicked="#determineLocalIpAddress" text="Server" />
-      <TextField fx:id="textFieldIpAddress" layoutX="214.0" layoutY="270.0" promptText="192.168.5.34" />
-      <Label layoutX="214.0" layoutY="234.0" text="IP_Adresse:" />
-      <Label layoutX="212.0" layoutY="309.0" text="Port:" />
-      <TextField alignment="TOP_LEFT" layoutX="212.0" layoutY="348.0" promptText="1578" />
-      <Label layoutX="417.0" layoutY="193.0" text="Player 1;" />
-      <TextField layoutX="417.0" layoutY="235.0" promptText="Alice " />
-      <Label layoutX="417.0" layoutY="299.0" text="Player 2;" />
-      <TextField layoutX="417.0" layoutY="335.0" promptText="Bob" />
-      <VBox layoutX="67.0" layoutY="234.0" spacing="10.0">
+      <VBox fx:id="vBoxNetzwerk" layoutX="196.0" layoutY="193.0" prefHeight="306.0" prefWidth="175.0" spacing="10.0" styleClass="vBoxTask">
          <children>
-            <RadioButton fx:id="radioButtonEasy" mnemonicParsing="false" text="Leicht" />
-            <RadioButton fx:id="radioButtonMedium" mnemonicParsing="false" text="Mittel" />
-            <RadioButton fx:id="radioButtonHard" mnemonicParsing="false" text="Schwer" />
+            <HBox spacing="15.0">
+               <children>
+                  <RadioButton fx:id="radioButtonServer" mnemonicParsing="false" onMouseClicked="#determineLocalIpAddress" text="Server" />
+                  <RadioButton fx:id="radioButtonClient" mnemonicParsing="false" onMouseClicked="#setClientInformation" text="Client" />
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+               </padding>
+            </HBox>
+            <Label text="IP_Adresse:" />
+            <TextField fx:id="textFieldIpAddress" promptText="192.168.5.34" />
+            <Label text="Port:" />
+            <TextField alignment="TOP_LEFT" promptText="1578" />
          </children>
+         <padding>
+            <Insets left="5.0" right="5.0" />
+         </padding>
       </VBox>
-      <Label layoutX="46.0" layoutY="193.0" text="Schwierigkeitsgrad:" />
-      <Button layoutX="956.0" layoutY="668.0" mnemonicParsing="false" onMouseClicked="#loadShipPöacementScene" prefHeight="25.0" prefWidth="133.0" text="Spiel starten" AnchorPane.bottomAnchor="60.0" AnchorPane.rightAnchor="100.0" />
-      <TextField fx:id="textfieldPlaygroundSize" alignment="CENTER" layoutX="222.0" layoutY="548.0" promptText="Spielfeld größe" text="5" />
-      <Label layoutX="116.0" layoutY="547.0" text="Spielfeldgröße:" />
+      <VBox fx:id="vBoxLocal" layoutX="410.0" layoutY="193.0" prefHeight="306.0" prefWidth="175.0" spacing="15.0" styleClass="vBoxTask">
+         <children>
+            <Label text="Player 1:" />
+            <TextField promptText="Alice " />
+            <Label text="Player 2:" />
+            <TextField promptText="Bob" />
+         </children>
+         <padding>
+            <Insets left="5.0" right="5.0" top="10.0" />
+         </padding>
+      </VBox>
+      <VBox fx:id="vBoxKI" alignment="TOP_CENTER" layoutX="34.0" layoutY="193.0" prefHeight="306.0" prefWidth="133.0" spacing="15.0" styleClass="vBoxTask">
+         <children>
+            <Label text="Schwierigkeitsgrad:" />
+            <VBox alignment="CENTER_LEFT" spacing="10.0">
+               <children>
+                  <RadioButton fx:id="radioButtonEasy" mnemonicParsing="false" text="Leicht" />
+                  <RadioButton fx:id="radioButtonMedium" mnemonicParsing="false" text="Mittel" />
+                  <RadioButton fx:id="radioButtonHard" mnemonicParsing="false" text="Schwer" />
+               </children>
+               <VBox.margin>
+                  <Insets left="10.0" />
+               </VBox.margin>
+            </VBox>
+         </children>
+         <padding>
+            <Insets left="5.0" right="5.0" top="10.0" />
+         </padding>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </VBox>
+      <Button layoutX="1020.0" layoutY="669.0" mnemonicParsing="false" onMouseClicked="#loadShipPöacementScene" prefHeight="25.0" prefWidth="133.0" text="Spiel starten" AnchorPane.bottomAnchor="53.66666666666663" AnchorPane.rightAnchor="46.66666666666674" />
+      <VBox alignment="TOP_CENTER" layoutX="33.0" layoutY="529.0" prefHeight="123.0" prefWidth="551.0" spacing="10.0" styleClass="vBoxTask">
+         <children>
+            <Label text="Spielfeldeinstellungen:">
+               <padding>
+                  <Insets bottom="5.0" />
+               </padding>
+            </Label>
+            <HBox spacing="20.0">
+               <children>
+                  <Label text="Spielfeldgröße:" />
+                  <TextField fx:id="textfieldPlaygroundSize" alignment="CENTER" promptText="Spielfeld größe" text="5" />
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" top="5.0" />
+               </padding>
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </VBox>
       <Separator layoutX="40.0" layoutY="513.0" prefHeight="0.0" prefWidth="539.0" />
    </children>
 </AnchorPane>

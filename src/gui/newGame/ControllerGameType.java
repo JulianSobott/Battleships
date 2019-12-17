@@ -14,6 +14,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import player.PlayerAI;
 import player.PlayerHuman;
 import player.PlayerNetwork;
@@ -60,6 +61,15 @@ public class ControllerGameType implements Initializable {
     @FXML
     public TextField textFieldIpAddress;
 
+    @FXML
+    public VBox vBoxKI;
+
+    @FXML
+    public VBox vBoxNetzwerk;
+
+    @FXML
+    public VBox vBoxLocal;
+
 
     private static final String filepathBackMainMenu = "../Main_Menu.fxml";
     private static final String filepathShipPlacement = "../ShipPlacement/ShipPlacement.fxml";
@@ -86,7 +96,9 @@ public class ControllerGameType implements Initializable {
     }
 
 
-    /** #################################################   JavaFX Events  ############################################*/
+    /**
+     * #################################################   JavaFX Events  ############################################
+     */
 
     @FXML
     private void determineLocalIpAddress() {
@@ -107,20 +119,38 @@ public class ControllerGameType implements Initializable {
     }
 
     @FXML
-    private void setClientInformation(){
+    private void setClientInformation() {
 
         textFieldIpAddress.clear();
     }
 
 
+    @FXML
+    private void accentuateSettingsForCurrentGamType() {
 
+        if (radioButtonKI.isSelected()) {
+
+            vBoxKI.setStyle("-fx-background-color: #626D71");
+            vBoxNetzwerk.setStyle("-fx-background-color: lightgray");
+            vBoxLocal.setStyle("-fx-background-color: lightgray");
+        } else if (radioButtonNetzwerk.isSelected()){
+
+            vBoxKI.setStyle("-fx-background-color: lightgray");
+            vBoxNetzwerk.setStyle("-fx-background-color: #626D71");
+            vBoxLocal.setStyle("-fx-background-color: lightgray");
+
+        } else if (radioButtonLocal.isSelected()){
+
+            vBoxKI.setStyle("-fx-background-color: lightgray");
+            vBoxNetzwerk.setStyle("-fx-background-color: lightgray");
+            vBoxLocal.setStyle("-fx-background-color: #626D71");
+        }
+    }
 
 
     /**
      * ##########################################   generate Settings  ###############################################
      */
-
-
 
 
     private GameSettings buildGameSettings() {
