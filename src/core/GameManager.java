@@ -1,11 +1,13 @@
 package core;
 
 import core.communication_data.*;
+import core.utils.logging.LoggerGUI;
 import core.utils.logging.LoggerLogic;
 import core.utils.logging.LoggerState;
 
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.logging.Logger;
 
 public class GameManager implements GameManagerInterface {
 
@@ -23,6 +25,8 @@ public class GameManager implements GameManagerInterface {
     // Player A wants the lastTurns from Player B: lastTurns.get(A).get(B)
     private HashMap<Player, ConcurrentLinkedQueue<TurnResult>> lastTurns = new HashMap<>();
     private HashMap<String, Player> idPlayerHashMap = new HashMap<>();
+
+    private Thread inGameThread;
 
     @Override
     public boolean connectToServer(String ip, int port) {
@@ -114,7 +118,7 @@ public class GameManager implements GameManagerInterface {
                 try {
                     this.lastTurns.get(player).wait();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    return null;
                 }
             }
             TurnResult res = this.lastTurns.get(player).poll();
@@ -179,15 +183,18 @@ public class GameManager implements GameManagerInterface {
      * Loop until game is finished
      */
     private void gameLoop() {
-        Thread mainGameLoop = new Thread(() -> {
+        inGameThread = new Thread(() -> {
             TurnResult res;
             do {
                 res = turnLoop();
-                nextPlayer();
-            } while (!res.isFINISHED());
+                if (res != null)
+                    nextPlayer();
+                else { // game was interrupted
+                }
+            } while (res != null && res.isFINISHED() && !Thread.currentThread().isInterrupted());
         });
-        mainGameLoop.setName("Main_gameLoop");
-        mainGameLoop.start();
+        inGameThread.setName("Main_gameLoop");
+        inGameThread.start();
     }
 
     /**
@@ -196,16 +203,18 @@ public class GameManager implements GameManagerInterface {
      * @return The last TurnResult
      */
     private TurnResult turnLoop() {
-        TurnResult res;
+        TurnResult res = null;
         do {
             // TODO: Find better solution for makeTurn. maybe flag in player: triggerMakeTurn needed.
             Position pos = this.currentPlayer.makeTurn();
             if (pos == null) {
                 pos = this.getPlayerShootPosition();
             }
-            res = this.turn(this.currentPlayer, pos);
-            this.saveTurnResult(res);
-        } while (res.isTURN_AGAIN());
+            if (pos != null) {
+                res = this.turn(this.currentPlayer, pos);
+                this.saveTurnResult(res);
+            }
+        } while (res != null && res.isTURN_AGAIN() && !Thread.currentThread().isInterrupted());
         return res;
     }
 
@@ -233,8 +242,9 @@ public class GameManager implements GameManagerInterface {
                     this.nextTurns.get(this.currentPlayer).wait();
                     LoggerLogic.debug("Queue is no longer empty");
                 } catch (InterruptedException e) {
-                    LoggerLogic.error("Thread that waited for shot was interrupted. Error=" + e.getMessage());
-                    e.printStackTrace();
+                    return null;
+//                    LoggerLogic.error("Thread that waited for shot was interrupted. Error=" + e.getMessage());
+//                    e.printStackTrace();
                 }
             }
             return this.nextTurns.get(this.currentPlayer).poll();
@@ -244,6 +254,16 @@ public class GameManager implements GameManagerInterface {
     private Player otherPlayer(Player player) {
         if (player == player1) return player2;
         else return player1;
+    }
+
+
+    public void exitInGameThread() {
+        inGameThread.interrupt();
+        try {
+            this.inGameThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }

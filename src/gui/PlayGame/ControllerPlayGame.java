@@ -7,8 +7,10 @@ import core.Ship;
 import core.communication_data.*;
 import core.utils.logging.LoggerGUI;
 import core.utils.logging.LoggerLogic;
+import gui.ControllerMainMenu;
 import gui.UiClasses.BattleShipGui;
 import gui.UiClasses.PaneExtends;
+import gui.WindowChange.SceneLoader;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -49,6 +51,10 @@ public class ControllerPlayGame implements Initializable {
 
     // 0: Player1, 1: Player2
     private HashMap<Integer, GridPane> playerGridPaneHashMap = new HashMap<>();
+    private Thread playgroundUpdaterThread;
+
+    private static final String filepathBackMainMenu = "../Main_Menu.fxml";
+
 
     public ControllerPlayGame(int playgroudSize, ArrayList<BattleShipGui> shipPositionList, GameManager gameManager) {
         this.playgroundSize = playgroudSize;
@@ -211,21 +217,30 @@ public class ControllerPlayGame implements Initializable {
      *
      */
     private void startPlaygroundUpdaterThread() {
-        Thread playgroundUpdater = new Thread(() -> {
+        playgroundUpdaterThread = new Thread(() -> {
             TurnResult res;
             do {
                 res = gameManager.pollTurn("GUI_1");
-                LoggerGUI.info("TurnResult in GUI: " + res);
-                if (res.getError() == TurnResult.Error.NONE) {
-                    this.updateByShotResult(this.playerGridPaneHashMap.get(res.getPlayerIndex()), res.getSHOT_RESULT());
+                if (res != null) {
+                    LoggerGUI.info("TurnResult in GUI: " + res);
+                    if (res.getError() == TurnResult.Error.NONE) {
+                        this.updateByShotResult(this.playerGridPaneHashMap.get(res.getPlayerIndex()), res.getSHOT_RESULT());
+                    } else {
+                        LoggerGUI.info("NOTIFY USER: Turn was not valid" + res.getError());
+                    }
                 } else {
-                    LoggerGUI.info("NOTIFY USER: Turn was not valid" + res.getError());
+                    // TODO: thread is not shown as interrupted although it was interrupted
+                    if (!Thread.currentThread().isInterrupted())
+                        LoggerGUI.error("Received TurnResult with value null");
+                    else {
+                        // Thread was stopped
+                    }
                 }
-            } while (!res.isFINISHED());
-
+            } while (res != null && !res.isFINISHED() && !Thread.currentThread().isInterrupted());
+            LoggerGUI.info("PlaygroundUpdaterThread was stopped. No more results will be displayed");
         });
-        playgroundUpdater.setName("GUI_PlaygroundUpdater");
-        playgroundUpdater.start();
+        playgroundUpdaterThread.setName("GUI_PlaygroundUpdater");
+        playgroundUpdaterThread.start();
     }
 
     private void updateByShotResult(GridPane gridPane, ShotResult shotResult) {
@@ -389,9 +404,30 @@ public class ControllerPlayGame implements Initializable {
      */
 
     //TODO wo soll der Spieler beim Spielabruch landen ?? Wieder im Hauptmenü??
-    public void goBackToShipPlacement() {
-
+    public void goBackToMainMenu() {
+        ControllerMainMenu controllerMainMenu = new ControllerMainMenu();
+        SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathBackMainMenu, controllerMainMenu);
+        sceneLoader.loadSceneInExistingWindow();
     }
 
 
+    // TODO place
+
+    public void leaveGame() {
+        LoggerGUI.debug("Leave game");
+        this.exitInGameThread();
+        this.goBackToMainMenu();
+    }
+
+    public void exitInGameThread() {
+        LoggerGUI.debug("Num threads before exit: " + Thread.activeCount());
+        this.playgroundUpdaterThread.interrupt();
+        try {
+            this.playgroundUpdaterThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        this.gameManager.exitInGameThread();
+        LoggerGUI.debug("Num threads after exit: " + Thread.activeCount());
+    }
 }
