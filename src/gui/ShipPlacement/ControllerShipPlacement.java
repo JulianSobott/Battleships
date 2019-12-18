@@ -446,14 +446,9 @@ public class ControllerShipPlacement implements Initializable {
             ButtonShip buttonShip1 = null;
             if (nodeShip instanceof ButtonShip) {
                 buttonShip1 = (ButtonShip) nodeShip;
-            }
-
-            boolean success = GAME_MANAGER.deleteShip(buttonShip1.getBattleShipGui().getShipID());
-            if (success) {
-                hashMapShipLabels.get(buttonShip1.getBattleShipGui().getPosition().getLength()).increaseCounter();
-                dataGridBattleship.getChildren().remove(index);
+                deleteShipFromPlayground(buttonShip1);
             } else {
-                // TODO: inform user
+                LoggerGUI.error("Object is not instance of ButtonShip: " + nodeShip);
             }
         });
     }
@@ -533,14 +528,21 @@ public class ControllerShipPlacement implements Initializable {
     @FXML
     private void deletePlacedShips(){
 
-        for ( ButtonShip buttonShip  :shipArrayListGui) {
-            this.hashMapShipLabels.get(buttonShip.getBattleShipGui().getPosition().getLength()).increaseCounter();
-            dataGridBattleship.getChildren().remove(buttonShip);
-            boolean success = GAME_MANAGER.deleteShip(buttonShip.getBattleShipGui().getShipID());
-            if (!success) {
-                LoggerGUI.error("Can't delete ship: shipID=" + buttonShip.getBattleShipGui().getShipID());
-            }
+        while (!shipArrayListGui.isEmpty()) {
+            ButtonShip buttonShip = shipArrayListGui.remove(0);
+            deleteShipFromPlayground(buttonShip);
         }
+    }
+
+    private boolean deleteShipFromPlayground(ButtonShip buttonShip) {
+        boolean success = GAME_MANAGER.deleteShip(buttonShip.getBattleShipGui().getShipID());
+        if (success) {
+            dataGridBattleship.getChildren().remove(buttonShip);
+            shipArrayListGui.remove(buttonShip);
+        } else {
+            LoggerGUI.error("Can't delete ship: shipID=" + buttonShip.getBattleShipGui().getShipID());
+        }
+        return success;
     }
 
 
@@ -565,7 +567,6 @@ public class ControllerShipPlacement implements Initializable {
 
     @FXML
     public void startGame(){
-
         ArrayList<BattleShipGui> shipPositionList = new ArrayList<>();
         for (ButtonShip buttonShip :shipArrayListGui) {
 
