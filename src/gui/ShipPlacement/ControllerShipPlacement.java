@@ -527,7 +527,6 @@ public class ControllerShipPlacement implements Initializable {
 
     @FXML
     private void deletePlacedShips(){
-
         while (!shipArrayListGui.isEmpty()) {
             ButtonShip buttonShip = shipArrayListGui.remove(0);
             deleteShipFromPlayground(buttonShip);
@@ -567,16 +566,22 @@ public class ControllerShipPlacement implements Initializable {
 
     @FXML
     public void startGame(){
-        ArrayList<BattleShipGui> shipPositionList = new ArrayList<>();
-        for (ButtonShip buttonShip :shipArrayListGui) {
+        StartShootingRes res = GAME_MANAGER.startShooting();
+        if (res == StartShootingRes.SHOOTING_ALLOWED) {
+            ArrayList<BattleShipGui> shipPositionList = new ArrayList<>();
+            for (ButtonShip buttonShip :shipArrayListGui) {
 
-         shipPositionList.add(buttonShip.getBattleShipGui());
+                shipPositionList.add(buttonShip.getBattleShipGui());
+            }
+
+            ControllerPlayGame controllerPlayGame = new ControllerPlayGame(playgroundSize, shipPositionList, this.GAME_MANAGER);
+            SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathPlayGame, controllerPlayGame);
+            sceneLoader.loadSceneInExistingWindow();
+            LoggerState.info("Switch state to In_Game");
         }
-
-        ControllerPlayGame controllerPlayGame = new ControllerPlayGame(playgroundSize, shipPositionList, this.GAME_MANAGER);
-        SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathPlayGame, controllerPlayGame);
-        sceneLoader.loadSceneInExistingWindow();
-        LoggerState.info("Switch state to In_Game");
+        else {
+            LoggerGUI.info("[user hint]" + res);
+        }
     }
 
 

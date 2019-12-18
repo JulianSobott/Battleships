@@ -57,6 +57,11 @@ public class GameManager implements GameManagerInterface {
         return new NewGameResult(shipList);
     }
 
+    public StartShootingRes startShooting() {
+        // TODO
+        return StartShootingRes.SHOOTING_ALLOWED;
+    }
+
     public void startGame() {
         this.gameLoop();
     }
