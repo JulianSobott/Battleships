@@ -122,7 +122,6 @@ public class ControllerShipPlacement implements Initializable {
     }
 
 
-
     /**
      * Water is pre-populated on the playing fields
      */
@@ -521,6 +520,9 @@ public class ControllerShipPlacement implements Initializable {
                 PlaceShipResult placeShipResult = new PlaceShipResult(true, ship.getPOSITION(), ship.getId(), PlaceShipResult.Error.NONE);
                 addShipToPlayground(buttonShip, battleShipGui, placeShipResult);
             }
+            for(ShipCounterPair lbl :this.hashMapShipLabels.values()) {
+                lbl.setCounter(0);
+            }
         } else {
             LoggerGUI.info("[USER HINT]: Can not place ships random");
             // TODO: inform user
@@ -532,8 +534,12 @@ public class ControllerShipPlacement implements Initializable {
     private void deletePlacedShips(){
 
         for ( ButtonShip buttonShip  :shipArrayListGui) {
-
+            this.hashMapShipLabels.get(buttonShip.getBattleShipGui().getPosition().getLength()).increaseCounter();
             dataGridBattleship.getChildren().remove(buttonShip);
+            boolean success = GAME_MANAGER.deleteShip(buttonShip.getBattleShipGui().getShipID());
+            if (!success) {
+                LoggerGUI.error("Can't delete ship: shipID=" + buttonShip.getBattleShipGui().getShipID());
+            }
         }
     }
 
