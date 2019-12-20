@@ -18,7 +18,7 @@ public class TestMain extends Application{
 
     @Override
     public void start(Stage primaryStage) {
-        int playgroundSize = 20;
+        int playgroundSize = 10;
         GameSettings settings = new GameSettings(playgroundSize, new PlayerHuman("1", playgroundSize),
                 new PlayerAI("2", playgroundSize));
         ControllerShipPlacement controller = new ControllerShipPlacement(settings);
