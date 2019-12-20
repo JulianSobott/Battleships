@@ -16,6 +16,12 @@ public class PlayerNetwork extends Player {
     }
 
     @Override
+    public boolean areAllShipsPlaced() {
+        // TODO
+        return true;
+    }
+
+    @Override
     public ShotResult gotHit(Position position) {
         // TODO: Send message to network
         return null;

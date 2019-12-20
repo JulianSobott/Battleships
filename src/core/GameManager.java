@@ -59,7 +59,9 @@ public class GameManager implements GameManagerInterface {
     }
 
     public StartShootingRes startShooting() {
-        // TODO
+        // TODO: return or wait till both finished? new thread? User should be somehow informed what is going on.
+        if (!this.player1.areAllShipsPlaced()) return StartShootingRes.OWN_NOT_ALL_SHIPS_PLACED;
+        if (!this.player2.areAllShipsPlaced()) return StartShootingRes.ENEMY_NOT_ALL_SHIPS_PLACED;
         return StartShootingRes.SHOOTING_ALLOWED;
     }
 
