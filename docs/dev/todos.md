@@ -16,7 +16,9 @@
 
 ## Logic
 
-- areAllShipsPlaced: _Julian_
+- areAllShipsPlaced: _Julian_  (✓)
+    - How to inform user?
+    - Add thread that waits?
 - save game: _Julian_
 - load game: _Julian_
 - (statistics): _Julian_
