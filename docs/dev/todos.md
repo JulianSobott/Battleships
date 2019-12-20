@@ -1,6 +1,6 @@
 # TODO's ✓
 
-## Network
+## Network: _Josua_
 
 - shooting
     - receive
@@ -10,6 +10,8 @@
         - Position from GameManager
         - ShotResult to GameManager
 - start game
+- save game
+- load game
 
 
 ## Logic
@@ -23,19 +25,21 @@
 
 ## GUI
 
-- design
-- endScreen
-- save game
-- load game
+- save game: _Lukas_
+- load game: _Lukas_
+- endScreen: _Lukas_
+- design: _Julien_
 - (settings)
+- (multi language support) 
 
 ## Documentation
 
 - java docs: _all_
 - class diagram
-- etc.
+- user manual
+- (etc.)
 
 
 ## General
 
-- cleanup code: _all_
+- (cleanup code): _all_
