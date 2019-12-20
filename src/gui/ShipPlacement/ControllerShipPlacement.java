@@ -538,6 +538,7 @@ public class ControllerShipPlacement implements Initializable {
         if (success) {
             dataGridBattleship.getChildren().remove(buttonShip);
             shipArrayListGui.remove(buttonShip);
+            this.hashMapShipLabels.get(buttonShip.getBattleShipGui().getPosition().getLength()).increaseCounter();
         } else {
             LoggerGUI.error("Can't delete ship: shipID=" + buttonShip.getBattleShipGui().getShipID());
         }
