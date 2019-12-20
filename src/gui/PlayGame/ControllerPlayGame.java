@@ -229,7 +229,6 @@ public class ControllerPlayGame implements Initializable {
                         LoggerGUI.info("NOTIFY USER: Turn was not valid" + res.getError());
                     }
                 } else {
-                    // TODO: thread is not shown as interrupted although it was interrupted
                     if (!Thread.currentThread().isInterrupted())
                         LoggerGUI.error("Received TurnResult with value null");
                     else {

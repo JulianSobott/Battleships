@@ -123,6 +123,7 @@ public class GameManager implements GameManagerInterface {
                 try {
                     this.lastTurns.get(player).wait();
                 } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                     return null;
                 }
             }
@@ -247,9 +248,8 @@ public class GameManager implements GameManagerInterface {
                     this.nextTurns.get(this.currentPlayer).wait();
                     LoggerLogic.debug("Queue is no longer empty");
                 } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                     return null;
-//                    LoggerLogic.error("Thread that waited for shot was interrupted. Error=" + e.getMessage());
-//                    e.printStackTrace();
                 }
             }
             return this.nextTurns.get(this.currentPlayer).poll();
