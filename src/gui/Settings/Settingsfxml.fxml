@@ -12,8 +12,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<AnchorPane prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="750.0" prefWidth="1200.0" stylesheets="@../generalApplication%20Design.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Button fx:id="buttonBackMainMenu" layoutX="87.0" layoutY="656.0" mnemonicParsing="false" onMouseClicked="#goBackToMenu" prefHeight="25.0" prefWidth="81.0" text="zurück" AnchorPane.bottomAnchor="70.0" />
       <Separator layoutX="429.0" layoutY="67.0" orientation="VERTICAL" prefHeight="509.0" prefWidth="0.0" AnchorPane.bottomAnchor="70.0" AnchorPane.topAnchor="70.0" />

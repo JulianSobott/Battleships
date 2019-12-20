@@ -1,0 +1,96 @@
+
+
+.anchorPane{
+    -fx-background-color: white;
+}
+
+
+.anchorPaneMainMenu{
+    -fx-background-color: white;
+    -fx-background-image: url('Images/Flugzeugtraeger.jpg');
+    -fx-background-size: 100% 100%;
+}
+
+.radio-button{
+    -fx-text-fill: darkgrey;
+    -fx-background-color: white;
+    -fx-padding: 5px;
+    -fx-background-radius: 4;
+}
+
+.label-h1 {
+    -fx-font-size: 21px;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.75) , 5,0,0,1 );
+}
+
+.label-h2 {
+    -fx-font-size: 18px;
+}
+
+.vBoxTask{
+    -fx-background-radius: 6;
+    -fx-background-color: linear-gradient(lightgrey 30%, lightgrey 100%);
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.75) , 5,0,0,1 );
+}
+
+.textarea, .text-field {
+    -fx-font-size: 14px;
+    -fx-background-color: white;
+    -fx-border-width: 1;
+    -fx-border-radius: 2;
+    -fx-text-fill: black;
+    -fx-padding: 4px 8px;
+    -fx-content-display: inline-block;
+    -fx-background-radius: 8;
+}
+
+.button {
+    -fx-font-weight: bold;
+    -fx-border-color: lightgrey;
+    -fx-background-color: transparent;
+    -fx-border-width: 1px;
+    -fx-border-radius: 2;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-border-color: grey;
+    -fx-border-width: 1px;
+    -fx-background-color: orange;
+}
+
+.label {
+    -fx-background-radius: 4;
+    -fx-background-color: white;
+    -fx-text-fill: grey;
+    -fx-font-weight: bold;
+    -fx-padding: 5px;
+}
+
+
+.menu:hover, .menu:showing{
+    -fx-background-color: #1966FF;
+}
+
+.context-menu {
+    -fx-background-color: white;
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 0 6 6 6, 0 5 5 5, 0 4 4 4;
+    -fx-border-radius: 0 6 6 6, 0 5 5 5, 0 4 4 4;
+    -fx-border-color: lightgrey;
+    /*    -fx-padding: 0.666667em 0.083333em 0.666667em 0.083333em;  8 1 8 1 */
+    -fx-padding: 0.333333em 0.083333em 0.666667em 0.083333em; /* 4 1 8 1 */
+}
+
+.menu-item:focused {
+    -fx-background-color: #1966FF;
+    -fx-text-fill: #FAFAFA;
+}
+
+.menu-item:focused .label {
+    -fx-text-fill: white;
+    -fx-background-color: #1966FF;
+}
+.menu-item .label{
+    -fx-background-color: white;
+}

@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="750.0" prefWidth="1200.0" styleClass="anchorPane" stylesheets="@../generalApplication%20Design.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Button fx:id="buttonBack" layoutX="70.0" layoutY="676.0" mnemonicParsing="false" onMouseClicked="#goBackToShipPlacement" prefHeight="25.0" prefWidth="120.0" text="Spiel abrechen" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="70.0" />
+      <Button fx:id="buttonBack" layoutX="70.0" layoutY="676.0" mnemonicParsing="false" onMouseClicked="#leaveGame" prefHeight="25.0" prefWidth="120.0" text="Spiel abrechen" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="70.0" />
       <HBox fx:id="hBoxPlaygrounds" alignment="CENTER" layoutX="69.29289245605469" layoutY="69.29289245605469" spacing="10.0" AnchorPane.bottomAnchor="120.0" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="70.0" AnchorPane.topAnchor="70.0">
          <children>
             <VBox fx:id="vBoxOwnPlayground" alignment="CENTER" spacing="20.0">
                <children>
-                  <Label text="Ihr Spielfeld:" />
+                  <Label styleClass="label-h2" text="Ihr Spielfeld:" />
                   <GridPane fx:id="gridPaneOwnField" hgap="2.0" prefHeight="560.0" prefWidth="521.0" vgap="2.0">
        
       </GridPane>
@@ -22,7 +18,7 @@
             </VBox>
             <VBox fx:id="vBoxEnemyPlayground" alignment="CENTER" spacing="20.0">
                <children>
-                  <Label text="Gegnerisches Spielfeld:" />
+                  <Label styleClass="label-h2" text="Gegnerisches Spielfeld:" />
                   <GridPane fx:id="gridPaneEnemyField" hgap="2.0" prefHeight="560.0" prefWidth="521.0" vgap="2.0">
       </GridPane>
                </children>

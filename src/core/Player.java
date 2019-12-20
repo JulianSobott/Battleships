@@ -8,8 +8,10 @@ public abstract class Player {
     protected PlaygroundEnemy playgroundEnemy;
 
     protected String name;
+    private int index;
 
-    public Player(String name, int playgroundSize) {
+    public Player(int index, String name, int playgroundSize) {
+        this.index = index;
         this.name = name;
         this.playgroundOwn = new PlaygroundOwn(playgroundSize);
         this.playgroundEnemy = new PlaygroundEnemy(playgroundSize);
@@ -59,5 +61,9 @@ public abstract class Player {
 
     TurnResult.Error canShootAt(Position position) {
         return this.playgroundEnemy.canShootAt(position);
+    }
+
+    public int getIndex() {
+        return this.index;
     }
 }

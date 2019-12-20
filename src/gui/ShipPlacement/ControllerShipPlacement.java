@@ -122,7 +122,6 @@ public class ControllerShipPlacement implements Initializable {
     }
 
 
-
     /**
      * Water is pre-populated on the playing fields
      */
@@ -447,14 +446,9 @@ public class ControllerShipPlacement implements Initializable {
             ButtonShip buttonShip1 = null;
             if (nodeShip instanceof ButtonShip) {
                 buttonShip1 = (ButtonShip) nodeShip;
-            }
-
-            boolean success = GAME_MANAGER.deleteShip(buttonShip1.getBattleShipGui().getShipID());
-            if (success) {
-                hashMapShipLabels.get(buttonShip1.getBattleShipGui().getPosition().getLength()).increaseCounter();
-                dataGridBattleship.getChildren().remove(index);
+                deleteShipFromPlayground(buttonShip1);
             } else {
-                // TODO: inform user
+                LoggerGUI.error("Object is not instance of ButtonShip: " + nodeShip);
             }
         });
     }
@@ -501,6 +495,7 @@ public class ControllerShipPlacement implements Initializable {
      */
 
 
+    @FXML
     public void placeShipsRandom() {
 
         if(shipArrayListGui.size() > 0)
@@ -520,11 +515,33 @@ public class ControllerShipPlacement implements Initializable {
                 PlaceShipResult placeShipResult = new PlaceShipResult(true, ship.getPOSITION(), ship.getId(), PlaceShipResult.Error.NONE);
                 addShipToPlayground(buttonShip, battleShipGui, placeShipResult);
             }
+            for(ShipCounterPair lbl :this.hashMapShipLabels.values()) {
+                lbl.setCounter(0);
+            }
         } else {
             LoggerGUI.info("[USER HINT]: Can not place ships random");
             // TODO: inform user
         }
 
+    }
+
+    @FXML
+    private void deletePlacedShips(){
+        while (!shipArrayListGui.isEmpty()) {
+            ButtonShip buttonShip = shipArrayListGui.remove(0);
+            deleteShipFromPlayground(buttonShip);
+        }
+    }
+
+    private boolean deleteShipFromPlayground(ButtonShip buttonShip) {
+        boolean success = GAME_MANAGER.deleteShip(buttonShip.getBattleShipGui().getShipID());
+        if (success) {
+            dataGridBattleship.getChildren().remove(buttonShip);
+            shipArrayListGui.remove(buttonShip);
+        } else {
+            LoggerGUI.error("Can't delete ship: shipID=" + buttonShip.getBattleShipGui().getShipID());
+        }
+        return success;
     }
 
 
@@ -549,17 +566,22 @@ public class ControllerShipPlacement implements Initializable {
 
     @FXML
     public void startGame(){
+        StartShootingRes res = GAME_MANAGER.startShooting();
+        if (res == StartShootingRes.SHOOTING_ALLOWED) {
+            ArrayList<BattleShipGui> shipPositionList = new ArrayList<>();
+            for (ButtonShip buttonShip :shipArrayListGui) {
 
-        ArrayList<BattleShipGui> shipPositionList = new ArrayList<>();
-        for (ButtonShip buttonShip :shipArrayListGui) {
+                shipPositionList.add(buttonShip.getBattleShipGui());
+            }
 
-         shipPositionList.add(buttonShip.getBattleShipGui());
+            ControllerPlayGame controllerPlayGame = new ControllerPlayGame(playgroundSize, shipPositionList, this.GAME_MANAGER);
+            SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathPlayGame, controllerPlayGame);
+            sceneLoader.loadSceneInExistingWindow();
+            LoggerState.info("Switch state to In_Game");
         }
-
-        ControllerPlayGame controllerPlayGame = new ControllerPlayGame(playgroundSize, shipPositionList, this.GAME_MANAGER);
-        SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathPlayGame, controllerPlayGame);
-        sceneLoader.loadSceneInExistingWindow();
-        LoggerState.info("Switch state to In_Game");
+        else {
+            LoggerGUI.info("[user hint]" + res);
+        }
     }
 
 

@@ -5,8 +5,8 @@ import core.communication_data.Position;
 import core.communication_data.ShotResult;
 
 public class PlayerNetwork extends Player {
-    public PlayerNetwork(String name, int playgroundSize) {
-        super(name, playgroundSize);
+    public PlayerNetwork(int index, String name, int playgroundSize) {
+        super(index, name, playgroundSize);
     }
 
     @Override
