@@ -10,6 +10,11 @@ public class PlayerHuman extends Player {
     }
 
     @Override
+    public boolean areAllShipsPlaced() {
+        return this.playgroundOwn.areAllShipsPlaced();
+    }
+
+    @Override
     public Position makeTurn() {
         return null;
     }

@@ -33,6 +33,8 @@ public abstract class Player {
         return res;
     }
 
+    public abstract boolean areAllShipsPlaced();
+
     public ShotResult gotHit(Position position) {
         return this.playgroundOwn.gotHit(position);
     }

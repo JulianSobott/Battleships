@@ -27,6 +27,11 @@ public class PlayerAI extends Player {
         this.playgroundHeatmap = new PlaygroundHeatmap(playgroundSize);
     }
 
+    @Override
+    public boolean areAllShipsPlaced() {
+        return true; // Ships are always placed in the constructor.
+    }
+
     /**
      * Calculates a Position for the next shot. The Position is a completely valid position.
      * @return Position

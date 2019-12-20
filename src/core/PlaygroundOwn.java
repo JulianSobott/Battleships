@@ -170,6 +170,10 @@ public class PlaygroundOwn extends Playground {
 
     }
 
+    public boolean areAllShipsPlaced() {
+        return this.shipPool.areAllShipsPlaced();
+    }
+
     private boolean placeSingleShipRandom(int length, Random rand){
         int max_iterations = 100;
         for(int i = 0; i < max_iterations; i++){
@@ -244,5 +248,4 @@ public class PlaygroundOwn extends Playground {
     private Ship getShipByID(ShipID shipID){
         return this.shipHashMap.get(shipID);
     }
-
 }
