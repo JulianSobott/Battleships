@@ -1,21 +1,17 @@
 package player;
 
 import core.Player;
-import core.communication_data.Position;
+import core.communication_data.TurnResult;
 
 public class PlayerHuman extends Player {
 
-    public PlayerHuman(int index, String name, int playgroundSize) {
-        super(index, name, playgroundSize);
+    public PlayerHuman(String name, int playgroundSize) {
+
+        super(name, playgroundSize);
     }
 
     @Override
-    public boolean areAllShipsPlaced() {
-        return this.playgroundOwn.areAllShipsPlaced();
-    }
-
-    @Override
-    public Position makeTurn() {
+    public TurnResult makeTurn() {
         return null;
     }
 }
