@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class PlayerAI extends Player {
 
-    enum Difficulty {
+    public enum Difficulty {
         EASY, MEDIUM, HARD
     }
 
@@ -123,5 +123,9 @@ public class PlayerAI extends Player {
     public void update(ShotResult result) {
         super.update(result);
         this.playgroundHeatmap.update(result);
+    }
+
+    public Difficulty getDifficulty() {
+        return difficulty;
     }
 }

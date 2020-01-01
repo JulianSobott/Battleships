@@ -274,4 +274,15 @@ public class GameManager implements GameManagerInterface {
         }
     }
 
+    public Player[] getPlayers() {
+        return players;
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public int getRound() {
+        return round;
+    }
 }
