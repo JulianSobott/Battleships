@@ -1,29 +1,22 @@
 package network.Client;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import network.Connected;
+
+import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class Client {
+public class Client extends Connected {
 
     public static void main(String[] args) {
         try {
-            Socket s = new Socket("localhost", 4999);
-//            PrintWriter pr = new PrintWriter(s.getOutputStream());
-//            pr.println("is it working");
-//            pr.flush();
-//
-//            InputStreamReader in = new InputStreamReader(s.getInputStream());
-//            BufferedReader bf = new BufferedReader(in);
-//
-//            String str = bf.readLine();
-//            System.out.println("Server: " + str);
+            Socket s = new Socket("localhost", 50000);
 
-            //
-            //
+            InputStreamReader in1 = new InputStreamReader(s.getInputStream());
+            BufferedReader bf1 = new BufferedReader(in1);
+            String str1 = bf1.readLine();
+            Connected.checkmessage(str1);
+            System.out.println("[Server]: " + str1);
 
             while (true) {
 
@@ -35,8 +28,9 @@ public class Client {
 
                 InputStreamReader in = new InputStreamReader(s.getInputStream());
                 BufferedReader bf = new BufferedReader(in);
-
                 String str = bf.readLine();
+                Connected.checkmessage(str);
+                System.out.println(checkmessage(str));
                 System.out.println("[Server]: " + str);
             }
 
@@ -51,4 +45,6 @@ public class Client {
 
 
     }
+
+
 }
