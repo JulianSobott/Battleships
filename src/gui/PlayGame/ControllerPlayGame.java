@@ -264,11 +264,33 @@ public class ControllerPlayGame implements Initializable {
         PaneExtends paneExtends = this.getPaneAtPosition(gridPane, shotResult.getPosition().getX(),
                 shotResult.getPosition().getY());
         paneExtends.setStyle(cellStyle);
+
+        if (gridPane == this.gridPaneEnemyField && this.showHeatMap) {
+          this.updateHeatMap(shotResult);
+        }
     }
 
     private PaneExtends getPaneAtPosition(GridPane gridPane, int x, int y) {
         int index = x * playgroundSize + y;
         return (PaneExtends) gridPane.getChildren().get(index);
+    }
+
+    private void updateHeatMap(ShotResult result) {
+        this.playgroundHeatmap.update(result);
+        int[][] heatMap = this.playgroundHeatmap.buildHeatMap(255);
+        this.playgroundHeatmap.printFields();
+        PlaygroundHeatmap.printHeatMap(heatMap);
+        for (int y = 0; y < playgroundSize; y++) {
+            for (int x = 0; x < playgroundSize; x++) {
+                PaneExtends p = getPaneAtPosition(gridPaneEnemyField, x, y);
+                if(!this.playgroundHeatmap.isAlreadyDiscoveredShipAt(x, y)){
+                    int w = Math.min(255, heatMap[y][x]);
+                    p.setStyle("-fx-background-color: rgb("+w+", "+w+", "+w+")");
+                } else {
+                    p.setStyle("-fx-background-color: rgb(255, 0, 0)");
+                }
+            }
+        }
     }
 
     /** ##########################################   Window Navigation  ############################################## */
