@@ -19,4 +19,12 @@ public abstract class ShotResult {
     public Position getPosition() {
         return position;
     }
+
+    @Override
+    public String toString() {
+        return "ShotResult{" +
+                "type=" + type +
+                ", position=" + position +
+                '}';
+    }
 }

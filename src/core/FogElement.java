@@ -1,4 +1,4 @@
 package core;
 
-class FogElement extends PlaygroundElement {
+public class FogElement extends PlaygroundElement {
 }

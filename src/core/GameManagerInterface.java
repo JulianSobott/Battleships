@@ -21,6 +21,7 @@ public interface GameManagerInterface {
      */
     PlaceShipResult placeShip(ShipPosition pos);
 
+    PlaceShipsRandomRes placeShipsRandom();
     /**
      * Request for a move of a ship to a new position.
      * Checks whether the new position is valid and free are made in the implementation.
@@ -40,7 +41,4 @@ public interface GameManagerInterface {
      */
     boolean deleteShip(ShipID id);
 
-    // turn
-    public TurnResult ownTurn(Position position);
-    public TurnResult enemyTurn();
 }

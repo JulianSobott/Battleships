@@ -1,6 +1,8 @@
 package core.communication_data;
 
-public class ShipID {
+import java.io.Serializable;
+
+public class ShipID implements Serializable {
 
     private final int id;
     private static int nextID = 0;

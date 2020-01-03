@@ -1,33 +1,12 @@
 package core;
 
-import core.communication_data.PlaceShipResult;
 import core.communication_data.Position;
 import core.communication_data.ShipList;
-import core.communication_data.ShipPosition;
+import core.utils.logging.LoggerLogic;
+
+import java.util.Arrays;
 
 public abstract class Playground {
-
-    public enum FieldType{
-        SHIP, WATER, FOG;
-    }
-
-    static class Field{
-        boolean hit;
-        FieldType type;
-        PlaygroundElement element;
-
-        public Field(FieldType type, PlaygroundElement element, boolean hit){
-            this.hit = hit;
-            this.type = type;
-            this.element = element;
-        }
-
-        Field(FieldType type, PlaygroundElement element){
-            this(type, element, false);
-        }
-
-        // TODO: Maybe add build factories: e.g. newWater(),
-    }
 
     /**
      * Positioning of the elements in playground:
@@ -38,11 +17,21 @@ public abstract class Playground {
     protected Field[][] elements;
     protected int size;
     ShipPool shipPool;
-
     public Playground(int size){
         this.size = size;
         this.elements = new Field[size][size];
         this.shipPool = new ShipPool(ShipList.fromSize(size));
+    }
+
+    /**
+     * Reset all fields to type.
+     * Releases all ships. Same as creating a new Playground
+     *
+     * @param type
+     */
+    void resetAll(FieldType type){
+        this.resetFields(type);
+        this.shipPool.releaseAll();
     }
 
     protected void resetFields(FieldType type){
@@ -70,4 +59,80 @@ public abstract class Playground {
         this.elements[pos.getY()][pos.getX()] = new Field(type, element, false);
     }
 
+    public enum FieldType{
+        SHIP, WATER, FOG;
+
+    }
+    public static class Field {
+
+        private boolean hit;
+        public FieldType type;
+        public PlaygroundElement element;
+        public Field(FieldType type, PlaygroundElement element, boolean hit){
+            this.hit = hit;
+            this.type = type;
+            this.element = element;
+        }
+
+        Field(FieldType type, PlaygroundElement element){
+            this(type, element, false);
+        }
+
+        public static Field newWaterField(){
+            return new Field(FieldType.WATER, new WaterElement(), false);
+        }
+
+        public void gotHit(){
+            this.hit = true;
+            this.element.gotHit();
+        }
+
+        public boolean isHit() {
+            return hit;
+        }
+
+    }
+    /**
+     * Call when a ship is sunken and water fields around can no longer be hit.
+     *
+     * @param waterFields All positions around the Ship where water is. All Positions exist and are on the playground
+     */
+    public void hitWaterFieldsAroundSunkenShip(Position[] waterFields){
+        LoggerLogic.info("hitWaterFieldsAroundSunkenShip: waterFields= " + Arrays.toString(waterFields));
+        for(Position position : waterFields){
+            Field f = Field.newWaterField();
+            f.gotHit();
+            this.elements[position.getY()][position.getX()] = f;
+        }
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void printField(){
+        StringBuilder s = new StringBuilder();
+        s.append("\n");
+        for(Field[] row : this.elements){
+            for(Field f : row){
+                if(f == null){
+                    s.append("N");
+                }
+                else if(f.type == FieldType.SHIP){
+                    s.append("S");
+                }
+                else if(f.type == FieldType.WATER){
+                    s.append("~");
+                }else if(f.type == FieldType.FOG){
+                    s.append("=");
+                }
+            }
+            s.append("\n");
+        }
+        LoggerLogic.debug(s.toString());
+    }
+
+    public Field[][] getFields() {
+        return this.elements;
+    }
 }

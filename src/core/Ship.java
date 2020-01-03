@@ -3,7 +3,9 @@ package core;
 import core.communication_data.ShipID;
 import core.communication_data.ShipPosition;
 
-public class Ship extends PlaygroundElement{
+import java.io.Serializable;
+
+public class Ship extends PlaygroundElement implements Serializable {
 
     private int lives;
     private ShipID id;
@@ -28,7 +30,7 @@ public class Ship extends PlaygroundElement{
         this(length, ShipID.getNextShipID(), ShipPosition.DEFAULT(length));
     }
 
-    LifeStatus getStatus() {
+    public LifeStatus getStatus() {
         if(this.lives == 0)
             return LifeStatus.SUNKEN;
         else

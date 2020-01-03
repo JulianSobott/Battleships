@@ -13,6 +13,7 @@ import java.util.HashMap;
 public class ShipPool {
 
     static class ShipObjectPool extends ObjectPool<Ship> {
+
         ShipObjectPool(int length, int num){
             for (int i = 0; i < num; i++) {
                 Ship s = new Ship(length);
@@ -20,7 +21,6 @@ public class ShipPool {
             }
         }
     }
-
     private HashMap<Integer, ObjectPool<Ship>> pools = new HashMap<>();
 
     public ShipPool(ShipList shipList){
@@ -50,20 +50,29 @@ public class ShipPool {
      * @param ship Ship object that is no free to use
      */
     public void releaseShip(Ship ship){
-        int size = ship.getShipPosition().getLENGTH();
+        if(ship == null)
+            return;
+        int size = ship.getShipPosition().getLength();
         assert this.pools.containsKey(size);
         this.pools.get(size).releaseObject(ship);
         this.cleanUp(ship);
     }
 
     private void cleanUp(Ship ship){
-        ship.setShipPosition(ShipPosition.DEFAULT(ship.getShipPosition().getLENGTH()));
+        ship.setShipPosition(ShipPosition.DEFAULT(ship.getShipPosition().getLength()));
     }
 
     public void releaseAll() {
         for(ObjectPool<Ship> pool : this.pools.values()){
             pool.releaseAll();
         }
+    }
+
+    public boolean areAllShipsPlaced() {
+        for(ObjectPool<Ship> pool : this.pools.values()) {
+            if (pool.numAvailable() != 0) return false;
+        }
+        return true;
     }
 
 }
