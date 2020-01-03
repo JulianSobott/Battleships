@@ -10,6 +10,7 @@ import java.util.Random;
 public class PlaygroundOwn extends Playground {
 
     private HashMap<ShipID, Ship> shipHashMap = new HashMap<>();
+    private boolean logDeactivatedShipPlacement = false;
 
     public PlaygroundOwn() { // Jackson deserialization
     }
@@ -39,7 +40,8 @@ public class PlaygroundOwn extends Playground {
      * @return An result that indicates whether it was successfully placed or not.
      */
     private PlaceShipResult placeShip(ShipPosition position, Ship ship){
-        LoggerLogic.info("placeShip: position=" + position + ", ship=" + ship);
+        if (!this.logDeactivatedShipPlacement)
+            LoggerLogic.info("placeShip: position=" + position + ", ship=" + ship);
         PlaceShipResult res;
         if(ship == null)
             res = PlaceShipResult.failed(position, null, PlaceShipResult.Error.NO_MORE_SHIPS);
@@ -57,7 +59,8 @@ public class PlaygroundOwn extends Playground {
             this.shipHashMap.put(shipID, ship);
             res =  PlaceShipResult.success(position, shipID);
         }
-        LoggerLogic.info( "placeShip return: PlaceShipResult=" + res);
+        if (!this.logDeactivatedShipPlacement)
+            LoggerLogic.info( "placeShip return: PlaceShipResult=" + res);
         return res;
     }
 
@@ -141,6 +144,7 @@ public class PlaygroundOwn extends Playground {
     }
 
     public PlaceShipsRandomRes placeShipsRandom(ShipList shipList) {
+        this.logDeactivatedShipPlacement = true;
         int max_tries = 10000;
         Random random = new Random(1000);
         boolean foundPlace = true;
@@ -158,6 +162,7 @@ public class PlaygroundOwn extends Playground {
                 break;
             }
         }
+        this.logDeactivatedShipPlacement = false;
         if(foundPlace){
             LoggerLogic.info("Successfully placed ships");
             PlaceShipsRandomRes.ShipData[] data = new PlaceShipsRandomRes.ShipData[shipList.getTotalNumberOfShips()];
