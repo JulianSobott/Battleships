@@ -1,8 +1,6 @@
 package core;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.*;
 import core.communication_data.ShipID;
 import core.communication_data.ShipPosition;
 

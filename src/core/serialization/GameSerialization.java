@@ -50,6 +50,7 @@ public class GameSerialization {
         try {
             InputStream fileInputStream = new FileInputStream(f.getAbsolutePath());
             GameData gameData = mapper.readValue(fileInputStream, GameData.class);
+            // TODO: set in GameManager
             LoggerLogic.info("Successfully loaded game");
         } catch (FileNotFoundException e) {
             LoggerLogic.warning("No game found with id=" + id + ". TODO what TODO");
