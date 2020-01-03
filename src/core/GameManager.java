@@ -99,12 +99,11 @@ public class GameManager implements GameManagerInterface {
         LoggerLogic.debug("Make shot: player=" + player + " position=" + position);
         synchronized (this.nextTurns.get(player)) {
             LoggerLogic.debug("" + this.nextTurns);
-            LoggerLogic.debug("" + this.nextTurns.get(player));
             LoggerLogic.debug("" + position);
             if (this.nextTurns.get(player).size() != 1) {
                 this.nextTurns.get(player).add(position);
                 this.nextTurns.get(player).notifyAll();
-                LoggerLogic.debug("Notify on Queue: " + this.nextTurns.get(player));
+                LoggerLogic.debug("Notify on Queue: " + this.nextTurns);
             } else {
                 LoggerLogic.debug("Player has already made a shot. player=" + player);
             }
@@ -200,7 +199,8 @@ public class GameManager implements GameManagerInterface {
                     nextPlayer();
                 else { // game was interrupted
                 }
-            } while (res != null && res.isFINISHED() && !Thread.currentThread().isInterrupted());
+            } while (res != null && !res.isFINISHED() && !Thread.currentThread().isInterrupted());
+            LoggerLogic.info("End main gameLoop");
         });
         inGameThread.setName("Main_gameLoop");
         inGameThread.start();
@@ -216,11 +216,14 @@ public class GameManager implements GameManagerInterface {
         do {
             // TODO: Find better solution for makeTurn. maybe flag in player: triggerMakeTurn needed.
             Position pos = this.currentPlayer.makeTurn();
+            LoggerLogic.debug("Position=" + pos + ", Player=" + this.currentPlayer);
             if (pos == null) {
                 pos = this.getPlayerShootPosition();
+                LoggerLogic.debug("Position=" + pos + ", Player=" + this.currentPlayer);
             }
             if (pos != null) {
                 res = this.turn(this.currentPlayer, pos);
+                LoggerLogic.debug("res=" + res + ", Player=" + this.currentPlayer);
                 this.saveTurnResult(res);
             }
         } while (res != null && res.isTURN_AGAIN() && !Thread.currentThread().isInterrupted());
@@ -241,6 +244,7 @@ public class GameManager implements GameManagerInterface {
                 // TODO: Poll from all Queues Also AI
             }
         }
+        LoggerLogic.debug("SavedResults: lastTurns=" + this.lastTurns);
     }
 
     private Position getPlayerShootPosition() {
