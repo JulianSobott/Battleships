@@ -43,11 +43,11 @@ public class Ship extends PlaygroundElement implements Serializable {
         this.lives--;
     }
 
-    ShipID getId() {
+    public ShipID getId() {
         return id;
     }
 
-    ShipPosition getShipPosition(){
+    public ShipPosition getShipPosition(){
         return this.shipPosition;
     }
 

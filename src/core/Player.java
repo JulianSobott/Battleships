@@ -66,4 +66,16 @@ public abstract class Player {
     public int getIndex() {
         return this.index;
     }
+
+    public PlaygroundOwn getPlaygroundOwn() {
+        return playgroundOwn;
+    }
+
+    public PlaygroundEnemy getPlaygroundEnemy() {
+        return playgroundEnemy;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

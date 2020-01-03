@@ -23,19 +23,21 @@ public class GameSerialization {
         int round = gameManager.getRound();
         int currentPlayerIndex = gameManager.getCurrentPlayer().getIndex();
         Player[] players = gameManager.getPlayers();
-        PlayerType[] playerTypes = new PlayerType[players.length];
-        PlayerAI.Difficulty[] aiDifficulties = new PlayerAI.Difficulty[players.length];
-        int i = 0;
-        for (Player p : players) {
-            playerTypes[i] = PlayerType.fromPlayer(p);
-            aiDifficulties[i] = playerTypes[i] == PlayerType.AI ? ((PlayerAI) p).getDifficulty() : null;
-            i++;
-        }
+//        PlayerData[] playersData = new PlayerData[players.length];
+//        int i = 0;
+//        for (Player p : players) {
+//            PlayerType type = PlayerType.fromPlayer(p);
+//            PlayerAI.Difficulty difficulty = type == PlayerType.AI ? ((PlayerAI) p).getDifficulty() : null;
+//            PlaygroundData playgroundDataOwn = PlaygroundData.fromPlayground(p.get)
+//            PlayerData data = new PlayerData(type, difficulty, )
+//            i++;
+//        }
+
         // save data in object
-        GameData gameData = new GameData(gameID, timestamp, round, currentPlayerIndex, playerTypes, aiDifficulties,
-                new PlaygroundData(5), new PlaygroundData(5));
+        GameData gameData = new GameData(gameID, timestamp, round, currentPlayerIndex, players);
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         // write data to json file
         try {
             File f = new File("game_" + gameID + ".json");
