@@ -19,6 +19,9 @@ public class GameData {
     private int currentPlayer;     // 0 or 1
     private Player[] players;
 
+    public GameData() { // Jackson deserialization
+    }
+
     public GameData(long gameID, String timestamp, int round, int currentPlayer, Player[] players) {
         this.gameID = gameID;
         this.timestamp = timestamp;
@@ -45,5 +48,25 @@ public class GameData {
 
     public Player[] getPlayers() {
         return players;
+    }
+
+    public void setGameID(long gameID) {
+        this.gameID = gameID;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public void setRound(int round) {
+        this.round = round;
+    }
+
+    public void setCurrentPlayer(int currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    public void setPlayers(Player[] players) {
+        this.players = players;
     }
 }

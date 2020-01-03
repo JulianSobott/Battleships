@@ -19,6 +19,9 @@ public class PlayerAI extends Player {
     private Random r =  new Random(seed);
     PlaygroundHeatmap playgroundHeatmap;
 
+    public PlayerAI() { //Jackson deserialization
+    }
+
     public PlayerAI(int index, String name, int playgroundSize) {
         super(index, name, playgroundSize);
         this.playgroundOwn.placeShipsRandom();

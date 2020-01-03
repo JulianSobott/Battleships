@@ -1,9 +1,14 @@
 package core;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonValue;
 import core.communication_data.ShipID;
 import core.communication_data.ShipPosition;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Ship extends PlaygroundElement implements Serializable {
 
@@ -12,7 +17,10 @@ public class Ship extends PlaygroundElement implements Serializable {
     private ShipPosition shipPosition;
 
     public enum LifeStatus {
-        SUNKEN, ALIVE
+        SUNKEN, ALIVE;
+    }
+
+    public Ship() {
     }
 
     private Ship(int lives, ShipID id, ShipPosition shipPosition){
@@ -30,6 +38,7 @@ public class Ship extends PlaygroundElement implements Serializable {
         this(length, ShipID.getNextShipID(), ShipPosition.DEFAULT(length));
     }
 
+    @JsonIgnore
     public LifeStatus getStatus() {
         if(this.lives == 0)
             return LifeStatus.SUNKEN;
@@ -43,6 +52,10 @@ public class Ship extends PlaygroundElement implements Serializable {
         this.lives--;
     }
 
+    public int getLives() {
+        return lives;
+    }
+
     public ShipID getId() {
         return id;
     }
@@ -53,5 +66,13 @@ public class Ship extends PlaygroundElement implements Serializable {
 
     public void setShipPosition(ShipPosition newPosition){
         this.shipPosition = newPosition;
+    }
+
+    public void setLives(int lives) {
+        this.lives = lives;
+    }
+
+    public void setId(ShipID id) {
+        this.id = id;
     }
 }

@@ -7,6 +7,10 @@ public class ShipID implements Serializable {
     private final int id;
     private static int nextID = 0;
 
+    public ShipID() { // Jackson deserialization
+        this.id = -1;
+    }
+
     public ShipID(int id) {
         this.id = id;
     }
@@ -33,4 +37,6 @@ public class ShipID implements Serializable {
     public int hashCode() {
         return id;
     }
+
+
 }

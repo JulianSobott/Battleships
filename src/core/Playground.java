@@ -1,11 +1,18 @@
 package core;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonValue;
 import core.communication_data.Position;
 import core.communication_data.ShipList;
 import core.utils.logging.LoggerLogic;
+import org.junit.platform.commons.util.StringUtils;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
+@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
 public abstract class Playground {
 
     /**
@@ -17,6 +24,10 @@ public abstract class Playground {
     protected Field[][] elements;
     protected int size;
     ShipPool shipPool;
+
+    public Playground() { // Jackson deserialization
+    }
+
     public Playground(int size){
         this.size = size;
         this.elements = new Field[size][size];
@@ -62,12 +73,38 @@ public abstract class Playground {
     public enum FieldType{
         SHIP, WATER, FOG;
 
+        private static Map<String, FieldType> namesMap = new HashMap<String, FieldType>(3);
+
+        static {
+            namesMap.put("ship", SHIP);
+            namesMap.put("water", WATER);
+            namesMap.put("fog", FOG);
+        }
+
+        @JsonCreator
+        public static FieldType forValue(String value) {
+            return namesMap.get(value.toLowerCase());
+        }
+
+        @JsonValue
+        public String toValue() {
+            for (Map.Entry<String, FieldType> entry : namesMap.entrySet()) {
+                if (entry.getValue() == this)
+                    return entry.getKey();
+            }
+
+            return null; // or fail
+        }
     }
     public static class Field {
 
         private boolean hit;
         public FieldType type;
         public PlaygroundElement element;
+
+        public Field() { // Jackson deserialization
+        }
+
         public Field(FieldType type, PlaygroundElement element, boolean hit){
             this.hit = hit;
             this.type = type;
@@ -91,6 +128,17 @@ public abstract class Playground {
             return hit;
         }
 
+        public void setHit(boolean hit) {
+            this.hit = hit;
+        }
+
+        public void setType(FieldType type) {
+            this.type = type;
+        }
+
+        public void setElement(PlaygroundElement element) {
+            this.element = element;
+        }
     }
     /**
      * Call when a ship is sunken and water fields around can no longer be hit.
@@ -134,5 +182,13 @@ public abstract class Playground {
 
     public Field[][] getFields() {
         return this.elements;
+    }
+
+    public void setFields(Field[][] elements) {
+        this.elements = elements;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 }

@@ -10,6 +10,9 @@ public class PlaygroundEnemy extends Playground{
     private int numShipsFields = 0;
     private int numHitShipsFields = 0;
 
+    public PlaygroundEnemy() {// Jackson deserialization
+    }
+
     public PlaygroundEnemy(int size) {
         super(size);
         this.resetFields(FieldType.FOG);

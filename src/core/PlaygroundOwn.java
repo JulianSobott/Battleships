@@ -11,6 +11,9 @@ public class PlaygroundOwn extends Playground {
 
     private HashMap<ShipID, Ship> shipHashMap = new HashMap<>();
 
+    public PlaygroundOwn() { // Jackson deserialization
+    }
+
     public PlaygroundOwn(int size) {
         super(size);
         this.resetFields(FieldType.WATER);

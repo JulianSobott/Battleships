@@ -1,7 +1,9 @@
 package core;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import core.communication_data.*;
 
+@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
 public abstract class Player {
 
     protected PlaygroundOwn playgroundOwn;
@@ -9,6 +11,9 @@ public abstract class Player {
 
     protected String name;
     private int index;
+
+    public Player() { // Jackson deserialization
+    }
 
     public Player(int index, String name, int playgroundSize) {
         this.index = index;
@@ -77,5 +82,21 @@ public abstract class Player {
 
     public String getName() {
         return name;
+    }
+
+    public void setPlaygroundOwn(PlaygroundOwn playgroundOwn) {
+        this.playgroundOwn = playgroundOwn;
+    }
+
+    public void setPlaygroundEnemy(PlaygroundEnemy playgroundEnemy) {
+        this.playgroundEnemy = playgroundEnemy;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }
