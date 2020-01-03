@@ -4,9 +4,11 @@ import core.GameManager;
 import core.Player;
 import core.communication_data.GameSettings;
 import core.communication_data.NewGameResult;
+import core.utils.logging.LoggerGUI;
 import gui.ControllerMainMenu;
 import gui.ShipPlacement.ControllerShipPlacement;
 import gui.WindowChange.SceneLoader;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -101,8 +103,32 @@ public class ControllerGameType implements Initializable {
      */
 
     @FXML
-    private void determineLocalIpAddress() {
+    private void onServerSelected() {
+        // TODO: only when wasn't selected before
+        this.determineLocalIpAddress();
+        this.startServer();
+    }
 
+    @FXML
+    private void onClientSelected() {
+        // TODO: only when wasn't selected before
+        this.setClientInformation();
+        this.stopServer();
+    }
+
+    private void startServer() {
+        LoggerGUI.info("Starting server");
+        // TODO
+    }
+
+    private void stopServer() {
+        LoggerGUI.info("Stopping server");
+        // TODO
+    }
+
+    @FXML
+    private void determineLocalIpAddress() {
+        // TODO: move parts to network package
         InetAddress localIp = null;
         try {
             localIp = Inet4Address.getLocalHost();

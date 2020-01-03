@@ -9,6 +9,8 @@ public class PlayerNetwork extends Player {
         super(index, name, playgroundSize);
     }
 
+    // TODO: Add connection to class that can send/receive messages
+
     @Override
     public Position makeTurn() {
         // TODO: wait till enemy turn and return

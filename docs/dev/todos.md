@@ -31,6 +31,14 @@
 - load game: _Lukas_
 - endScreen: _Lukas_
 - design: _Julien_
+- new game screen:
+    - Remove 'port' field
+    - when client selected: add button join
+    - when server selected: Show joined player
+    - Server: only start when player joined
+    - Client: start when received playground size
+- input validation
+
 - (settings)
 - (multi language support) 
 
