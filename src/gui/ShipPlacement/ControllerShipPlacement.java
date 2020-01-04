@@ -288,10 +288,17 @@ public class ControllerShipPlacement implements Initializable {
         if (res.isSuccessfullyPlaced()) {
 
             addShipToPlayground(button, battleShipGui, res);
-
             this.hashMapShipLabels.get(battleShipGui.getPosition().getLength()).decreaseCounter();
         } else {
             // TODO: inform user about failure
+            Notifications notifications = Notifications.create()
+                    .title("Not allowed to place here a Ship")
+                    .text("Parts of the ship collapse either with another ship or the edge of the field")
+                    .darkStyle()
+                    .hideCloseButton()
+                    .position(Pos.CENTER)
+                    .hideAfter(Duration.seconds(6.0));
+            notifications.showError();
         }
     }
 
@@ -334,7 +341,6 @@ public class ControllerShipPlacement implements Initializable {
                     .position(Pos.CENTER)
                     .hideAfter(Duration.seconds(6.0));
             notifications.showError();
-
         }
     }
 
@@ -367,7 +373,6 @@ public class ControllerShipPlacement implements Initializable {
      * @param result        the result contains the new information about the graphical object.
      */
 
-    //ToDO PlaceShipReslult möglicherweiße durch anderen Datentypen ersetzen ??
     private void addShipToPlayground(ButtonShip buttonShip, BattleShipGui battleShipGui, PlaceShipResult result) {
 
         battleShipGui.setPosition(result.getPosition());
@@ -508,6 +513,14 @@ public class ControllerShipPlacement implements Initializable {
                 battleShipGui.getPosition().setDirection(directionNew);
             } else {
                 LoggerGUI.info("User Info: Not allowed to rotate ship");
+                Notifications notifications = Notifications.create()
+                        .title("Not allowed to rotate ship")
+                        .text("Parts of the ship collapse either with another ship or the edge of the field")
+                        .darkStyle()
+                        .hideCloseButton()
+                        .position(Pos.CENTER)
+                        .hideAfter(Duration.seconds(6.0));
+                notifications.showError();
             }
         });
     }
@@ -546,6 +559,7 @@ public class ControllerShipPlacement implements Initializable {
         } else {
             LoggerGUI.info("[USER HINT]: Can not place ships random");
             // TODO: inform user
+
         }
 
     }
