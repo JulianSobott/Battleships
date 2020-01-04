@@ -9,6 +9,7 @@ import core.serialization.GameData;
 import core.utils.logging.LoggerGUI;
 import core.utils.logging.LoggerLogic;
 import gui.ControllerMainMenu;
+import gui.GameOver.ControllerGameOver;
 import gui.UiClasses.BattleShipGui;
 import gui.UiClasses.PaneExtends;
 import gui.WindowChange.SceneLoader;
@@ -60,7 +61,7 @@ public class ControllerPlayGame implements Initializable {
     private Thread playgroundUpdaterThread;
 
     private static final String filepathBackMainMenu = "../Main_Menu.fxml";
-
+    private static final String filepathGameOver = "../Main_Menu.fxml";
 
     public ControllerPlayGame(int playgroudSize, ArrayList<BattleShipGui> shipPositionList, GameManager gameManager) {
         this.playgroundSize = playgroudSize;
@@ -331,8 +332,20 @@ public class ControllerPlayGame implements Initializable {
 
     //TODO wo soll der Spieler beim Spielabruch landen ?? Wieder im Hauptmenü??
     public void goBackToMainMenu() {
+
         ControllerMainMenu controllerMainMenu = new ControllerMainMenu();
         SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathBackMainMenu, controllerMainMenu);
+        sceneLoader.loadSceneInExistingWindow();
+    }
+
+    /**
+     * if one player wins new screen is loaded
+     */
+
+    private void loadEndScreen(){
+
+        ControllerGameOver controllerGameOver = new ControllerGameOver();
+        SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathGameOver , controllerGameOver);
         sceneLoader.loadSceneInExistingWindow();
     }
 

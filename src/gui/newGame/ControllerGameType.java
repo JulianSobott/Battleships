@@ -1,14 +1,11 @@
 package gui.newGame;
 
-import core.GameManager;
 import core.Player;
 import core.communication_data.GameSettings;
-import core.communication_data.NewGameResult;
 import core.utils.logging.LoggerGUI;
 import gui.ControllerMainMenu;
 import gui.ShipPlacement.ControllerShipPlacement;
 import gui.WindowChange.SceneLoader;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
