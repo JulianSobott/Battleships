@@ -12,6 +12,7 @@ import gui.WindowChange.SceneLoader;
 import gui.newGame.ControllerGameType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -25,6 +26,8 @@ import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -46,6 +49,9 @@ public class ControllerShipPlacement implements Initializable {
     private Button buttonBack;
     @FXML
     private Button buttonPlaceShipsRandom;
+    @FXML
+    private Button startGame;
+
     private double CELL_PERCENTAGE_WIDTH;
     private HashMap<Integer, ShipCounterPair> hashMapShipLabels = new HashMap<>();
     private ArrayList<ButtonShip> shipArrayListGui = new ArrayList<>();
@@ -154,7 +160,7 @@ public class ControllerShipPlacement implements Initializable {
      * This method generates the different types of ships that the player sees on the right side of the board
      * and can then distribute on the board.
      *
-     * @param shipSize      length of the ship type
+     * @param shipSize length of the ship type
      */
 
     private HBoxExends createNewGuiShipType(int shipSize) {
@@ -318,7 +324,17 @@ public class ControllerShipPlacement implements Initializable {
 
         } else {
             LoggerGUI.info("[USER HINT] Cannot move ship to new position: " + res.getERROR());
+
             // TODO: inform user
+            Notifications notifications = Notifications.create()
+                    .title("Cannot move ship to new position")
+                    .text("Parts of the ship collapse either with another ship or the edge of the field")
+                    .darkStyle()
+                    .hideCloseButton()
+                    .position(Pos.CENTER)
+                    .hideAfter(Duration.seconds(6.0));
+            notifications.showError();
+
         }
     }
 
@@ -352,7 +368,6 @@ public class ControllerShipPlacement implements Initializable {
      */
 
     //ToDO PlaceShipReslult möglicherweiße durch anderen Datentypen ersetzen ??
-
     private void addShipToPlayground(ButtonShip buttonShip, BattleShipGui battleShipGui, PlaceShipResult result) {
 
         battleShipGui.setPosition(result.getPosition());
@@ -498,10 +513,9 @@ public class ControllerShipPlacement implements Initializable {
     @FXML
     public void placeShipsRandom() {
 
-        if(shipArrayListGui.size() > 0)
-        {
-            while ( shipArrayListGui.size() > 0) {
-               BattleShipGui battleShipGui =  shipArrayListGui.get(0).getBattleShipGui();
+        if (shipArrayListGui.size() > 0) {
+            while (shipArrayListGui.size() > 0) {
+                BattleShipGui battleShipGui = shipArrayListGui.get(0).getBattleShipGui();
                 deleteShipFromPlayground(battleShipGui);
             }
         }
@@ -515,7 +529,7 @@ public class ControllerShipPlacement implements Initializable {
                 PlaceShipResult placeShipResult = new PlaceShipResult(true, ship.getPOSITION(), ship.getId(), PlaceShipResult.Error.NONE);
                 addShipToPlayground(buttonShip, battleShipGui, placeShipResult);
             }
-            for(ShipCounterPair lbl :this.hashMapShipLabels.values()) {
+            for (ShipCounterPair lbl : this.hashMapShipLabels.values()) {
                 lbl.setCounter(0);
             }
         } else {
@@ -526,7 +540,7 @@ public class ControllerShipPlacement implements Initializable {
     }
 
     @FXML
-    private void deletePlacedShips(){
+    private void deletePlacedShips() {
         while (!shipArrayListGui.isEmpty()) {
             ButtonShip buttonShip = shipArrayListGui.remove(0);
             deleteShipFromPlayground(buttonShip);
@@ -566,11 +580,11 @@ public class ControllerShipPlacement implements Initializable {
      */
 
     @FXML
-    public void startGame(){
+    public void startGame() {
         StartShootingRes res = GAME_MANAGER.startShooting();
         if (res == StartShootingRes.SHOOTING_ALLOWED) {
             ArrayList<BattleShipGui> shipPositionList = new ArrayList<>();
-            for (ButtonShip buttonShip :shipArrayListGui) {
+            for (ButtonShip buttonShip : shipArrayListGui) {
 
                 shipPositionList.add(buttonShip.getBattleShipGui());
             }
@@ -579,8 +593,7 @@ public class ControllerShipPlacement implements Initializable {
             SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathPlayGame, controllerPlayGame);
             sceneLoader.loadSceneInExistingWindow();
             LoggerState.info("Switch state to In_Game");
-        }
-        else {
+        } else {
             LoggerGUI.info("[user hint]" + res);
         }
     }
