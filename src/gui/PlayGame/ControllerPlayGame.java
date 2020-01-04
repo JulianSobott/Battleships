@@ -394,8 +394,10 @@ public class ControllerPlayGame implements Initializable {
     }
 
 
+    /**
+     * ...
+     */
     // TODO place
-
     public void leaveGame() {
 
         LoggerGUI.debug("Leave game");

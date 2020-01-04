@@ -468,6 +468,13 @@ public class ControllerShipPlacement implements Initializable {
         });
     }
 
+    /**
+     * Ships can be turned on the playground
+     *
+     * @param menuItemTurnShip menu Item of the ship
+     * @param buttonShip       ship which should be turned
+     */
+
     private void addMenuItemTurnShip(MenuItem menuItemTurnShip, ButtonShip buttonShip) {
         menuItemTurnShip.setOnAction(event -> {
 
@@ -510,6 +517,10 @@ public class ControllerShipPlacement implements Initializable {
      */
 
 
+    /**
+     * ...
+     */
+
     @FXML
     public void placeShipsRandom() {
 
@@ -539,6 +550,10 @@ public class ControllerShipPlacement implements Initializable {
 
     }
 
+    /**
+     * ...
+     */
+
     @FXML
     private void deletePlacedShips() {
         while (!shipArrayListGui.isEmpty()) {
@@ -546,6 +561,10 @@ public class ControllerShipPlacement implements Initializable {
             deleteShipFromPlayground(buttonShip);
         }
     }
+
+    /**
+     * ...
+     */
 
     private boolean deleteShipFromPlayground(ButtonShip buttonShip) {
         boolean success = GAME_MANAGER.deleteShip(buttonShip.getBattleShipGui().getShipID());
@@ -603,6 +622,10 @@ public class ControllerShipPlacement implements Initializable {
      * #########################################   ShipCounterPair class   #############################################
      */
 
+
+    /**
+     * ...
+     */
 
     static class ShipCounterPair {
         private final int size;

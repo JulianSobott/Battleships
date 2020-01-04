@@ -99,12 +99,20 @@ public class ControllerGameType implements Initializable {
      * #################################################   JavaFX Events  ############################################
      */
 
+    /**
+     * ...
+     */
+
     @FXML
     private void onServerSelected() {
         // TODO: only when wasn't selected before
         this.determineLocalIpAddress();
         this.startServer();
     }
+
+    /**
+     * ...
+     */
 
     @FXML
     private void onClientSelected() {
@@ -113,15 +121,27 @@ public class ControllerGameType implements Initializable {
         this.stopServer();
     }
 
+    /**
+     * ...
+     */
+
     private void startServer() {
         LoggerGUI.info("Starting server");
         // TODO
     }
 
+    /**
+     * ...
+     */
+
     private void stopServer() {
         LoggerGUI.info("Stopping server");
         // TODO
     }
+
+    /**
+     * ...
+     */
 
     @FXML
     private void determineLocalIpAddress() {
@@ -141,12 +161,20 @@ public class ControllerGameType implements Initializable {
         }
     }
 
+    /**
+     * ...
+     */
+
     @FXML
     private void setClientInformation() {
 
         textFieldIpAddress.clear();
     }
 
+
+    /**
+     * ...
+     */
 
     @FXML
     private void accentuateSettingsForCurrentGamType() {
@@ -176,6 +204,10 @@ public class ControllerGameType implements Initializable {
      */
 
 
+    /**
+     * ...
+     */
+
     private GameSettings buildGameSettings() {
         // TODO: Surface validation
         int playgroundSize = Integer.parseInt(this.textfieldPlaygroundSize.getText());
@@ -196,6 +228,11 @@ public class ControllerGameType implements Initializable {
      * ##########################################   Window Navigation  ##############################################
      */
 
+
+    /**
+     * ...
+     */
+
     @FXML
     public void goBacktoMainMenus(MouseEvent event) {
 
@@ -205,6 +242,10 @@ public class ControllerGameType implements Initializable {
 
 
     }
+
+    /**
+     * ...
+     */
 
     @FXML
     public void loadShipPöacementScene() {
