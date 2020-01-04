@@ -25,6 +25,6 @@
             </VBox>
          </children>
       </HBox>
-      <Button layoutX="220.0" layoutY="675.0" mnemonicParsing="false" prefWidth="120.0" text="Spiel speichern" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="220.0" />
+      <Button fx:id="buttonSave" layoutX="220.0" layoutY="675.0" mnemonicParsing="false" onMouseClicked="#clickSaveGame" prefWidth="120.0" text="Spiel speichern" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="220.0" />
    </children>
 </AnchorPane>

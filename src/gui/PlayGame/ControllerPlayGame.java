@@ -21,6 +21,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+import java.util.concurrent.CompletableFuture;
 
 public class ControllerPlayGame implements Initializable {
 
@@ -292,6 +293,18 @@ public class ControllerPlayGame implements Initializable {
             }
         }
     }
+
+    // ########################################## (Menu )Actions ######################################################
+
+    public void clickSaveGame() {
+        CompletableFuture.runAsync(this::saveGame);
+    }
+
+    private void saveGame() {
+        long id = this.gameManager.saveGame();
+        LoggerGUI.info("USER INFO: Successfully saved game with id=" + id);
+    }
+
 
     /** ##########################################   Window Navigation  ############################################## */
 
