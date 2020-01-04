@@ -29,6 +29,24 @@ public class GameManager implements GameManagerInterface {
 
     private Thread inGameThread;
 
+    /**
+     * Constructor, when game was loaded
+     * @param players
+     * @param currentPlayer
+     * @param round
+     */
+    public GameManager(Player[] players, Player currentPlayer, int round) {
+        this.initGame(players[0], players[1]);
+        this.currentPlayer = currentPlayer;
+        this.round = round;
+    }
+
+    /**
+     * Constructor, when attributes will be set in the {@link #newGame(GameSettings) newGame} method.
+     */
+    public GameManager() {
+    }
+
     @Override
     public boolean connectToServer(String ip, int port) {
         return false;
@@ -41,21 +59,25 @@ public class GameManager implements GameManagerInterface {
 
     @Override
     public NewGameResult newGame(GameSettings settings) {
-        this.player1 = settings.getP1();
-        this.player2 = settings.getP2();
-        this.players = new Player[]{settings.getP1(), settings.getP2()};
-        for(Player p1 : this.players){
-            this.lastTurns.put(p1, new ConcurrentLinkedQueue<>());
-            this.nextTurns.put(p1, new ConcurrentLinkedQueue<>());
+        this.initGame(settings.getP1(), settings.getP2());
+        ShipList shipList = ShipList.fromSize(settings.getPlaygroundSize());
+        return new NewGameResult(shipList);
+    }
+
+    public void initGame(Player p1, Player p2) {
+        this.player1 = p1;
+        this.player2 = p2;
+        this.players = new Player[]{p1, p2};
+        for(Player p : this.players){
+            this.lastTurns.put(p, new ConcurrentLinkedQueue<>());
+            this.nextTurns.put(p, new ConcurrentLinkedQueue<>());
         }
         // TODO: find better way
         idPlayerHashMap.put("GUI_1", this.player1);
-        idPlayerHashMap.put("AI_2", this.player1);
+        idPlayerHashMap.put("AI_2", this.player2);
 
         // TODO: Set current player properly
         this.currentPlayer = player1;
-        ShipList shipList = ShipList.fromSize(settings.getPlaygroundSize());
-        return new NewGameResult(shipList);
     }
 
     public StartShootingRes startShooting() {
@@ -204,6 +226,7 @@ public class GameManager implements GameManagerInterface {
         });
         inGameThread.setName("Main_gameLoop");
         inGameThread.start();
+        LoggerLogic.info("Started Main_gameLoop thread");
     }
 
     /**
@@ -278,26 +301,11 @@ public class GameManager implements GameManagerInterface {
         }
     }
 
-    // Save load game
+    // Save game
 
     public long saveGame() {
         return GameSerialization.saveGame(this);
     }
-
-    public LoadGameResult loadGame(long gameID) {
-        LoadGameResult res = GameSerialization.loadGame(gameID);
-        if (res.getStatus() == LoadGameResult.LoadStatus.SUCCESS) {
-            // Set all attributes
-            GameData data = res.getGameData();
-            this.currentPlayer = data.getCurrentPlayer();
-            this.players = data.getPlayers();
-            this.round = data.getRound();
-        } else {
-            // load failed. Can not handle here
-        }
-        return res;
-    }
-
 
     // Getters
 

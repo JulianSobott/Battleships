@@ -5,6 +5,7 @@ import core.Player;
 import core.Playground;
 import core.Ship;
 import core.communication_data.*;
+import core.serialization.GameData;
 import core.utils.logging.LoggerGUI;
 import core.utils.logging.LoggerLogic;
 import gui.ControllerMainMenu;
@@ -66,6 +67,22 @@ public class ControllerPlayGame implements Initializable {
         this.playgroundHeatmap = new PlaygroundHeatmap(playgroudSize);
         this.shipPositionList = shipPositionList;
         this.gameManager = gameManager;
+    }
+
+    /**
+     * Constructor when game was loaded
+     *
+     * @param gameData from loading
+     */
+    public static ControllerPlayGame fromLoad(GameData gameData) {
+        GameManager manager = new GameManager(gameData.getPlayers(), gameData.getCurrentPlayer(), gameData.getRound());
+        // TODO: save size directly in GameData
+        int playgroundSize = gameData.getCurrentPlayer().getPlaygroundOwn().getSize();
+        ArrayList<BattleShipGui> shipPositionList = new ArrayList<>();
+
+        // TODO: Update playgrounds
+
+        return new ControllerPlayGame(playgroundSize, shipPositionList, manager);
     }
 
     /**

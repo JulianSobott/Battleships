@@ -1,5 +1,6 @@
 package core.serialization;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import core.Player;
 import player.PlayerAI;
 
@@ -26,7 +27,7 @@ public class GameData {
         this.gameID = gameID;
         this.timestamp = timestamp;
         this.round = round;
-        this.currentPlayer = currentPlayer;
+        this.currentPlayer = players[currentPlayer.getIndex()];
         this.players = players;
     }
 
