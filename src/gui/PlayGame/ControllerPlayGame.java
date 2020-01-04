@@ -61,7 +61,7 @@ public class ControllerPlayGame implements Initializable {
     private Thread playgroundUpdaterThread;
 
     private static final String filepathBackMainMenu = "../Main_Menu.fxml";
-    private static final String filepathGameOver = "../Main_Menu.fxml";
+    private static final String filepathGameOver = "../GameOver/GameOver.fxml";
 
     public ControllerPlayGame(int playgroudSize, ArrayList<BattleShipGui> shipPositionList, GameManager gameManager) {
         this.playgroundSize = playgroudSize;
@@ -76,6 +76,7 @@ public class ControllerPlayGame implements Initializable {
      * @param gameData from loading
      */
     public static ControllerPlayGame fromLoad(GameData gameData) {
+
         GameManager manager = new GameManager(gameData.getPlayers(), gameData.getCurrentPlayer(), gameData.getRound());
         // TODO: save size directly in GameData
         int playgroundSize = gameData.getCurrentPlayer().getPlaygroundOwn().getSize();
@@ -178,7 +179,6 @@ public class ControllerPlayGame implements Initializable {
 
             addShipToPlayground(battleShipGui);
         }
-
     }
 
 
@@ -219,7 +219,14 @@ public class ControllerPlayGame implements Initializable {
      * ############################################# Turn #######################################################
      */
 
+    /**
+     * add Click Event to a field on the playground
+     *
+     * @param p Element witch the event is added
+     */
+
     private void addClickFieldEvent(PaneExtends p) {
+
         p.setOnMouseClicked(mouseEvent -> {
             int col = GridPane.getColumnIndex(p);
             int row = GridPane.getRowIndex(p);
@@ -228,7 +235,16 @@ public class ControllerPlayGame implements Initializable {
         });
     }
 
+    /**
+     * color field to show what kind of element it on the playground  is
+     *
+     * @param color       color of the field
+     * @param gridPane    playground from one of the player
+     * @param waterFields fields which should get a color
+     */
+
     private void color_fields(Position[] waterFields, String color, GridPane gridPane) {
+
         for (Position position : waterFields) {
             PaneExtends p = this.getPaneAtPosition(gridPane, position.getX(), position.getY());
             p.setStyle("-fx-background-color: " + color);
@@ -238,9 +254,10 @@ public class ControllerPlayGame implements Initializable {
     /**
      * Permanently updates all playgrounds in the background.
      * Every time a player makes a shot.
-     *
      */
+
     private void startPlaygroundUpdaterThread() {
+
         playgroundUpdaterThread = new Thread(() -> {
             TurnResult res;
             do {
@@ -266,7 +283,13 @@ public class ControllerPlayGame implements Initializable {
         playgroundUpdaterThread.start();
     }
 
+
+    /**
+     * ...
+     */
+
     private void updateByShotResult(GridPane gridPane, ShotResult shotResult) {
+
         String cellStyle;
         if (shotResult.getType() == Playground.FieldType.SHIP) {
             ShotResultShip resultShip = (ShotResultShip) shotResult;
@@ -285,16 +308,26 @@ public class ControllerPlayGame implements Initializable {
         paneExtends.setStyle(cellStyle);
 
         if (gridPane == this.gridPaneEnemyField && this.showHeatMap) {
-          this.updateHeatMap(shotResult);
+            this.updateHeatMap(shotResult);
         }
     }
 
+    /**
+     * ...
+     */
+
     private PaneExtends getPaneAtPosition(GridPane gridPane, int x, int y) {
+
         int index = x * playgroundSize + y;
         return (PaneExtends) gridPane.getChildren().get(index);
     }
 
+    /**
+     * ...
+     */
+
     private void updateHeatMap(ShotResult result) {
+
         this.playgroundHeatmap.update(result);
         int[][] heatMap = this.playgroundHeatmap.buildHeatMap(255);
         this.playgroundHeatmap.printFields();
@@ -302,9 +335,9 @@ public class ControllerPlayGame implements Initializable {
         for (int y = 0; y < playgroundSize; y++) {
             for (int x = 0; x < playgroundSize; x++) {
                 PaneExtends p = getPaneAtPosition(gridPaneEnemyField, x, y);
-                if(!this.playgroundHeatmap.isAlreadyDiscoveredShipAt(x, y)){
+                if (!this.playgroundHeatmap.isAlreadyDiscoveredShipAt(x, y)) {
                     int w = Math.min(255, heatMap[y][x]);
-                    p.setStyle("-fx-background-color: rgb("+w+", "+w+", "+w+")");
+                    p.setStyle("-fx-background-color: rgb(" + w + ", " + w + ", " + w + ")");
                 } else {
                     p.setStyle("-fx-background-color: rgb(255, 0, 0)");
                 }
@@ -312,13 +345,25 @@ public class ControllerPlayGame implements Initializable {
         }
     }
 
-    // ########################################## (Menu )Actions ######################################################
+    /**
+     * ########################################## (Menu )Actions #####################################################
+     */
+
+    /**
+     * ...
+     */
 
     public void clickSaveGame() {
+
         CompletableFuture.runAsync(this::saveGame);
     }
 
+    /**
+     * ...
+     */
+
     private void saveGame() {
+
         long id = this.gameManager.saveGame();
         LoggerGUI.info("USER INFO: Successfully saved game with id=" + id);
     }
@@ -330,7 +375,6 @@ public class ControllerPlayGame implements Initializable {
      * go back to previous Scene
      */
 
-    //TODO wo soll der Spieler beim Spielabruch landen ?? Wieder im Hauptmenü??
     public void goBackToMainMenu() {
 
         ControllerMainMenu controllerMainMenu = new ControllerMainMenu();
@@ -342,10 +386,10 @@ public class ControllerPlayGame implements Initializable {
      * if one player wins new screen is loaded
      */
 
-    private void loadEndScreen(){
+    private void loadEndScreen() {
 
         ControllerGameOver controllerGameOver = new ControllerGameOver();
-        SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathGameOver , controllerGameOver);
+        SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathGameOver, controllerGameOver);
         sceneLoader.loadSceneInExistingWindow();
     }
 
@@ -353,12 +397,19 @@ public class ControllerPlayGame implements Initializable {
     // TODO place
 
     public void leaveGame() {
+
         LoggerGUI.debug("Leave game");
         this.exitInGameThread();
         this.goBackToMainMenu();
     }
 
+
+    /**
+     * ...
+     */
+
     public void exitInGameThread() {
+
         LoggerGUI.debug("Num threads before exit: " + Thread.activeCount());
         this.playgroundUpdaterThread.interrupt();
         try {
