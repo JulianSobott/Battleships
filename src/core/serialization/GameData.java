@@ -16,13 +16,13 @@ public class GameData {
     // Game data
 
     private int round;
-    private int currentPlayer;     // 0 or 1
+    private Player currentPlayer;     // 0 or 1
     private Player[] players;
 
     public GameData() { // Jackson deserialization
     }
 
-    public GameData(long gameID, String timestamp, int round, int currentPlayer, Player[] players) {
+    public GameData(long gameID, String timestamp, int round, Player currentPlayer, Player[] players) {
         this.gameID = gameID;
         this.timestamp = timestamp;
         this.round = round;
@@ -42,7 +42,7 @@ public class GameData {
         return round;
     }
 
-    public int getCurrentPlayer() {
+    public Player getCurrentPlayer() {
         return currentPlayer;
     }
 
@@ -62,7 +62,7 @@ public class GameData {
         this.round = round;
     }
 
-    public void setCurrentPlayer(int currentPlayer) {
+    public void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
     }
 

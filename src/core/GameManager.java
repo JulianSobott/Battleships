@@ -1,13 +1,13 @@
 package core;
 
 import core.communication_data.*;
-import core.utils.logging.LoggerGUI;
+import core.serialization.GameData;
+import core.serialization.GameSerialization;
 import core.utils.logging.LoggerLogic;
 import core.utils.logging.LoggerState;
 
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.logging.Logger;
 
 public class GameManager implements GameManagerInterface {
 
@@ -277,6 +277,29 @@ public class GameManager implements GameManagerInterface {
             e.printStackTrace();
         }
     }
+
+    // Save load game
+
+    public long saveGame() {
+        return GameSerialization.saveGame(this);
+    }
+
+    public LoadGameResult loadGame(long gameID) {
+        LoadGameResult res = GameSerialization.loadGame(gameID);
+        if (res.getStatus() == LoadGameResult.LoadStatus.SUCCESS) {
+            // Set all attributes
+            GameData data = res.getGameData();
+            this.currentPlayer = data.getCurrentPlayer();
+            this.players = data.getPlayers();
+            this.round = data.getRound();
+        } else {
+            // load failed. Can not handle here
+        }
+        return res;
+    }
+
+
+    // Getters
 
     public Player[] getPlayers() {
         return players;
