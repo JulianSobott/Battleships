@@ -12,7 +12,6 @@ import gui.WindowChange.SceneLoader;
 import gui.newGame.ControllerGameType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -106,8 +105,8 @@ public class ControllerShipPlacement implements Initializable {
             dataGridBattleship.getRowConstraints().add(row);
         }
 
-        Image battleShipImage = new Image("/gui/ShipIcons/Wasser_Groß.jpg");
-        BackgroundImage im = new BackgroundImage(battleShipImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
+       // Image battleShipImage = new Image("/gui/ShipIcons/Wasser_Groß.jpg");
+       // BackgroundImage im = new BackgroundImage(battleShipImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
         // dataGridBattleship.setBackground(new Background(im));
     }
 
@@ -170,10 +169,12 @@ public class ControllerShipPlacement implements Initializable {
         hBox.setSpacing(20);
         hBox.setAlignment(Pos.CENTER);
 
-        Image battleShipImage = new Image("/gui/ShipIcons/Testschiff.png");
+        String shipIcon = "wikingerschiff0" + shipSize;
+
+        Image battleShipImage = new Image("/gui/ShipIcons/wikingerschiff01.png");
         ImageView imageView = new ImageView(battleShipImage);
         addEventDragDetected(hBox);
-        imageView.setFitWidth(140);
+        imageView.setFitWidth(100);
         imageView.setFitHeight(60);
 
         hBox.getChildren().addAll(imageView, this.hashMapShipLabels.get(shipSize).getTextLabel());
