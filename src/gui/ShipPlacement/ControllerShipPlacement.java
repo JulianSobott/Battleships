@@ -104,10 +104,6 @@ public class ControllerShipPlacement implements Initializable {
             row.setPercentHeight(CELL_PERCENTAGE_WIDTH);
             dataGridBattleship.getRowConstraints().add(row);
         }
-
-       // Image battleShipImage = new Image("/gui/ShipIcons/Wasser_Groß.jpg");
-       // BackgroundImage im = new BackgroundImage(battleShipImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
-        // dataGridBattleship.setBackground(new Background(im));
     }
 
 
@@ -169,12 +165,13 @@ public class ControllerShipPlacement implements Initializable {
         hBox.setSpacing(20);
         hBox.setAlignment(Pos.CENTER);
 
-        String shipIcon = "wikingerschiff0" + shipSize;
+        String shipIcon = "battleship0" + shipSize;
+        String path = "/gui/ShipIcons/battleship0" + shipSize + ".png";
 
-        Image battleShipImage = new Image("/gui/ShipIcons/wikingerschiff01.png");
+        Image battleShipImage = new Image(path);
         ImageView imageView = new ImageView(battleShipImage);
         addEventDragDetected(hBox);
-        imageView.setFitWidth(100);
+        imageView.setFitWidth(80);
         imageView.setFitHeight(60);
 
         hBox.getChildren().addAll(imageView, this.hashMapShipLabels.get(shipSize).getTextLabel());
