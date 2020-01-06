@@ -69,6 +69,9 @@ public class ControllerGameType implements Initializable {
     @FXML
     public VBox vBoxLocal;
 
+    @FXML
+    public VBox vBoxPlaygroundSettings;
+
 
     private static final String filepathBackMainMenu = "../Main_Menu.fxml";
     private static final String filepathShipPlacement = "../ShipPlacement/ShipPlacement.fxml";
@@ -184,17 +187,19 @@ public class ControllerGameType implements Initializable {
             vBoxKI.setStyle("-fx-background-color: #626D71");
             vBoxNetzwerk.setStyle("-fx-background-color: lightgray");
             vBoxLocal.setStyle("-fx-background-color: lightgray");
+            vBoxPlaygroundSettings.setStyle("-fx-background-color: #626D71");
         } else if (radioButtonNetzwerk.isSelected()){
 
             vBoxKI.setStyle("-fx-background-color: lightgray");
             vBoxNetzwerk.setStyle("-fx-background-color: #626D71");
             vBoxLocal.setStyle("-fx-background-color: lightgray");
-
+            vBoxPlaygroundSettings.setStyle("-fx-background-color: #626D71");
         } else if (radioButtonLocal.isSelected()){
 
             vBoxKI.setStyle("-fx-background-color: lightgray");
             vBoxNetzwerk.setStyle("-fx-background-color: lightgray");
             vBoxLocal.setStyle("-fx-background-color: #626D71");
+            vBoxPlaygroundSettings.setStyle("-fx-background-color: #626D71");
         }
     }
 
