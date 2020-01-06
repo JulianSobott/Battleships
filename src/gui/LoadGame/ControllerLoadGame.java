@@ -6,6 +6,8 @@ import core.serialization.GameData;
 import core.serialization.GameSerialization;
 import gui.PlayGame.ControllerPlayGame;
 import gui.WindowChange.SceneLoader;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
@@ -14,6 +16,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class ControllerLoadGame implements Initializable {
@@ -24,17 +28,17 @@ public class ControllerLoadGame implements Initializable {
     @FXML
     private ListView listViewSaveGames;
 
-    MotionBlur motionBlur = new MotionBlur();
+    private ObservableList<String> itemsSaveGame = FXCollections.observableArrayList();
 
     private final AnchorPane ANCHORPANEMAINMENU;
 
 
-    public ControllerLoadGame(AnchorPane anchorPaneMainMenu){
+    public ControllerLoadGame(AnchorPane anchorPaneMainMenu) {
 
+        MotionBlur motionBlur = new MotionBlur();
         this.ANCHORPANEMAINMENU = anchorPaneMainMenu;
-        ANCHORPANEMAINMENU.setEffect(this.motionBlur);
+        ANCHORPANEMAINMENU.setEffect(motionBlur);
     }
-
 
 
     /**
@@ -45,7 +49,8 @@ public class ControllerLoadGame implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         addSaveGamesToListView();
-
+        listViewSaveGames.setItems(itemsSaveGame);
+        listViewSaveGames.setId("listView");
     }
 
     /**
@@ -54,7 +59,15 @@ public class ControllerLoadGame implements Initializable {
 
     private void addSaveGamesToListView() {
 
+        List<GameData> arrayListGameData = new ArrayList<>();
+        arrayListGameData = GameSerialization.getAllSaveGames();
 
+        for ( GameData saveGame : arrayListGameData) {
+
+            itemsSaveGame.add(""  + saveGame.getGameID());
+        }
+        // Hardkodiert als Beispiel und test -> muss später entfernt werden !!
+         itemsSaveGame.add(""  + "Savegame 1");
     }
 
     /**
@@ -79,7 +92,7 @@ public class ControllerLoadGame implements Initializable {
 
     }
 
-    public void closeWindow(){
+    public void closeWindow() {
 
         ANCHORPANEMAINMENU.setEffect(null);
         Stage stage = (Stage) anchorPaneLoadGames.getScene().getWindow();

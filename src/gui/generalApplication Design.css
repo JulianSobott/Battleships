@@ -115,3 +115,13 @@
     -fx-background-image: url('ShipIcons/battleship02.png');
     -fx-background-size: 100% 100%;
 }
+
+
+#listView{
+
+
+}
+
+#listView .list-cell {
+    -fx-alignment: center;
+}
