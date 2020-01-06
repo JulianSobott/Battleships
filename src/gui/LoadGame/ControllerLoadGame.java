@@ -10,10 +10,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.ListView;
 import javafx.scene.effect.MotionBlur;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -62,12 +65,16 @@ public class ControllerLoadGame implements Initializable {
         List<GameData> arrayListGameData = new ArrayList<>();
         arrayListGameData = GameSerialization.getAllSaveGames();
 
-        for ( GameData saveGame : arrayListGameData) {
+        for (GameData saveGame : arrayListGameData) {
 
-            itemsSaveGame.add(""  + saveGame.getGameID());
+            itemsSaveGame.add("" + saveGame.getGameID());
         }
         // Hardkodiert als Beispiel und test -> muss später entfernt werden !!
-         itemsSaveGame.add(""  + "Savegame 1");
+        for (int i = 0; i < 11; i++) {
+
+            itemsSaveGame.add("" + "Savegame" + i);
+        }
+
     }
 
     /**
@@ -77,6 +84,10 @@ public class ControllerLoadGame implements Initializable {
     @FXML
     private void LoadSaveGame() {
 
+        int index = getSelectedSaveGame();
+        if (index == -1) {
+            return;
+        }
         closeWindow();
         // Hardcoded for debug purposes
         LoadGameResult res = GameSerialization.loadGame(1);
@@ -91,6 +102,34 @@ public class ControllerLoadGame implements Initializable {
         }
 
     }
+
+    /**
+     *
+     */
+
+    private int getSelectedSaveGame() {
+
+        int index;
+        if (listViewSaveGames.getSelectionModel().getSelectedIndex() == -1) {
+            Notifications notifications = Notifications.create()
+                    .title("No score selected")
+                    .text("Please select one of the available games, which should be loaded")
+                    .darkStyle()
+                    .hideCloseButton()
+                    .position(Pos.CENTER)
+                    .hideAfter(Duration.seconds(6.0));
+            notifications.showError();
+
+            index = -1;
+        } else {
+            index = listViewSaveGames.getSelectionModel().getSelectedIndex();
+        }
+        return index;
+    }
+
+    /**
+     *
+     */
 
     public void closeWindow() {
 
