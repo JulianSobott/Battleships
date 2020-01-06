@@ -29,7 +29,7 @@
 
 .vBoxTask{
     -fx-background-radius: 6;
-    -fx-background-color: linear-gradient(lightgrey 30%, lightgrey 100%);
+    -fx-background-color: linear-gradient(white 30%, white 100%);
     -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.75) , 5,0,0,1 );
 }
 
