@@ -9,6 +9,7 @@ import gui.WindowChange.SceneLoader;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
+import javafx.scene.effect.MotionBlur;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -23,6 +24,7 @@ public class ControllerLoadGame implements Initializable {
     @FXML
     private ListView listViewSaveGames;
 
+    MotionBlur motionBlur = new MotionBlur();
 
     private final AnchorPane ANCHORPANEMAINMENU;
 
@@ -30,8 +32,7 @@ public class ControllerLoadGame implements Initializable {
     public ControllerLoadGame(AnchorPane anchorPaneMainMenu){
 
         this.ANCHORPANEMAINMENU = anchorPaneMainMenu;
-        //anchorPaneMainMenu.setStyle("");
-        // TODO Blur effekt für den hintergrund...
+        ANCHORPANEMAINMENU.setEffect(this.motionBlur);
     }
 
 
@@ -80,6 +81,7 @@ public class ControllerLoadGame implements Initializable {
 
     public void closeWindow(){
 
+        ANCHORPANEMAINMENU.setEffect(null);
         Stage stage = (Stage) anchorPaneLoadGames.getScene().getWindow();
         stage.close();
     }
