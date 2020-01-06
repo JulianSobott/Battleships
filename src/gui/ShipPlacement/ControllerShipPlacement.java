@@ -288,10 +288,19 @@ public class ControllerShipPlacement implements Initializable {
             addShipToPlayground(button, battleShipGui, res);
             this.hashMapShipLabels.get(battleShipGui.getPosition().getLength()).decreaseCounter();
         } else {
+            //TODO: no ships are left
+            String title = "Not allowed to place here a Ship";
+            String content = "Parts of the ship collapse either with another ship or the edge of the field";
+            ShipCounterPair shipCounterPair = this.hashMapShipLabels.get(battleShipGui.getPosition().getLength());
+            if(shipCounterPair.getCounter() == 0){
+
+                title = "no length " + battleShipGui.getPosition().getLength() + " vessel available";
+                content = "You have already placed all ships of this size on the board";
+            }
             // TODO: inform user about failure
             Notifications notifications = Notifications.create()
-                    .title("Not allowed to place here a Ship")
-                    .text("Parts of the ship collapse either with another ship or the edge of the field")
+                    .title(title)
+                    .text(content)
                     .darkStyle()
                     .hideCloseButton()
                     .position(Pos.CENTER)
@@ -328,8 +337,8 @@ public class ControllerShipPlacement implements Initializable {
             addShipToPlayground(buttonShip, battleShipGui, res);
 
         } else {
-            LoggerGUI.info("[USER HINT] Cannot move ship to new position: " + res.getERROR());
 
+            LoggerGUI.info("[USER HINT] Cannot move ship to new position: " + res.getERROR());
             // TODO: inform user
             Notifications notifications = Notifications.create()
                     .title("Cannot move ship to new position")
