@@ -16,6 +16,7 @@
          </children>
       </VBox>
       <ListView fx:id="listViewSaveGames" layoutX="14.0" layoutY="147.0" prefHeight="183.0" prefWidth="260.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+      <Button layoutX="21.0" layoutY="353.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="111.0" text="Close" />
    </children>
    <styleClass>
       <String fx:value="anchorPane" />

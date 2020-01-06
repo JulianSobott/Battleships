@@ -61,9 +61,7 @@ public class ControllerLoadGame implements Initializable {
     @FXML
     private void LoadSaveGame() {
 
-        Stage stage = (Stage) anchorPaneLoadGames.getScene().getWindow();
-        stage.close();
-
+        closeWindow();
         // Hardcoded for debug purposes
         LoadGameResult res = GameSerialization.loadGame(1);
         if (res.getStatus() == LoadGameResult.LoadStatus.SUCCESS) {
@@ -76,6 +74,12 @@ public class ControllerLoadGame implements Initializable {
             // TODO: inform user
         }
 
+    }
+
+    private void closeWindow(){
+
+        Stage stage = (Stage) anchorPaneLoadGames.getScene().getWindow();
+        stage.close();
     }
 
 }
