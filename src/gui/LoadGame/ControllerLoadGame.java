@@ -76,7 +76,7 @@ public class ControllerLoadGame implements Initializable {
 
     }
 
-    private void closeWindow(){
+    public void closeWindow(){
 
         Stage stage = (Stage) anchorPaneLoadGames.getScene().getWindow();
         stage.close();
