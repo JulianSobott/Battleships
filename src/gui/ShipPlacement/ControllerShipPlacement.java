@@ -428,7 +428,7 @@ public class ControllerShipPlacement implements Initializable {
 
         ButtonShip button = new ButtonShip(battleShipGui);
         button.setStyle("-fx-background-color: white");
-        button.setId("Battleship01");
+       // button.setId("Battleship01");
         addEventDragDetectedPlacedShip(button);
         addContextMenu(button);
 

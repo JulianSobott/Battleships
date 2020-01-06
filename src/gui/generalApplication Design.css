@@ -7,7 +7,7 @@
 
 .anchorPaneMainMenu{
     -fx-background-color: white;
-    -fx-background-image: url('Images/Flugzeugtraeger.jpg');
+    -fx-background-image: url('Images/MainMenuImage.png');
     -fx-background-size: 100% 100%;
 }
 
