@@ -5,6 +5,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
@@ -22,6 +23,8 @@ public class SceneLoader {
         this.controllerClass = controllerClass;
     }
 
+
+
     public void loadSceneInExistingWindow() {
 
         Parent window =  loadFxmlFile();
@@ -37,6 +40,17 @@ public class SceneLoader {
         Stage stage = new Stage();
         stage.setTitle(windowTitle);
         stage.setScene(new Scene(window));
+        stage.show();
+    }
+
+    public void loadSceneInExistingWindowWithoutButtons(String windowTitle){
+
+        Parent window = loadFxmlFile();
+        Stage stage = new Stage();
+        stage.setTitle(windowTitle);
+        stage.setScene(new Scene(window));
+        stage.initStyle(StageStyle.UNDECORATED);
+        stage.resizableProperty().setValue(false);
         stage.show();
 
     }
