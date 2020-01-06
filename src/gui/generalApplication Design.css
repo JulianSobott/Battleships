@@ -94,3 +94,18 @@
 .menu-item .label{
     -fx-background-color: white;
 }
+
+#Welle00{
+    -fx-background-image: url('Images/GameIcons/Welle00.png');
+    -fx-background-size: 100% 100%;
+}
+
+#Welle01{
+    -fx-background-image: url('Images/GameIcons/Welle01.png');
+    -fx-background-size: 100% 100%;
+}
+
+#Battleship01{
+    -fx-background-image: url('ShipIcons/battleship02.png');
+    -fx-background-size: 100% 100%;
+}

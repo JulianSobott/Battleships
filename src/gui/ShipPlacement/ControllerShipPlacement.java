@@ -144,6 +144,7 @@ public class ControllerShipPlacement implements Initializable {
     private void generateWater(int possHorizontal, int possVertical) {
         Pane p = new Pane();
         p.setStyle("-fx-background-color: #2E64FE");
+        p.setId("Welle01");
         dataGridBattleship.add(p, possHorizontal, possVertical);
         handleDragOver(p);
         handleDrop(p);
@@ -426,7 +427,8 @@ public class ControllerShipPlacement implements Initializable {
     private ButtonShip generateNewBattleship(BattleShipGui battleShipGui) {
 
         ButtonShip button = new ButtonShip(battleShipGui);
-        button.setStyle("-fx-background-color: #00ff00");
+        button.setStyle("-fx-background-color: white");
+        button.setId("Battleship01");
         addEventDragDetectedPlacedShip(button);
         addContextMenu(button);
 
