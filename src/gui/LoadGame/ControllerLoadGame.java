@@ -30,6 +30,8 @@ public class ControllerLoadGame implements Initializable {
     public ControllerLoadGame(AnchorPane anchorPaneMainMenu){
 
         this.ANCHORPANEMAINMENU = anchorPaneMainMenu;
+        //anchorPaneMainMenu.setStyle("");
+        // TODO Blur effekt für den hintergrund...
     }
 
 

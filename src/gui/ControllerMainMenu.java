@@ -58,7 +58,7 @@ public class ControllerMainMenu {
          // TODO: open dialog with all saved games
         ControllerLoadGame controllerLoadGame = new ControllerLoadGame(this.anchorPane);
         SceneLoader sceneLoader = new SceneLoader(null, "../LoadGame/LoadGame.fxml", controllerLoadGame);
-        sceneLoader.loadSceneInExistingWindowWithoutButtons("Load Game");
+        sceneLoader.loadSceneInExistingWindowWithoutButtons("Load Game", (Stage) anchorPane.getScene().getWindow());
 
     }
 

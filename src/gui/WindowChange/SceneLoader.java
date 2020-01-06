@@ -1,10 +1,12 @@
 package gui.WindowChange;
 
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -25,10 +27,9 @@ public class SceneLoader {
     }
 
 
-
     public void loadSceneInExistingWindow() {
 
-        Parent window =  loadFxmlFile();
+        Parent window = loadFxmlFile();
         Stage stage = (Stage) this.node.getScene().getWindow();
         stage.setScene(new Scene(window));
 
@@ -44,7 +45,7 @@ public class SceneLoader {
         stage.show();
     }
 
-    public void loadSceneInExistingWindowWithoutButtons(String windowTitle){
+    public void loadSceneInExistingWindowWithoutButtons(String windowTitle, Stage stageMainWindow) {
 
         Parent window = loadFxmlFile();
         Stage stage = new Stage();
@@ -53,6 +54,16 @@ public class SceneLoader {
         stage.initStyle(StageStyle.UNDECORATED);
         stage.resizableProperty().setValue(false);
         stage.initModality(Modality.APPLICATION_MODAL);
+
+        double x = stageMainWindow.getX();
+        double y = stageMainWindow.getY();
+
+        double width = stageMainWindow.getWidth();
+        double height = stageMainWindow.getHeight();
+
+        stage.setX( x + (width/2.5));
+        stage.setY( y + (height/3) );
+
         stage.show();
 
     }
