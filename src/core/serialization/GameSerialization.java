@@ -9,13 +9,23 @@ import core.utils.logging.LoggerLogic;
 
 import java.io.*;
 import java.time.Instant;
+import java.util.Objects;
 
 /**
  * Save and load a game.
  */
 public class GameSerialization {
 
+    private static final String saveGameFilePattern = "game_\\d*.json";
+    private static final boolean checkHashesAtValidityCheck = true;
+    private static final File folderPath = new File("SaveGames/");
+
     public static long saveGame(GameManager gameManager) {
+        LoggerLogic.info("Saving game ...");
+        // init folder
+        Thread folderInitThread = new Thread(GameSerialization::initSaveGamesFolder);
+        folderInitThread.start();
+
         // collect data
         long gameID = System.currentTimeMillis();
         String timestamp = Instant.now().toString();
@@ -31,11 +41,16 @@ public class GameSerialization {
 
         // write data to json file
         try {
+            folderInitThread.join();
             File f = GameSerialization.getFile(gameID);
-            LoggerLogic.debug(f.getAbsolutePath());
-            mapper.writeValue(f, gameData);
-            LoggerLogic.info("Successfully saved game: id=" + gameID);
-        } catch (IOException e) {
+            if (f.getParentFile().exists() && f.getParentFile().isDirectory()) {
+                LoggerLogic.debug(f.getAbsolutePath());
+                mapper.writeValue(f, gameData);
+                LoggerLogic.info("Successfully saved game: id=" + gameID);
+            }else {
+                LoggerLogic.error("Can not save game! Reason: Missing folder " + f.getParentFile());
+            }
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
         return gameID;
@@ -67,6 +82,63 @@ public class GameSerialization {
     }
 
     private static File getFile(long gameID) {
-        return new File("game_" + gameID + ".json");
+        return new File(folderPath, "game_" + gameID + ".json");
+    }
+
+    /**
+     * Ensures that a folder with valid save games exist.
+     *
+     * Creates a new folder if non exist.
+     * Delete all files, that are not valid save games.
+     */
+    private static void initSaveGamesFolder() {
+        // Ensure folder exists
+        boolean make_folder = false;
+        if (folderPath.exists()) {
+            if (folderPath.isFile()) {
+                boolean success = folderPath.delete();
+                if (!success) LoggerLogic.warning("Can not delete file: file=" + folderPath);
+                make_folder = true;
+            } else { // Do nothing. Folder already exist
+            }
+        } else {
+            make_folder = true;
+        }
+        if (make_folder) {
+            boolean success = folderPath.mkdir();
+            if (!success) LoggerLogic.warning("Can not mkdir: file=" + folderPath);
+        }
+
+        if (folderPath.exists() && folderPath.isDirectory()) {
+            // Check all files for validity
+            for (File f : Objects.requireNonNull(folderPath.listFiles())) {
+                if (!GameSerialization.isValidSaveGame(f)) {
+                    boolean success = f.delete();
+                    if (!success) LoggerLogic.warning("Can not delete file: file=" + f);
+                }
+            }
+
+        } else {
+            LoggerLogic.error("No folder for saving games available! Folder does not exist: " + folderPath);
+        }
+    }
+
+    private static boolean isValidSaveGame(File file) {
+        // valid file
+        if (file == null || !file.exists() || !file.isFile() || !file.canRead()) {
+            return false;
+        }
+
+        // valid name
+        if (!file.getName().matches(GameSerialization.saveGameFilePattern)) {
+            return false;
+        }
+
+        // valid content
+        if (GameSerialization.checkHashesAtValidityCheck) {
+            // TODO
+        }
+
+        return true;
     }
 }
