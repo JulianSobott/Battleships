@@ -9,14 +9,18 @@ import core.utils.logging.LoggerLogic;
 
 import java.io.*;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Save and load a game.
  */
 public class GameSerialization {
 
-    private static final String saveGameFilePattern = "game_\\d*.json";
+    private static final String saveGameFilePattern = "game_(?<id>\\d*).json";
     private static final boolean checkHashesAtValidityCheck = true;
     private static final File folderPath = new File("SaveGames/");
 
@@ -81,6 +85,23 @@ public class GameSerialization {
         return result;
     }
 
+    public static List<GameData> getAllSaveGames() {
+        List<GameData> savedGames = new ArrayList<>();
+        if (initSaveGamesFolder()) {
+            Pattern p = Pattern.compile(saveGameFilePattern);
+            for (File f : Objects.requireNonNull(folderPath.listFiles())) {
+                Matcher m = p.matcher(f.getName());
+                boolean matches = m.matches();
+                assert matches: "Invalid regex or file name. " + f;
+                long id = Long.parseLong(m.group("id"));
+                LoadGameResult res = loadGame(id);
+                if (res.getStatus() == LoadGameResult.LoadStatus.SUCCESS)
+                    savedGames.add(res.getGameData());
+            }
+        }
+        return savedGames;
+    }
+
     private static File getFile(long gameID) {
         return new File(folderPath, "game_" + gameID + ".json");
     }
@@ -91,7 +112,7 @@ public class GameSerialization {
      * Creates a new folder if non exist.
      * Delete all files, that are not valid save games.
      */
-    private static void initSaveGamesFolder() {
+    private static boolean initSaveGamesFolder() {
         // Ensure folder exists
         boolean make_folder = false;
         if (folderPath.exists()) {
@@ -117,9 +138,10 @@ public class GameSerialization {
                     if (!success) LoggerLogic.warning("Can not delete file: file=" + f);
                 }
             }
-
+            return true;
         } else {
             LoggerLogic.error("No folder for saving games available! Folder does not exist: " + folderPath);
+            return false;
         }
     }
 
@@ -140,5 +162,20 @@ public class GameSerialization {
         }
 
         return true;
+    }
+
+    /**
+     * Deletes all files in the SaveGames folder
+     *
+     * Only for debug and testing purposes.
+     */
+    public static void deleteAllSaveGames() {
+        if (folderPath.exists() && folderPath.isDirectory()) {
+            // Check all files for validity
+            for (File f : Objects.requireNonNull(folderPath.listFiles())) {
+                //noinspection ResultOfMethodCallIgnored
+                f.delete();
+            }
+        }
     }
 }
