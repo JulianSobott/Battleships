@@ -118,7 +118,7 @@ public class ControllerLoadGame implements Initializable {
                     .hideCloseButton()
                     .position(Pos.CENTER)
                     .hideAfter(Duration.seconds(6.0));
-            notifications.showError();
+            notifications.showInformation();
 
             index = -1;
         } else {
