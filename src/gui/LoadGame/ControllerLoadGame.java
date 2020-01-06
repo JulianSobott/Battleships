@@ -1,10 +1,16 @@
 package gui.LoadGame;
 
 
+import core.communication_data.LoadGameResult;
+import core.serialization.GameData;
+import core.serialization.GameSerialization;
+import gui.PlayGame.ControllerPlayGame;
+import gui.WindowChange.SceneLoader;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -16,6 +22,16 @@ public class ControllerLoadGame implements Initializable {
 
     @FXML
     private ListView listViewSaveGames;
+
+
+    private final AnchorPane ANCHORPANEMAINMENU;
+
+
+    public ControllerLoadGame(AnchorPane anchorPaneMainMenu){
+
+        this.ANCHORPANEMAINMENU = anchorPaneMainMenu;
+    }
+
 
 
     /**
@@ -30,10 +46,10 @@ public class ControllerLoadGame implements Initializable {
     }
 
     /**
-     *  add all Saved games to the ListView
+     * add all Saved games to the ListView
      */
 
-    private void addSaveGamesToListView(){
+    private void addSaveGamesToListView() {
 
 
     }
@@ -43,8 +59,22 @@ public class ControllerLoadGame implements Initializable {
      */
 
     @FXML
-    private void LoadSaveGame(){
+    private void LoadSaveGame() {
 
+        Stage stage = (Stage) anchorPaneLoadGames.getScene().getWindow();
+        stage.close();
+
+        // Hardcoded for debug purposes
+        LoadGameResult res = GameSerialization.loadGame(1);
+        if (res.getStatus() == LoadGameResult.LoadStatus.SUCCESS) {
+
+            GameData gameData = res.getGameData();
+            ControllerPlayGame controller = ControllerPlayGame.fromLoad(gameData);
+            SceneLoader sceneLoader = new SceneLoader(this.ANCHORPANEMAINMENU, "../PlayGame/PlayGame.fxml", controller);
+            sceneLoader.loadSceneInExistingWindow();
+        } else {
+            // TODO: inform user
+        }
 
     }
 

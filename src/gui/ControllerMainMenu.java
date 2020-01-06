@@ -56,21 +56,9 @@ public class ControllerMainMenu {
     @FXML
     void loadExistingGame(MouseEvent event) {
          // TODO: open dialog with all saved games
-        ControllerLoadGame controllerLoadGame = new ControllerLoadGame();
+        ControllerLoadGame controllerLoadGame = new ControllerLoadGame(this.anchorPane);
         SceneLoader sceneLoader = new SceneLoader(null, "../LoadGame/LoadGame.fxml", controllerLoadGame);
         sceneLoader.loadSceneInExistingWindowWithoutButtons("Load Game");
-
-
-        // Hardcoded for debug purposes
-        LoadGameResult res = GameSerialization.loadGame(1);
-        if (res.getStatus() == LoadGameResult.LoadStatus.SUCCESS) {
-            GameData gameData = res.getGameData();
-            ControllerPlayGame controller = ControllerPlayGame.fromLoad(gameData);
-          //  SceneLoader sceneLoader = new SceneLoader(this.anchorPane, "../PlayGame/PlayGame.fxml", controller);
-          // sceneLoader.loadSceneInExistingWindow();
-        } else {
-            // TODO: inform user
-        }
 
     }
 
