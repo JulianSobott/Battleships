@@ -78,14 +78,10 @@ public class ControllerPlayGame implements Initializable {
     public static ControllerPlayGame fromLoad(GameData gameData) {
 
         GameManager manager = new GameManager(gameData.getPlayers(), gameData.getCurrentPlayer(), gameData.getRound());
-        // TODO: save size directly in GameData
         int playgroundSize = gameData.getCurrentPlayer().getPlaygroundOwn().getSize();
         ArrayList<BattleShipGui> shipPositionList = new ArrayList<>();
 
-        // TODO: Update playgrounds
-
         ControllerPlayGame controllerPlayGame = new ControllerPlayGame(playgroundSize, shipPositionList, manager);
-
         return controllerPlayGame;
     }
 
@@ -232,7 +228,7 @@ public class ControllerPlayGame implements Initializable {
         }
     }
 
-
+    // TODO: Lukas
     private void initPlaygroundFromLoad(Playground playground, GridPane gridPane) {
         for (int y = 0; y < playground.getSize(); y++) {
             for (int x = 0; x < playground.getSize(); x++) {
@@ -242,10 +238,13 @@ public class ControllerPlayGame implements Initializable {
                 // TODO: replace color with images
                 // TODO: Are any ship objects needed?
                 // TODO: differ between hit fields
-                String color = "";
-                if (field.type == Playground.FieldType.SHIP) color = "#1f1f1f";
-                if (field.type == Playground.FieldType.WATER) color = "#123456";
-                if (field.type == Playground.FieldType.FOG) color = "#ff00ff";
+                String color = "black";
+                if (field.type == Playground.FieldType.SHIP) {
+                    color = "red";
+                    LoggerLogic.debug("Ship at + " + pos);
+                }
+                if (field.type == Playground.FieldType.WATER) color = "blue";
+                if (field.type == Playground.FieldType.FOG) color = "white";
                 if (field.type == Playground.FieldType.WATER)
                 this.color_fields(pos, color, gridPane);
             }

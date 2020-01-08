@@ -97,6 +97,7 @@ public class ControllerLoadGame implements Initializable {
             ControllerPlayGame controller = ControllerPlayGame.fromLoad(gameData);
             SceneLoader sceneLoader = new SceneLoader(this.ANCHORPANEMAINMENU, "../PlayGame/PlayGame.fxml", controller);
             sceneLoader.loadSceneInExistingWindow();
+            controller.initFieldsFromLoad(gameData);
         } else {
             // TODO: inform user
         }
