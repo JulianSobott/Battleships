@@ -67,14 +67,8 @@ public class ControllerLoadGame implements Initializable {
 
         for (GameData saveGame : arrayListGameData) {
 
-            itemsSaveGame.add("" + saveGame.getGameID());
+            itemsSaveGame.add(saveGame.getTimestamp());
         }
-        // Hardkodiert als Beispiel und test -> muss später entfernt werden !!
-        for (int i = 0; i < 11; i++) {
-
-            itemsSaveGame.add("" + "Savegame" + i);
-        }
-
     }
 
     /**
