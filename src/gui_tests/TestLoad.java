@@ -24,6 +24,7 @@ public class TestLoad extends Application {
             ControllerPlayGame controller = ControllerPlayGame.fromLoad(gameData);
             SceneLoader sceneLoader = new SceneLoader(null, "../../gui/PlayGame/PlayGame.fxml", controller);
             sceneLoader.loadSceneInNewWindow("Test Ship Placement");
+            controller.initFieldsFromLoad(gameData);
         } else {
             LoggerGUI.error("Load failed: res=" + res);
         }

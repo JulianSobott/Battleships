@@ -84,7 +84,9 @@ public class ControllerPlayGame implements Initializable {
 
         // TODO: Update playgrounds
 
-        return new ControllerPlayGame(playgroundSize, shipPositionList, manager);
+        ControllerPlayGame controllerPlayGame = new ControllerPlayGame(playgroundSize, shipPositionList, manager);
+
+        return controllerPlayGame;
     }
 
     /**
@@ -114,6 +116,22 @@ public class ControllerPlayGame implements Initializable {
         this.playerGridPaneHashMap.put(0, gridPaneEnemyField);
         this.gameManager.startGame();
         this.startPlaygroundUpdaterThread();
+    }
+
+    public void initFieldsFromLoad(GameData gameData) {
+        // TODO: Is Player1 always local player
+        Player localPLayer = gameData.getPlayers()[0];
+        Playground ownPlayground = localPLayer.getPlaygroundOwn();
+        Playground enemyPlayground = localPLayer.getPlaygroundEnemy();
+
+        ownPlayground.printField();
+        enemyPlayground.printField();
+
+        // Own playground
+        this.initPlaygroundFromLoad(ownPlayground, this.gridPaneOwnField);
+
+        // Enemy playground
+        this.initPlaygroundFromLoad(enemyPlayground, this.gridPaneEnemyField);
     }
 
 
@@ -210,6 +228,26 @@ public class ControllerPlayGame implements Initializable {
                 pane.setFieldType(PaneExtends.FieldType.SHIP);
                 index++;
 
+            }
+        }
+    }
+
+
+    private void initPlaygroundFromLoad(Playground playground, GridPane gridPane) {
+        for (int y = 0; y < playground.getSize(); y++) {
+            for (int x = 0; x < playground.getSize(); x++) {
+                Playground.Field field = playground.getFields()[y][x];
+                Position[] pos = {new Position(x, y)};
+
+                // TODO: replace color with images
+                // TODO: Are any ship objects needed?
+                // TODO: differ between hit fields
+                String color = "";
+                if (field.type == Playground.FieldType.SHIP) color = "#1f1f1f";
+                if (field.type == Playground.FieldType.WATER) color = "#123456";
+                if (field.type == Playground.FieldType.FOG) color = "#ff00ff";
+                if (field.type == Playground.FieldType.WATER)
+                this.color_fields(pos, color, gridPane);
             }
         }
     }
