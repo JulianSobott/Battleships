@@ -1,6 +1,7 @@
 package player;
 
 import core.Player;
+import core.PlaygroundEnemy;
 import core.communication_data.Position;
 import core.communication_data.ShotResult;
 import core.communication_data.TurnResult;
@@ -129,5 +130,18 @@ public class PlayerAI extends Player {
 
     public Difficulty getDifficulty() {
         return difficulty;
+    }
+
+    public PlaygroundHeatmap getPlaygroundHeatmap() {
+        return playgroundHeatmap;
+    }
+
+    public void setPlaygroundHeatmap(PlaygroundHeatmap playgroundHeatmap) {
+        this.playgroundHeatmap = playgroundHeatmap;
+    }
+
+    public void setPlaygroundEnemy(PlaygroundEnemy playgroundEnemy) {
+        super.setPlaygroundEnemy(playgroundEnemy);
+        //this.playgroundHeatmap.updateByPlayground();
     }
 }

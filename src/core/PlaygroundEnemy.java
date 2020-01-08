@@ -5,13 +5,12 @@ import core.communication_data.ShipList;
 import core.communication_data.TurnResult;
 import core.utils.logging.LoggerLogic;
 
+import java.beans.ConstructorProperties;
+
 public class PlaygroundEnemy extends Playground{
 
     private int numShipsFields = 0;
     private int numHitShipsFields = 0;
-
-    public PlaygroundEnemy() {// Jackson deserialization
-    }
 
     public PlaygroundEnemy(int size) {
         super(size);
@@ -21,6 +20,13 @@ public class PlaygroundEnemy extends Playground{
         for(ShipList.Pair p : l){
             this.numShipsFields += p.getSize() * p.getNum();
         }
+    }
+
+    @ConstructorProperties({"size", "numShipsFields", "numHitsShipsFields"})
+    public PlaygroundEnemy(int size, int numShipsFields, int numHitShipsFields) {
+        super(size);
+        this.numShipsFields = numShipsFields;
+        this.numHitShipsFields = numHitShipsFields;
     }
 
     public void updateField(Position position, FieldType type){
@@ -56,4 +62,11 @@ public class PlaygroundEnemy extends Playground{
         return TurnResult.Error.NONE;
     }
 
+    public int getNumShipsFields() {
+        return numShipsFields;
+    }
+
+    public int getNumHitShipsFields() {
+        return numHitShipsFields;
+    }
 }
