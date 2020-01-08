@@ -353,7 +353,7 @@ public class ControllerPlayGame implements Initializable {
             if (gridPane == gridPaneOwnField) {
                 paneExtends.setId(paneExtends.getId() + "_X");
             }else {
-                paneExtends.setId("");
+                paneExtends.setId("Water_Ship_Hit");
             }
 
             if (resultShip.getStatus() == Ship.LifeStatus.SUNKEN) {
