@@ -21,6 +21,7 @@
     - Add thread that waits?
 - save game: _Julian_
 - load game: _Julian_
+- placShipsRandom multiple times
 - (statistics): _Julian_
 - (settings)
 

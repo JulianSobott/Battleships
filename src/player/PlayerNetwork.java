@@ -3,6 +3,7 @@ package player;
 import core.Player;
 import core.communication_data.Position;
 import core.communication_data.ShotResult;
+import core.communication_data.ShotResultWater;
 
 import java.beans.ConstructorProperties;
 
@@ -21,6 +22,11 @@ public class PlayerNetwork extends Player {
         return null;
     }
 
+    public void sendResult(ShotResult shotResult) {
+
+        // communicator.sendMessage("" + shotResult.getType())
+    }
+
     @Override
     public boolean areAllShipsPlaced() {
         // TODO
@@ -29,7 +35,12 @@ public class PlayerNetwork extends Player {
 
     @Override
     public ShotResult gotHit(Position position) {
-        // TODO: Send message to network
+        // communicator.sendMessage("" + position);
+        // waitForMessage type
+        // return new ShotResultWater();
         return null;
     }
+
+    public boolean allShipsPlaced;
+    public Position turnPosition;
 }

@@ -12,10 +12,16 @@ public class Server extends Connected {
     public static void main(String[] args) {
         ServerSocket ss;
         try {
+            // start
             ss = new ServerSocket(50000);
             Socket s = ss.accept();
             System.out.println("client connected");
 
+            // readInput (endless loop new Thread)
+
+            // Send message
+
+            // startGame (int size, NetworkPlayer player)
             PrintWriter printWriter1 = new PrintWriter(s.getOutputStream());
             Scanner scanner1 = new Scanner(System.in);
             String nextline1 = scanner1.nextLine();
