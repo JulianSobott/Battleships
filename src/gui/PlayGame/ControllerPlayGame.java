@@ -7,7 +7,6 @@ import core.Ship;
 import core.communication_data.*;
 import core.serialization.GameData;
 import core.utils.logging.LoggerGUI;
-import core.utils.logging.LoggerLogic;
 import gui.ControllerMainMenu;
 import gui.GameOver.ControllerGameOver;
 import gui.UiClasses.BattleShipGui;
@@ -212,13 +211,13 @@ public class ControllerPlayGame implements Initializable {
             String cssId;
             for (int i = 0; i < battleShipGui.getPosition().getLength(); i++) {
                 PaneExtends pane = (PaneExtends) gridPaneOwnField.getChildren().get(index);
-                cssId = battleShipGui.getPosition().getLength() + "_0" + (i+1);
+                cssId = battleShipGui.getPosition().getLength() + "_0" + (i + 1);
                 pane.setStyle("-fx-background-color: #00ff00");
                 pane.setId(cssId);
                 pane.setFieldType(PaneExtends.FieldType.SHIP);
                 index += playgroundSize;
             }
-        }
+        }       //TODO Bilder mit 90 grad drehung müssen geladen werden
         if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.VERTICAL) {
 
             int index = battleShipGui.getPosition().getX() * playgroundSize + battleShipGui.getPosition().getY();
@@ -226,7 +225,7 @@ public class ControllerPlayGame implements Initializable {
             for (int i = 0; i < battleShipGui.getPosition().getLength(); i++) {
 
                 PaneExtends pane = (PaneExtends) gridPaneOwnField.getChildren().get(index);
-                cssId = battleShipGui.getPosition().getLength() + "_0" + (i+1);
+                cssId = battleShipGui.getPosition().getLength() + "_0" + (i + 1);
                 pane.setStyle("-fx-background-color: #00ff00");
                 pane.setId(cssId);
                 pane.setFieldType(PaneExtends.FieldType.SHIP);
@@ -244,8 +243,8 @@ public class ControllerPlayGame implements Initializable {
                 Position[] pos = {new Position(x, y)};
 
                 // TODO: replace color with images
-                // TODO: Are any ship objects needed?
-                // TODO: differ between hit fields
+                // TODO: Are any ship objects needed?  Good Question.... Yes and i wanna know if they are sunken.... and if horizontal or vertical alignment...
+
                 String cssId = "black";
                 if (field.type == Playground.FieldType.SHIP) {
                     cssId = "red";
@@ -345,20 +344,29 @@ public class ControllerPlayGame implements Initializable {
     private void updateByShotResult(GridPane gridPane, ShotResult shotResult) {
 
         String cellStyle;
+        PaneExtends paneExtends = this.getPaneAtPosition(gridPane, shotResult.getPosition().getX(),
+                shotResult.getPosition().getY());
+
         if (shotResult.getType() == Playground.FieldType.SHIP) {
             ShotResultShip resultShip = (ShotResultShip) shotResult;
             cellStyle = "-fx-background-color: #ff0000";
+            if (gridPane == gridPaneOwnField) {
+                paneExtends.setId(paneExtends.getId() + "_X");
+            }else {
+                paneExtends.setId("");
+            }
+
             if (resultShip.getStatus() == Ship.LifeStatus.SUNKEN) {
                 Position[] waterFields = resultShip.getWaterFields();
-                this.color_fields(waterFields, "#0000ff", gridPane);
+                this.color_fields(waterFields, "Water_Hit", gridPane);
             }
         } else if (shotResult.getType() == Playground.FieldType.WATER) {
             cellStyle = "-fx-background-color: #0055ff";
+            paneExtends.setId("Water_Hit");
+
         } else {
             throw new Error("Invalid shotResult type: " + shotResult.getType());
         }
-        PaneExtends paneExtends = this.getPaneAtPosition(gridPane, shotResult.getPosition().getX(),
-                shotResult.getPosition().getY());
         paneExtends.setStyle(cellStyle);
 
         if (gridPane == this.gridPaneEnemyField && this.showHeatMap) {

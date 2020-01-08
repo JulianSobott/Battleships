@@ -135,8 +135,13 @@
     -fx-background-size: 100% 100%;
 }
 
-#Water_Hit{
+#Water_Ship_Hit{
     -fx-background-image: url('ShipIcons/Wasser_mit_Treffer.png');
+    -fx-background-size: 100% 100%;
+}
+
+#Water_Hit{
+    -fx-background-image: url('ShipIcons/Wasser_ohne_treffer.png');
     -fx-background-size: 100% 100%;
 }
 
