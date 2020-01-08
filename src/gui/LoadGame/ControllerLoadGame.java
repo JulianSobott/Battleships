@@ -32,6 +32,7 @@ public class ControllerLoadGame implements Initializable {
     private ListView listViewSaveGames;
 
     private ObservableList<String> itemsSaveGame = FXCollections.observableArrayList();
+    private ArrayList<GameData> saveGames = new ArrayList<>();
 
     private final AnchorPane ANCHORPANEMAINMENU;
 
@@ -62,12 +63,12 @@ public class ControllerLoadGame implements Initializable {
 
     private void addSaveGamesToListView() {
 
-        List<GameData> arrayListGameData = new ArrayList<>();
-        arrayListGameData = GameSerialization.getAllSaveGames();
+        List<GameData> arrayListGameData = GameSerialization.getAllSaveGames();
 
         for (GameData saveGame : arrayListGameData) {
 
             itemsSaveGame.add(saveGame.getTimestamp());
+            saveGames.add(saveGame);
         }
     }
 
@@ -82,9 +83,11 @@ public class ControllerLoadGame implements Initializable {
         if (index == -1) {
             return;
         }
+        long id = saveGames.get(index).getGameID();
+
         closeWindow();
         // Hardcoded for debug purposes
-        LoadGameResult res = GameSerialization.loadGame(1);
+        LoadGameResult res = GameSerialization.loadGame(id);
         if (res.getStatus() == LoadGameResult.LoadStatus.SUCCESS) {
 
             GameData gameData = res.getGameData();
