@@ -14,6 +14,7 @@ public abstract class Player {
 
     protected String name;
     private int index;
+    private int playgroundSize;
 
     public Player() { // Jackson deserialization
     }
@@ -21,6 +22,7 @@ public abstract class Player {
     public Player(int index, String name, int playgroundSize) {
         this.index = index;
         this.name = name;
+        this.playgroundSize = playgroundSize;
         this.playgroundOwn = new PlaygroundOwn(playgroundSize);
         this.playgroundEnemy = new PlaygroundEnemy(playgroundSize);
     }

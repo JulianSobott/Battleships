@@ -6,6 +6,7 @@ import core.communication_data.ShotResult;
 import core.communication_data.TurnResult;
 import core.utils.logging.LoggerLogic;
 
+import java.beans.ConstructorProperties;
 import java.util.Random;
 
 public class PlayerAI extends Player {
@@ -19,9 +20,7 @@ public class PlayerAI extends Player {
     private Random r =  new Random(seed);
     PlaygroundHeatmap playgroundHeatmap;
 
-    public PlayerAI() { //Jackson deserialization
-    }
-
+    @ConstructorProperties({"index", "name", "playgroundSize"})
     public PlayerAI(int index, String name, int playgroundSize) {
         super(index, name, playgroundSize);
         this.playgroundOwn.placeShipsRandom();

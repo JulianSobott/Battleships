@@ -3,11 +3,11 @@ package player;
 import core.Player;
 import core.communication_data.Position;
 
+import java.beans.ConstructorProperties;
+
 public class PlayerHuman extends Player {
 
-    public PlayerHuman() { //Jackson deserialization
-    }
-
+    @ConstructorProperties({"index", "name", "playgroundSize"})
     public PlayerHuman(int index, String name, int playgroundSize) {
         super(index, name, playgroundSize);
     }

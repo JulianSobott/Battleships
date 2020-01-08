@@ -4,7 +4,11 @@ import core.Player;
 import core.communication_data.Position;
 import core.communication_data.ShotResult;
 
+import java.beans.ConstructorProperties;
+
 public class PlayerNetwork extends Player {
+
+    @ConstructorProperties({"index", "name", "playgroundSize"})
     public PlayerNetwork(int index, String name, int playgroundSize) {
         super(index, name, playgroundSize);
     }
