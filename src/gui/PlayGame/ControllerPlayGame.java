@@ -238,15 +238,19 @@ public class ControllerPlayGame implements Initializable {
                 // TODO: replace color with images
                 // TODO: Are any ship objects needed?
                 // TODO: differ between hit fields
-                String color = "black";
+                String cssId = "black";
                 if (field.type == Playground.FieldType.SHIP) {
-                    color = "red";
-                    LoggerLogic.debug("Ship at + " + pos);
+                    cssId = "red";
                 }
-                if (field.type == Playground.FieldType.WATER) color = "blue";
-                if (field.type == Playground.FieldType.FOG) color = "white";
-                if (field.type == Playground.FieldType.WATER)
-                this.color_fields(pos, color, gridPane);
+                if (field.type == Playground.FieldType.WATER) {
+
+                    if (field.isHit() == false) cssId = "Water";
+                    if (field.isHit()) cssId = "Water_Hit";
+                }
+                if (field.type == Playground.FieldType.FOG)
+                    cssId = "FOG";
+
+                this.color_fields(pos, cssId, gridPane);
             }
         }
     }
@@ -273,18 +277,19 @@ public class ControllerPlayGame implements Initializable {
     }
 
     /**
-     * color field to show what kind of element it on the playground  is
+     * cssID field to show what kind of element it on the playground  is
      *
-     * @param color       color of the field
+     * @param cssID       cssID of the field
      * @param gridPane    playground from one of the player
-     * @param waterFields fields which should get a color
+     * @param waterFields fields which should get a cssID
      */
 
-    private void color_fields(Position[] waterFields, String color, GridPane gridPane) {
+    private void color_fields(Position[] waterFields, String cssID, GridPane gridPane) {
 
         for (Position position : waterFields) {
             PaneExtends p = this.getPaneAtPosition(gridPane, position.getX(), position.getY());
-            p.setStyle("-fx-background-color: " + color);
+            p.setStyle("-fx-background-color: " + cssID); // später auskomentieren
+            p.setId(cssID);
         }
     }
 
