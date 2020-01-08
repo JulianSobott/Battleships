@@ -176,9 +176,11 @@ public class ControllerPlayGame implements Initializable {
 
         PaneExtends p = new PaneExtends(PaneExtends.FieldType.FOG);
         p.setStyle("-fx-background-color: #aaaaaa");
+        p.setId("Water");
         gridPane.add(p, possHorizontal, possVertical);
         if (gridPane == this.gridPaneEnemyField) {
             this.addClickFieldEvent(p);
+            p.setId("FOG");
         }
     }
 
@@ -207,9 +209,12 @@ public class ControllerPlayGame implements Initializable {
         if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.HORIZONTAL) {
 
             int index = battleShipGui.getPosition().getX() * playgroundSize + battleShipGui.getPosition().getY();
+            String cssId;
             for (int i = 0; i < battleShipGui.getPosition().getLength(); i++) {
                 PaneExtends pane = (PaneExtends) gridPaneOwnField.getChildren().get(index);
+                cssId = battleShipGui.getPosition().getLength() + "_0" + (i+1);
                 pane.setStyle("-fx-background-color: #00ff00");
+                pane.setId(cssId);
                 pane.setFieldType(PaneExtends.FieldType.SHIP);
                 index += playgroundSize;
             }
@@ -217,10 +222,13 @@ public class ControllerPlayGame implements Initializable {
         if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.VERTICAL) {
 
             int index = battleShipGui.getPosition().getX() * playgroundSize + battleShipGui.getPosition().getY();
+            String cssId;
             for (int i = 0; i < battleShipGui.getPosition().getLength(); i++) {
 
                 PaneExtends pane = (PaneExtends) gridPaneOwnField.getChildren().get(index);
+                cssId = battleShipGui.getPosition().getLength() + "_0" + (i+1);
                 pane.setStyle("-fx-background-color: #00ff00");
+                pane.setId(cssId);
                 pane.setFieldType(PaneExtends.FieldType.SHIP);
                 index++;
 
@@ -244,12 +252,16 @@ public class ControllerPlayGame implements Initializable {
                 }
                 if (field.type == Playground.FieldType.WATER) {
 
-                    if (field.isHit() == false) cssId = "Water";
-                    if (field.isHit()) cssId = "Water_Hit";
+                    if (field.isHit() == false) {
+                        cssId = "Water";
+                    }
+                    if (field.isHit()) {
+                        cssId = "Water_Hit";
+                    }
                 }
-                if (field.type == Playground.FieldType.FOG)
+                if (field.type == Playground.FieldType.FOG) {
                     cssId = "FOG";
-
+                }
                 this.color_fields(pos, cssId, gridPane);
             }
         }
