@@ -450,7 +450,7 @@ public class ControllerPlayGame implements Initializable {
 
     private void loadEndScreen() {
 
-        ControllerGameOver controllerGameOver = new ControllerGameOver();
+        ControllerGameOver controllerGameOver = new ControllerGameOver(false);
         SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathGameOver, controllerGameOver);
         sceneLoader.loadSceneInExistingWindow();
     }
