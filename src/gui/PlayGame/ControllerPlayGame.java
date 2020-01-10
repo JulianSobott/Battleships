@@ -47,6 +47,9 @@ public class ControllerPlayGame implements Initializable {
     @FXML
     public Button buttonBack;
 
+    @FXML
+    public AnchorPane anchorPanePlayGame;
+
 
     private double CELL_PERCENTAGE_WIDTH;
     private int playgroundSize;
@@ -465,7 +468,7 @@ public class ControllerPlayGame implements Initializable {
 
     private synchronized void loadEndScreen() {
 
-        ControllerGameOver controllerGameOver = new ControllerGameOver(false);
+        ControllerGameOver controllerGameOver = new ControllerGameOver(anchorPanePlayGame,false);
         SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathGameOver, controllerGameOver);
         sceneLoader.loadSceneInExistingWindowWithoutButtons("", (Stage) buttonBack.getScene().getWindow());
     }
