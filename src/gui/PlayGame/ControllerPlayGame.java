@@ -12,10 +12,12 @@ import gui.GameOver.ControllerGameOver;
 import gui.UiClasses.BattleShipGui;
 import gui.UiClasses.PaneExtends;
 import gui.WindowChange.SceneLoader;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
 import player.PlaygroundHeatmap;
 
 import java.net.URL;
@@ -311,27 +313,40 @@ public class ControllerPlayGame implements Initializable {
 
     private void startPlaygroundUpdaterThread() {
 
-        playgroundUpdaterThread = new Thread(() -> {
-            TurnResult res;
-            do {
-                res = gameManager.pollTurn("GUI_1");
-                if (res != null) {
-                    LoggerGUI.info("TurnResult in GUI: " + res);
-                    if (res.getError() == TurnResult.Error.NONE) {
-                        this.updateByShotResult(this.playerGridPaneHashMap.get(res.getPlayerIndex()), res.getSHOT_RESULT());
+        Task task = new Task<Boolean>() {
+            @Override
+            protected Boolean call() throws Exception {
+
+                TurnResult res;
+                do {
+                    res = gameManager.pollTurn("GUI_1");
+                    if (res != null) {
+                        LoggerGUI.info("TurnResult in GUI: " + res);
+                        if (res.getError() == TurnResult.Error.NONE) {
+                            updateByShotResult(playerGridPaneHashMap.get(res.getPlayerIndex()), res.getSHOT_RESULT());
+                        } else {
+                            LoggerGUI.info("NOTIFY USER: Turn was not valid" + res.getError());
+                        }
                     } else {
-                        LoggerGUI.info("NOTIFY USER: Turn was not valid" + res.getError());
+                        if (!Thread.currentThread().isInterrupted())
+                            LoggerGUI.error("Received TurnResult with value null");
+                        else {
+                            // Thread was stopped
+                        }
                     }
-                } else {
-                    if (!Thread.currentThread().isInterrupted())
-                        LoggerGUI.error("Received TurnResult with value null");
-                    else {
-                        // Thread was stopped
-                    }
-                }
-            } while (res != null && !res.isFINISHED() && !Thread.currentThread().isInterrupted());
-            LoggerGUI.info("PlaygroundUpdaterThread was stopped. No more results will be displayed");
+                } while (res != null && !res.isFINISHED() && !Thread.currentThread().isInterrupted());
+
+                LoggerGUI.info("PlaygroundUpdaterThread was stopped. No more results will be displayed");
+                return true;
+            }
+        };
+
+        task.setOnSucceeded(e -> {
+
+            loadEndScreen();
         });
+
+        playgroundUpdaterThread = new Thread(task);
         playgroundUpdaterThread.setName("GUI_PlaygroundUpdater");
         playgroundUpdaterThread.start();
     }
@@ -352,7 +367,7 @@ public class ControllerPlayGame implements Initializable {
             cellStyle = "-fx-background-color: #ff0000";
             if (gridPane == gridPaneOwnField) {
                 paneExtends.setId(paneExtends.getId() + "_X");
-            }else {
+            } else {
                 paneExtends.setId("Water_Ship_Hit");
             }
 
@@ -448,11 +463,11 @@ public class ControllerPlayGame implements Initializable {
      * if one player wins new screen is loaded
      */
 
-    private void loadEndScreen() {
+    private synchronized void loadEndScreen() {
 
         ControllerGameOver controllerGameOver = new ControllerGameOver(false);
         SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathGameOver, controllerGameOver);
-        sceneLoader.loadSceneInExistingWindow();
+        sceneLoader.loadSceneInExistingWindowWithoutButtons("", (Stage) buttonBack.getScene().getWindow());
     }
 
 
