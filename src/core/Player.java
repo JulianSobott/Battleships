@@ -61,6 +61,14 @@ public abstract class Player {
         }
     }
 
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "{" +
+                "name='" + name + '\'' +
+                ", index=" + index +
+                '}';
+    }
+
     public PlaceShipsRandomRes placeShipsRandom() {
         return this.playgroundOwn.placeShipsRandom();
     }
