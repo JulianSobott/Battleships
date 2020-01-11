@@ -9,13 +9,25 @@ import java.util.Scanner;
 
 public class Server extends Connected {
 
+    public Server(){
+        isServer=true;
+    }
+
+
+
+
+
+
+
+
+
     public static void main(String[] args) {
         ServerSocket ss;
         try {
             // start
             ss = new ServerSocket(50000);
             Socket s = ss.accept();
-            System.out.println("client connected");
+
 
             // readInput (endless loop new Thread)
 

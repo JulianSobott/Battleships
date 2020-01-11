@@ -8,13 +8,16 @@ import java.util.Scanner;
 
 public class Client extends Connected {
 
-    public static void main(String[] args) {
-        try {
-            Socket s = new Socket("localhost", 50000);
+    private Socket socket;
+    public Client(String ip) throws IOException {
+        socket = new Socket(ip, 50000);
+        in = new BufferedReader(new InputStreamReader(socket.getInputStream())); // empfang
+        out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())); // output Netzwerk
+    }
 
-            InputStreamReader in1 = new InputStreamReader(s.getInputStream());
-            BufferedReader bf1 = new BufferedReader(in1);
-            String str1 = bf1.readLine();
+
+
+
             Connected.checkmessage(str1);
             System.out.println("[Server]: " + str1);
 
