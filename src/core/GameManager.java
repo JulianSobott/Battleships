@@ -215,6 +215,7 @@ public class GameManager implements GameManagerInterface {
     private void gameLoop() {
         inGameThread = new Thread(() -> {
             TurnResult res;
+            LoggerState.info("Starting player: " + this.currentPlayer);
             do {
                 res = turnLoop();
                 if (res != null)
