@@ -12,6 +12,6 @@
             <Label fx:id="labelGameStatus" text="Result..." />
          </children>
       </VBox>
-      <Button layoutX="180.0" layoutY="343.0" mnemonicParsing="false" text="Main Menu" AnchorPane.bottomAnchor="30.0" AnchorPane.rightAnchor="30.0" />
+      <Button layoutX="180.0" layoutY="343.0" mnemonicParsing="false" onMouseClicked="#goBackToMainMenu" text="Main Menu" AnchorPane.bottomAnchor="30.0" AnchorPane.rightAnchor="30.0" />
    </children>
 </AnchorPane>
