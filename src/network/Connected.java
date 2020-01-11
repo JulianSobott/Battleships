@@ -13,7 +13,7 @@ import java.io.*;
 import java.net.Socket;
 import java.util.HashMap;
 
-public class Connected {
+public abstract class Connected {
 
     // Todo evtl in einzelne Methoden für Server und Client aufteilen ???
 
@@ -28,6 +28,16 @@ public class Connected {
     private final HashMap<String, Object> sentData = new HashMap<>();
     private ControllerPlayGame controllerPlayGame;
 
+    public Connected(ControllerPlayGame controllerPlayGame) {
+        this.controllerPlayGame = controllerPlayGame;
+    }
+
+    public abstract void start();
+
+    public void connected(BufferedReader in, BufferedWriter out) {
+        this.in = in;
+        this.out = out;
+    }
 
     public void checkmessage(String str) {
         String[] splitted = str.split(" ");
@@ -42,7 +52,7 @@ public class Connected {
                 break;
             case "SHOT":
                 Position position = new Position(Integer.parseInt(splitted[1]), Integer.parseInt(splitted[2]));
-                player.gotHit(position);    // TODO: must sendMessage in gotHit
+                sentData.put("makeTurnPosition", position);
                 expectedMessage="ANSWER";
                 break;
             case "SAVE":
@@ -112,8 +122,13 @@ public class Connected {
         if (message.equals("answer 0")) {
             expectedMessage = "PASS";
         }
-
-        return;
+        try {
+            out.write(message);
+            out.flush();
+        } catch (IOException e) {
+            LoggerNetwork.error("Can't send message");
+            e.printStackTrace();
+        }
     }
 
     public void stopListening() {
@@ -134,10 +149,20 @@ public class Connected {
      * blocking till available
      * @return
      */
-    public Playground.FieldType getShotResult() {
+    public ShotResTuple getShotResult() {
         Object o = getSentData("shotResult");
-        assert o instanceof Playground.FieldType: "Wrong data sent. Expected FieldType got " + o;
-        return (Playground.FieldType) o;
+        assert o instanceof ShotResTuple: "Wrong data sent. Expected FieldType got " + o;
+        return (ShotResTuple) o;
+    }
+
+    /**
+     * blocking till available
+     * @return
+     */
+    public Position getMakeTurnPosition() {
+        Object o = getSentData("makeTurnPosition");
+        assert o instanceof Playground.FieldType: "Wrong data sent. Expected Position got " + o;
+        return (Position) o;
     }
 
     private Object getSentData(String key) {

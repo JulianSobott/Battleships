@@ -1,33 +1,49 @@
 package player;
 
 import core.Player;
+import core.Playground;
+import core.Ship;
 import core.communication_data.Position;
 import core.communication_data.ShotResult;
+import core.communication_data.ShotResultShip;
 import core.communication_data.ShotResultWater;
+import network.Connected;
 
 import java.beans.ConstructorProperties;
 import java.util.HashMap;
 
 public class PlayerNetwork extends Player {
 
-    @ConstructorProperties({"index", "name", "playgroundSize"})
-    public PlayerNetwork(int index, String name, int playgroundSize) {
-        super(index, name, playgroundSize);
-    }
+    private Connected connected;
 
-    // TODO: Add connection to class that can send/receive messages
+    @ConstructorProperties({"index", "name", "playgroundSize"})
+    public PlayerNetwork(int index, String name, int playgroundSize, Connected connected) {
+        super(index, name, playgroundSize);
+        this.connected = connected;
+    }
 
     private final HashMap<String, Object> networkData = new HashMap<>();
 
     @Override
     public Position makeTurn() {
-        // TODO: wait till enemy turn and return
-        return null;
+        // received SHOT
+        return connected.getMakeTurnPosition();
     }
 
-    public void sendResult(ShotResult shotResult) {
-
-        // communicator.sendMessage("" + shotResult.getType())
+    @Override
+    public void update(ShotResult shotResult) {
+        super.update(shotResult);
+        String num;
+        if (shotResult.getType() == Playground.FieldType.SHIP) {
+            if (((ShotResultShip) shotResult).getStatus() == Ship.LifeStatus.SUNKEN) {
+                num = "2";
+            } else {
+                num = "1";
+            }
+        } else {
+            num = "0";
+        }
+        connected.sendMessage("answer " + num);
     }
 
     @Override
@@ -37,10 +53,19 @@ public class PlayerNetwork extends Player {
 
     @Override
     public ShotResult gotHit(Position position) {
-        // communicator.sendMessage("" + position);
-        // waitForMessage type
-        // return new ShotResultWater();
-        return null;
+        // send SHOT and receive ANSWER
+        connected.sendMessage("shot " + position.getX() + " " + position.getY());
+        Connected.ShotResTuple res = connected.getShotResult();
+        if (res.type == Playground.FieldType.WATER) {
+            return new ShotResultWater(position, Playground.FieldType.WATER);
+        } else {
+            if (res.sunken) {
+                // TODO: get WaterFields and ShipPosition
+                return new ShotResultShip(position, Playground.FieldType.SHIP, Ship.LifeStatus.SUNKEN, null, null);
+            }else {
+                return new ShotResultShip(position, Playground.FieldType.SHIP, Ship.LifeStatus.ALIVE);
+            }
+        }
     }
 
     public void setAllShipsPlaced() {

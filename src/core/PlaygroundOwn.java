@@ -229,7 +229,7 @@ public class PlaygroundOwn extends Playground {
      * @param s A ship. Most likely a ship that is sunken.
      * @return All positions around this ship
      */
-    private Position[] getSurroundingWaterPositions(Ship s) {
+    public Position[] getSurroundingWaterPositions(Ship s) {
         HashSet<Position> waterPositions = new HashSet<Position>();
         int[][] surroundingFields = {{-1, -1}, {-1, 0}, {0, -1}, {0, 0}, {0, 1}, {1, 0}, {1, 1}, {-1, 1}, {1, -1}};
         for (Position shipPosition : s.getShipPosition().generateIndices()) {

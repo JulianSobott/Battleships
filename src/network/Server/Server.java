@@ -1,6 +1,8 @@
 package network.Server;
 
+import gui.PlayGame.ControllerPlayGame;
 import network.Connected;
+import player.PlayerNetwork;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -9,56 +11,13 @@ import java.util.Scanner;
 
 public class Server extends Connected {
 
-    public Server(){
-        isServer=true;
+
+    public Server(PlayerNetwork player, ControllerPlayGame controllerPlayGame) {
+        super(controllerPlayGame);
     }
 
-
-
-
-
-
-
-
-
-    public static void main(String[] args) {
-        ServerSocket ss;
-        try {
-            // start
-            ss = new ServerSocket(50000);
-            Socket s = ss.accept();
-
-
-            // readInput (endless loop new Thread)
-
-            // Send message
-
-            // startGame (int size, NetworkPlayer player)
-            PrintWriter printWriter1 = new PrintWriter(s.getOutputStream());
-            Scanner scanner1 = new Scanner(System.in);
-            String nextline1 = scanner1.nextLine();
-            printWriter1.println(nextline1);
-            printWriter1.flush();
-
-            while (true) {
-
-                InputStreamReader in = new InputStreamReader(s.getInputStream());
-                BufferedReader bf = new BufferedReader(in);
-                String str = bf.readLine();
-                System.out.println(checkmessage(str));
-                System.out.println("[Client]: " + str);
-                PrintWriter printWriter = new PrintWriter(s.getOutputStream());
-                Scanner scanner = new Scanner(System.in);
-                String nextline = scanner.nextLine();
-                printWriter.println(nextline);
-                printWriter.flush();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    @Override
+    public void start() {
 
     }
-
-
-
 }

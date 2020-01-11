@@ -223,7 +223,8 @@ public class ControllerGameType implements Initializable {
         if (this.radioButtonKI.isSelected() && this.radioButtonEasy.isSelected()) {
             p2 = new PlayerAI(1, "KI", playgroundSize);
         } else if (this.radioButtonNetzwerk.isSelected()) {
-            p2 = new PlayerNetwork(1, "KI", playgroundSize);
+            // TODO: Set player in Connected or add connected to player
+            p2 = new PlayerNetwork(1, "KI", playgroundSize, null);
         } else {
             p2 = new PlayerHuman(1, "KI", playgroundSize);
         }
