@@ -1,17 +1,13 @@
 # TODO's ✓
 
-## Network: _Josua_
+## Network:
 
-- shooting
-    - receive
-        - forward Position to GameManager
-        - return result
-    - send
-        - Position from GameManager
-        - ShotResult to GameManager
 - start game
 - save game
 - load game
+- Connection with GUI
+    - Implementation of Client and Server
+    - Connection between Connect and PlayerNetwork 
 
 
 ## Logic
