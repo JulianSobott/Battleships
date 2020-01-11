@@ -18,6 +18,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import player.PlayerHuman;
 import player.PlaygroundHeatmap;
 
 import java.net.URL;
@@ -344,9 +345,15 @@ public class ControllerPlayGame implements Initializable {
             }
         };
 
+        //TODO: Fehler bei Current Player ???
         task.setOnSucceeded(e -> {
+            Player player = gameManager.getCurrentPlayer();
+            Boolean playerHumanWins = true;
+            if (player.getClass() == PlayerHuman.class) {
 
-            loadEndScreen();
+                playerHumanWins = false;
+            }
+            loadEndScreen(playerHumanWins);
         });
 
         playgroundUpdaterThread = new Thread(task);
@@ -466,9 +473,9 @@ public class ControllerPlayGame implements Initializable {
      * if one player wins new screen is loaded
      */
 
-    private synchronized void loadEndScreen() {
+    private synchronized void loadEndScreen(boolean humanPlayerWins) {
 
-        ControllerGameOver controllerGameOver = new ControllerGameOver(anchorPanePlayGame,false);
+        ControllerGameOver controllerGameOver = new ControllerGameOver(anchorPanePlayGame, humanPlayerWins);
         SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathGameOver, controllerGameOver);
         sceneLoader.loadSceneInExistingWindowWithoutButtons("", (Stage) buttonBack.getScene().getWindow());
     }
