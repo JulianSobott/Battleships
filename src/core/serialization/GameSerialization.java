@@ -24,6 +24,8 @@ public class GameSerialization {
     private static final boolean checkHashesAtValidityCheck = true;
     private static final File folderPath = new File("SaveGames/");
 
+    // TODO: Add ID as parameter
+
     public static long saveGame(GameManager gameManager) {
         LoggerLogic.info("Saving game ...");
         // init folder

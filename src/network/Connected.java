@@ -3,8 +3,11 @@ package network;
 import core.*;
 import core.communication_data.Position;
 import core.communication_data.TurnResult;
+import core.serialization.GameSerialization;
 import core.utils.logging.LoggerLogic;
 import core.utils.logging.LoggerNetwork;
+import gui.PlayGame.ControllerPlayGame;
+import player.PlayerNetwork;
 
 import java.io.*;
 import java.net.Socket;
@@ -17,44 +20,66 @@ public class Connected {
     protected BufferedReader in = null;
     protected BufferedWriter out = null; //setzen damit immerhin null drinsteht bei voreiliger ansprache
     protected String expectedMessage;
-    protected boolean isServer = false;
+    protected boolean isStartingPlayer = false;
     protected boolean isRunning = false;
+    protected PlayerNetwork player;
 
     // Data
     private final HashMap<String, Object> sentData = new HashMap<>();
+    private ControllerPlayGame controllerPlayGame;
 
 
-    public String checkmessage(String str) {
+    public void checkmessage(String str) {
         String[] splitted = str.split(" ");
-        String keyword = splitted[0];
-        switch (keyword.toUpperCase()) {
+        String keyword = splitted[0].toUpperCase();
+        if (!expectedMessage.equals(keyword)) {
+            LoggerNetwork.error("Unexpected message: expected=" + expectedMessage + ", got=" + keyword);
+        }
+        switch (keyword) {
             case "SIZE":
                 sentData.put("playgroundSize", Integer.parseInt(splitted[1]));
                 expectedMessage="CONFIRMED";
+                break;
             case "SHOT":
-                Position shot = new Position(Integer.parseInt(splitted[1]), Integer.parseInt(splitted[2])); // war nicht irgendwo was, wo man umgekehrt dachten musste und x und y vertauschen musste?
+                Position position = new Position(Integer.parseInt(splitted[1]), Integer.parseInt(splitted[2]));
+                player.gotHit(position);    // TODO: must sendMessage in gotHit
                 expectedMessage="ANSWER";
-                return "b";
+                break;
             case "SAVE":
-                return "c";
+                String id = splitted[1];
+                // TODO: pass ID to GUI
+                controllerPlayGame.clickSaveGame();
+                break;
             case "LOAD":
-                return "d";
+                break;
             case "CONFIRMED":
-                if (isServer){
-                    expectedMessage="SHOT";
-                } else expectedMessage="CONFIRMED";
-                return "xyz"; // Server muss confirmed nur einmal machen? Mitzählen?
+                player.setAllShipsPlaced();
+                if (isStartingPlayer){
+                    expectedMessage="ANSWER";
+                } else expectedMessage="SHOT";
+                break;
             case "ANSWER":
-                if (splitted[1].equals("0")){
-
-                } else if (splitted[1].equals("1")){
-
-                } else if (splitted[1].equals("2")) {
-
+                switch (splitted[1]) {
+                    case "0":    // WATER
+                        sentData.put("shotResult", new ShotResTuple(Playground.FieldType.WATER, false));
+                        expectedMessage = "SHOT";
+                        sendMessage("pass");
+                        break;
+                    case "1":  // SHIP
+                        sentData.put("shotResult", new ShotResTuple(Playground.FieldType.SHIP, false));
+                        expectedMessage = "ANSWER";
+                        break;
+                    case "2":  // SHIP SUNKEN
+                        sentData.put("shotResult", new ShotResTuple(Playground.FieldType.SHIP, true));
+                        expectedMessage = "ANSWER";
+                        break;
                 }
-            case "pass":
+                break;
+            case "PASS":
+                expectedMessage = "SHOT";
+                break;
             default:
-                return "x";
+                LoggerNetwork.error("Unrecognized");
         }
 
     }
@@ -84,7 +109,9 @@ public class Connected {
     }
 
     public void sendMessage(String message){
-
+        if (message.equals("answer 0")) {
+            expectedMessage = "PASS";
+        }
 
         return;
     }
@@ -93,19 +120,48 @@ public class Connected {
         this.isRunning = false;
     }
 
+    /**
+     * blocking till available
+     * @return
+     */
     public int getPlaygroundSize() {
+        Object o = getSentData("playgroundSize");
+        assert o instanceof Playground.FieldType: "Wrong data sent. Expected int got " + o;
+        return (int) o;
+    }
+
+    /**
+     * blocking till available
+     * @return
+     */
+    public Playground.FieldType getShotResult() {
+        Object o = getSentData("shotResult");
+        assert o instanceof Playground.FieldType: "Wrong data sent. Expected FieldType got " + o;
+        return (Playground.FieldType) o;
+    }
+
+    private Object getSentData(String key) {
         synchronized (this.sentData) {
-            while (this.sentData.get("playgroundSize") != null) {
+            while (this.sentData.get(key) != null) {
                 try {
                     this.sentData.wait();
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
-                    LoggerNetwork.warning("Interrupted getPlaygroundSize thread: returning -1");
-                    return -1;
+                    LoggerNetwork.warning("Interrupted getSentDat thread: returning null");
+                    return null;
                 }
             }
-            assert this.sentData.get("playgroundSize") instanceof Integer: "Wrong data sent";
-            return (int) this.sentData.get("playgroundSize");
+            return this.sentData.get(key);
+        }
+    }
+
+    public static class ShotResTuple {
+        public Playground.FieldType type;
+        public boolean sunken;
+
+        public ShotResTuple(Playground.FieldType type, boolean sunken) {
+            this.type = type;
+            this.sunken = sunken;
         }
     }
 }

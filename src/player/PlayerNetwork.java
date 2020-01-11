@@ -6,6 +6,7 @@ import core.communication_data.ShotResult;
 import core.communication_data.ShotResultWater;
 
 import java.beans.ConstructorProperties;
+import java.util.HashMap;
 
 public class PlayerNetwork extends Player {
 
@@ -15,6 +16,8 @@ public class PlayerNetwork extends Player {
     }
 
     // TODO: Add connection to class that can send/receive messages
+
+    private final HashMap<String, Object> networkData = new HashMap<>();
 
     @Override
     public Position makeTurn() {
@@ -29,8 +32,7 @@ public class PlayerNetwork extends Player {
 
     @Override
     public boolean areAllShipsPlaced() {
-        // TODO
-        return true;
+        return networkData.containsKey("allShipsPlaced");
     }
 
     @Override
@@ -41,6 +43,9 @@ public class PlayerNetwork extends Player {
         return null;
     }
 
-    public boolean allShipsPlaced;
+    public void setAllShipsPlaced() {
+        networkData.put("allShipsPlaced", true);
+    }
+
     public Position turnPosition;
 }
