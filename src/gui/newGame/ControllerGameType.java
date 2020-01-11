@@ -215,6 +215,8 @@ public class ControllerGameType implements Initializable {
 
     private GameSettings buildGameSettings() {
         // TODO: Surface validation
+        // TODO: get playgroundSize from Server
+        // int playgroundSize = client.getPlaygroundSize();
         int playgroundSize = Integer.parseInt(this.textfieldPlaygroundSize.getText());
         Player p1 = new PlayerHuman(0, "TODO", playgroundSize);
         Player p2;
