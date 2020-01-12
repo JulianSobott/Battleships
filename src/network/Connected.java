@@ -7,6 +7,7 @@ import core.serialization.GameSerialization;
 import core.utils.logging.LoggerLogic;
 import core.utils.logging.LoggerNetwork;
 import gui.PlayGame.ControllerPlayGame;
+import gui.PlayGame.InGameGUI;
 import player.PlayerNetwork;
 
 import java.io.*;
@@ -24,6 +25,7 @@ public abstract class Connected {
 
     // Communication
     protected boolean isRunning = false;
+    protected boolean isStarted = false;
     protected boolean isStartingPlayer = false;
     protected final AtomicReference<String> expectedMessage = new AtomicReference<>();
     protected String expectedFirstMessage;
@@ -31,18 +33,16 @@ public abstract class Connected {
 
     // Data
     private final HashMap<String, Object> sentData = new HashMap<>();
-    private ControllerPlayGame controllerPlayGame;
+    private InGameGUI inGameGUI;
 
 
-    public abstract void start();
+    public abstract ConnectionStatus start();
 
     /**
      * Start the communication in a new thread.
      * All mesages are processed till one side closes the connection or the game is over.
-     * @param controllerPlayGame
      */
-    public void startCommunication(ControllerPlayGame controllerPlayGame) {
-        this.controllerPlayGame = controllerPlayGame;
+    public void startCommunication() {
         Thread t = new Thread(this::waitMessage);
         t.setName("Network_waitMessage");
         t.start();
@@ -56,6 +56,10 @@ public abstract class Connected {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void enterInGame(InGameGUI inGameGUI) {
+        this.inGameGUI = inGameGUI;
     }
 
     public void checkmessage(String str) {
@@ -75,9 +79,8 @@ public abstract class Connected {
                 expectedMessage.set("ANSWER");
                 break;
             case "SAVE":
-                String id = splitted[1];
-                // TODO: pass ID to GUI
-                controllerPlayGame.clickSaveGame();
+                long id = Long.parseLong(splitted[1]);
+                inGameGUI.saveGame(id);
                 break;
             case "LOAD":
                 break;
@@ -200,17 +203,17 @@ public abstract class Connected {
     }
 
     public static class ShotResTuple {
+
         public Playground.FieldType type;
         public boolean sunken;
-
         public ShotResTuple(Playground.FieldType type, boolean sunken) {
             this.type = type;
             this.sunken = sunken;
         }
+
     }
 
     // GETTER
-
     /**
      *
      * @return The Player Object that was at {@link #initPlayer(int)} method
@@ -219,5 +222,13 @@ public abstract class Connected {
         assert player != null: "player has not been initialized yet. Wait till initPlayer method was called. After " +
                 "recv size or send size";
         return player;
+    }
+
+    public boolean isConnected() {
+        return socket != null && socket.isConnected();
+    }
+
+    public boolean isStarted() {
+        return isStarted;
     }
 }

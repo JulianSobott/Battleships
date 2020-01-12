@@ -1,13 +1,12 @@
 package network.Client;
 
 import core.utils.logging.LoggerNetwork;
-import gui.PlayGame.ControllerPlayGame;
 import network.Connected;
-import player.PlayerNetwork;
+import network.ConnectionStatus;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Scanner;
+import java.net.UnknownHostException;
 
 public class Client extends Connected {
 
@@ -22,13 +21,19 @@ public class Client extends Connected {
     }
 
     @Override
-    public void start() {
+    public ConnectionStatus start() {
         try {
             socket = new Socket(ip, port);
             super.connected(socket);
+            isStarted = true;
             LoggerNetwork.info("Client connected to server: ip=" + ip + ", port=" + port);
+            return ConnectionStatus.SUCCESSFUL;
+        } catch (UnknownHostException e) {
+            LoggerNetwork.warning("Unknown host: ip=" + ip + ", port=" + port);
+            return ConnectionStatus.UNKNOWN_HOST;
         } catch (IOException e) {
             e.printStackTrace();
+            return ConnectionStatus.UNKNOWN_HOST;
         }
     }
 }

@@ -6,14 +6,19 @@ import core.utils.logging.LoggerGUI;
 import gui.ControllerMainMenu;
 import gui.ShipPlacement.ControllerShipPlacement;
 import gui.WindowChange.SceneLoader;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import network.Client.Client;
+import network.Connected;
+import network.ConnectionStatus;
+import network.Server.Server;
+import network.Utils;
 import player.PlayerAI;
 import player.PlayerHuman;
 import player.PlayerNetwork;
@@ -23,6 +28,7 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ResourceBundle;
+import java.util.concurrent.CompletableFuture;
 
 
 public class ControllerGameType implements Initializable {
@@ -72,9 +78,15 @@ public class ControllerGameType implements Initializable {
     @FXML
     public VBox vBoxPlaygroundSettings;
 
+    @FXML
+    public Label labelConnectionStatus;
+
 
     private static final String filepathBackMainMenu = "../Main_Menu.fxml";
     private static final String filepathShipPlacement = "../ShipPlacement/ShipPlacement.fxml";
+
+    // Network
+    private Connected networkConnection;
 
 
     @Override
@@ -106,6 +118,20 @@ public class ControllerGameType implements Initializable {
      * ...
      */
 
+    public void btnConnectClicked() {
+        if (radioButtonClient.isSelected()) {
+            String ip = textFieldIpAddress.getText();
+            int port = 5000;
+            networkConnection= new Client(ip, port);
+            ConnectionStatus status = networkConnection.start();
+            LoggerGUI.info("Client connection to server: status=" + status);
+            labelConnectionStatus.setText("" + status);
+            // TODO: freeze GUI, open new window, ...?
+        } else {
+            LoggerGUI.warning("TODO: disable button connect, when server is selected");
+        }
+    }
+
     @FXML
     private void onServerSelected() {
         // TODO: only when wasn't selected before
@@ -130,7 +156,17 @@ public class ControllerGameType implements Initializable {
 
     private void startServer() {
         LoggerGUI.info("Starting server");
-        // TODO
+        Server server = new Server(5000);
+        Task<Void> task = new Task<Void>() {
+            @Override
+            protected Void call() {
+                server.start();
+                server.waitTillClientConnected();
+                return null;
+            }
+        };
+        task.setOnSucceeded(workerStateEvent -> labelConnectionStatus.setText("Client connected"));
+        new Thread(task).start();
     }
 
     /**
@@ -139,7 +175,9 @@ public class ControllerGameType implements Initializable {
 
     private void stopServer() {
         LoggerGUI.info("Stopping server");
-        // TODO
+        if (networkConnection != null && networkConnection.isStarted()) {
+            networkConnection.stopListening();
+        }
     }
 
     /**
@@ -148,20 +186,7 @@ public class ControllerGameType implements Initializable {
 
     @FXML
     private void determineLocalIpAddress() {
-        // TODO: move parts to network package
-        InetAddress localIp = null;
-        try {
-            localIp = Inet4Address.getLocalHost();
-
-        } catch (UnknownHostException exception) {
-            //TODO Loggen
-        }
-        if (localIp != null) {
-            String[] s = localIp.toString().split("/");
-            textFieldIpAddress.setText(s[1]);
-        } else {
-            //TODO logger
-        }
+        textFieldIpAddress.setText(Utils.getIpAddress());
     }
 
     /**

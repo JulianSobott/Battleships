@@ -3,6 +3,7 @@ package network.Server;
 import core.utils.logging.LoggerNetwork;
 import gui.PlayGame.ControllerPlayGame;
 import network.Connected;
+import network.ConnectionStatus;
 import network.Utils;
 import player.PlayerNetwork;
 
@@ -30,7 +31,7 @@ public class Server extends Connected {
     }
 
     @Override
-    public void start() {
+    public ConnectionStatus start() {
         new Thread(() -> {
             LoggerNetwork.info("Server starts accepting in new thread");
             try {
@@ -45,6 +46,8 @@ public class Server extends Connected {
                 e.printStackTrace();
             }
         }).start();
+        isStarted = true;
+        return ConnectionStatus.SUCCESSFUL;
     }
 
     public void waitTillClientConnected() {

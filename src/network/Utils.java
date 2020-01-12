@@ -6,9 +6,9 @@ import java.net.UnknownHostException;
 
 public class Utils {
 
-    public static InetAddress getIpAddress() {
+    public static String getIpAddress() {
         try {
-            return Inet4Address.getLocalHost();
+            return Inet4Address.getLocalHost().getHostAddress();
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }

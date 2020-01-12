@@ -1,19 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="750.0" prefWidth="1200.0" styleClass="anchorPane" stylesheets="@../generalApplication%20Design.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="750.0" prefWidth="1200.0" styleClass="anchorPane" stylesheets="@../generalApplication%20Design.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Button fx:id="BackToMenu" layoutX="33.0" layoutY="682.0" mnemonicParsing="false" onMouseClicked="#goBacktoMainMenus" prefHeight="25.0" prefWidth="118.0" text="zurrück" AnchorPane.bottomAnchor="40.66666666666663" AnchorPane.leftAnchor="33.0" />
       <Label layoutX="253.0" layoutY="73.0" styleClass="label-h2" text="Gegenspieler:">
@@ -47,8 +40,8 @@
             </HBox>
             <Label text="IP_Adresse:" />
             <TextField fx:id="textFieldIpAddress" promptText="192.168.5.34" />
-            <Label text="Port:" />
-            <TextField alignment="TOP_LEFT" promptText="1578" />
+            <Button mnemonicParsing="false" onMouseClicked="#btnConnectClicked" text="Connect" />
+            <Label fx:id="labelConnectionStatus" text="Not connected" />
          </children>
          <padding>
             <Insets left="5.0" right="5.0" />
