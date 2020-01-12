@@ -20,6 +20,7 @@ public class Server extends Connected {
     private final AtomicBoolean clientConnected = new AtomicBoolean(false);
 
     public Server(int port) {
+        this.expectedFirstMessage = "CONFIRMED";
         try {
             socket = new ServerSocket(port);
             LoggerNetwork.info("Start server: ip=" + Utils.getIpAddress() + ", port=" + port);
@@ -59,8 +60,9 @@ public class Server extends Connected {
         assert clientSocket != null;
     }
 
-    @Override
-    public void startCommunication() {
-        this.waitMessage("CONFIRMED");
+    public void startGame(int size){
+        this.sendMessage("size " + size);
+        this.initPlayer(size);
     }
+
 }

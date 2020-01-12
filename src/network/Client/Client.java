@@ -18,6 +18,7 @@ public class Client extends Connected {
     public Client(String ip, int port) {
         this.ip = ip;
         this.port = port;
+        this.expectedFirstMessage = "SIZE";
     }
 
     @Override
@@ -29,9 +30,5 @@ public class Client extends Connected {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void startCommunication() {
-        this.waitMessage("SIZE");
     }
 }

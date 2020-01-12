@@ -16,6 +16,6 @@ public class TestNetworkClient extends Application {
         // Connect to server
         Client client = new Client("localhost", 5000);
         client.start();
-        client.startCommunication();
+        client.startCommunication(null);
     }
 }

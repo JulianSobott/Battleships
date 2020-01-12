@@ -1,8 +1,15 @@
 package gui_tests;
 
+import core.GameManager;
+import core.Player;
+import gui.PlayGame.ControllerPlayGame;
+import gui.UiClasses.BattleShipGui;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import network.Server.Server;
+import player.PlayerNetwork;
+
+import java.util.ArrayList;
 
 public class TestNetworkServer extends Application {
     @Override
@@ -20,6 +27,6 @@ public class TestNetworkServer extends Application {
             e.printStackTrace();
         }
         server.startGame(playgroundSize);
-        server.startCommunication();
+        server.startCommunication(null);
     }
 }

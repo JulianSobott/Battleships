@@ -17,13 +17,16 @@ import java.util.concurrent.atomic.AtomicReference;
 public abstract class Connected {
 
     // Todo evtl in einzelne Methoden für Server und Client aufteilen ???
-
+    // Network
     protected BufferedReader in = null;
     protected BufferedWriter out = null; //setzen damit immerhin null drinsteht bei voreiliger ansprache
     private Socket socket;
+
+    // Communication
+    protected boolean isRunning = false;
     protected boolean isStartingPlayer = false;
     protected final AtomicReference<String> expectedMessage = new AtomicReference<>();
-    protected boolean isRunning = false;
+    protected String expectedFirstMessage;
     protected PlayerNetwork player;
 
     // Data
@@ -33,7 +36,17 @@ public abstract class Connected {
 
     public abstract void start();
 
-    public abstract void startCommunication();
+    /**
+     * Start the communication in a new thread.
+     * All mesages are processed till one side closes the connection or the game is over.
+     * @param controllerPlayGame
+     */
+    public void startCommunication(ControllerPlayGame controllerPlayGame) {
+        this.controllerPlayGame = controllerPlayGame;
+        Thread t = new Thread(this::waitMessage);
+        t.setName("Network_waitMessage");
+        t.start();
+    }
 
     public void connected(Socket socket) {
         this.socket = socket;
@@ -53,7 +66,7 @@ public abstract class Connected {
         }
         switch (keyword) {
             case "SIZE":
-                sentData.put("playgroundSize", Integer.parseInt(splitted[1]));
+                this.initPlayer(Integer.parseInt(splitted[1]));
                 expectedMessage.set("CONFIRMED");
                 break;
             case "SHOT":
@@ -100,14 +113,11 @@ public abstract class Connected {
 
     }
 
-    public void startGame(int size){
-        this.sendMessage("size " + size);
-    }
 
     /**
      * Start listening
      */
-    protected void waitMessage(String expectedFirstMessage){
+    protected void waitMessage(){
         this.isRunning = true;
         LoggerNetwork.info("Start listening to new messages");
         this.expectedMessage.set(expectedFirstMessage);
@@ -149,15 +159,10 @@ public abstract class Connected {
         this.isRunning = false;
     }
 
-    /**
-     * blocking till available
-     * @return
-     */
-    public int getPlaygroundSize() {
-        Object o = getSentData("playgroundSize");
-        assert o instanceof Playground.FieldType: "Wrong data sent. Expected int got " + o;
-        return (int) o;
+    protected void initPlayer(int playgroundSize) {
+        this.player = new PlayerNetwork(1, "Network", playgroundSize, this);
     }
+
 
     /**
      * blocking till available
@@ -175,7 +180,7 @@ public abstract class Connected {
      */
     public Position getMakeTurnPosition() {
         Object o = getSentData("makeTurnPosition");
-        assert o instanceof Playground.FieldType: "Wrong data sent. Expected Position got " + o;
+        assert o instanceof Position: "Wrong data sent. Expected Position got " + o;
         return (Position) o;
     }
 
@@ -202,5 +207,17 @@ public abstract class Connected {
             this.type = type;
             this.sunken = sunken;
         }
+    }
+
+    // GETTER
+
+    /**
+     *
+     * @return The Player Object that was at {@link #initPlayer(int)} method
+     */
+    public PlayerNetwork getPlayerNetwork() {
+        assert player != null: "player has not been initialized yet. Wait till initPlayer method was called. After " +
+                "recv size or send size";
+        return player;
     }
 }
