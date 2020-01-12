@@ -12,6 +12,7 @@ import player.PlayerNetwork;
 import java.io.*;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class Connected {
 
@@ -19,8 +20,9 @@ public abstract class Connected {
 
     protected BufferedReader in = null;
     protected BufferedWriter out = null; //setzen damit immerhin null drinsteht bei voreiliger ansprache
-    protected String expectedMessage;
+    private Socket socket;
     protected boolean isStartingPlayer = false;
+    protected final AtomicReference<String> expectedMessage = new AtomicReference<>();
     protected boolean isRunning = false;
     protected PlayerNetwork player;
 
@@ -28,32 +30,36 @@ public abstract class Connected {
     private final HashMap<String, Object> sentData = new HashMap<>();
     private ControllerPlayGame controllerPlayGame;
 
-    public Connected(ControllerPlayGame controllerPlayGame) {
-        this.controllerPlayGame = controllerPlayGame;
-    }
 
     public abstract void start();
 
-    public void connected(BufferedReader in, BufferedWriter out) {
-        this.in = in;
-        this.out = out;
+    public abstract void startCommunication();
+
+    public void connected(Socket socket) {
+        this.socket = socket;
+        try {
+            this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            this.out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void checkmessage(String str) {
         String[] splitted = str.split(" ");
         String keyword = splitted[0].toUpperCase();
-        if (!expectedMessage.equals(keyword)) {
+        if (!expectedMessage.get().equals(keyword)) {
             LoggerNetwork.error("Unexpected message: expected=" + expectedMessage + ", got=" + keyword);
         }
         switch (keyword) {
             case "SIZE":
                 sentData.put("playgroundSize", Integer.parseInt(splitted[1]));
-                expectedMessage="CONFIRMED";
+                expectedMessage.set("CONFIRMED");
                 break;
             case "SHOT":
                 Position position = new Position(Integer.parseInt(splitted[1]), Integer.parseInt(splitted[2]));
                 sentData.put("makeTurnPosition", position);
-                expectedMessage="ANSWER";
+                expectedMessage.set("ANSWER");
                 break;
             case "SAVE":
                 String id = splitted[1];
@@ -65,54 +71,59 @@ public abstract class Connected {
             case "CONFIRMED":
                 player.setAllShipsPlaced();
                 if (isStartingPlayer){
-                    expectedMessage="ANSWER";
-                } else expectedMessage="SHOT";
+                    expectedMessage.set("ANSWER");
+                } else expectedMessage.set("SHOT");
                 break;
             case "ANSWER":
                 switch (splitted[1]) {
                     case "0":    // WATER
                         sentData.put("shotResult", new ShotResTuple(Playground.FieldType.WATER, false));
-                        expectedMessage = "SHOT";
+                        expectedMessage.set("SHOT");
                         sendMessage("pass");
                         break;
                     case "1":  // SHIP
                         sentData.put("shotResult", new ShotResTuple(Playground.FieldType.SHIP, false));
-                        expectedMessage = "ANSWER";
+                        expectedMessage.set("ANSWER");
                         break;
                     case "2":  // SHIP SUNKEN
                         sentData.put("shotResult", new ShotResTuple(Playground.FieldType.SHIP, true));
-                        expectedMessage = "ANSWER";
+                        expectedMessage.set("ANSWER");
                         break;
                 }
                 break;
             case "PASS":
-                expectedMessage = "SHOT";
+                expectedMessage.set("SHOT");
                 break;
             default:
-                LoggerNetwork.error("Unrecognized");
+                LoggerNetwork.error("Unrecognized keyword: keyword=" + keyword);
         }
 
     }
 
     public void startGame(int size){
-//        pr.println("SIZE " + size);
-//        pr.flush();
-//        waitMessage();
+        this.sendMessage("size " + size);
     }
 
     /**
      * Start listening
      */
-    public void waitMessage(){
+    protected void waitMessage(String expectedFirstMessage){
         this.isRunning = true;
         LoggerNetwork.info("Start listening to new messages");
+        this.expectedMessage.set(expectedFirstMessage);
         while (isRunning) {
             try {
                 String answer = in.readLine();
                 LoggerNetwork.debug("New message: " + answer);
-                checkmessage(answer);
+                synchronized (expectedMessage) {
+                    checkmessage(answer);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
+                if (!socket.isConnected()) {
+                    this.isRunning = false;
+                    LoggerNetwork.info("Stop listening to messages. Reason: Disconnected from other side");
+                }
             }
         }
         LoggerNetwork.info("End waitMessage loop");
@@ -120,11 +131,14 @@ public abstract class Connected {
 
     public void sendMessage(String message){
         if (message.equals("answer 0")) {
-            expectedMessage = "PASS";
+            synchronized (expectedMessage) {
+                expectedMessage.set("PASS");
+            }
         }
         try {
-            out.write(message);
+            out.write(message + "\n");
             out.flush();
+            LoggerNetwork.debug("[ " + getClass().getSimpleName() + " ] Sent message: " + message);
         } catch (IOException e) {
             LoggerNetwork.error("Can't send message");
             e.printStackTrace();

@@ -1,5 +1,6 @@
 package network.Client;
 
+import core.utils.logging.LoggerNetwork;
 import gui.PlayGame.ControllerPlayGame;
 import network.Connected;
 import player.PlayerNetwork;
@@ -9,21 +10,28 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class Client extends Connected {
-    public Client(PlayerNetwork player, ControllerPlayGame controllerPlayGame) {
-        super(controllerPlayGame);
+
+    private Socket socket;
+    private String ip;
+    private int port;
+
+    public Client(String ip, int port) {
+        this.ip = ip;
+        this.port = port;
     }
 
     @Override
     public void start() {
-
+        try {
+            socket = new Socket(ip, port);
+            super.connected(socket);
+            LoggerNetwork.info("Client connected to server: ip=" + ip + ", port=" + port);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    //    private Socket socket;
-//    public Client(String ip) {
-//        super();
-//        socket = new Socket(ip, 50000);
-//        in = new BufferedReader(new InputStreamReader(socket.getInputStream())); // empfang
-//        out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())); // output Netzwerk
-//    }
-
+    public void startCommunication() {
+        this.waitMessage("SIZE");
+    }
 }
