@@ -70,12 +70,14 @@ public abstract class Connected {
         }
         switch (keyword) {
             case "SIZE":
-                this.initPlayer(Integer.parseInt(splitted[1]));
+                int playgroundSize = Integer.parseInt(splitted[1]);
+                this.initPlayer(playgroundSize);
+                setSentData("playgroundSize", playgroundSize);
                 expectedMessage.set("CONFIRMED");
                 break;
             case "SHOT":
                 Position position = new Position(Integer.parseInt(splitted[1]), Integer.parseInt(splitted[2]));
-                sentData.put("makeTurnPosition", position);
+                setSentData("makeTurnPosition", position);
                 expectedMessage.set("ANSWER");
                 break;
             case "SAVE":
@@ -93,16 +95,16 @@ public abstract class Connected {
             case "ANSWER":
                 switch (splitted[1]) {
                     case "0":    // WATER
-                        sentData.put("shotResult", new ShotResTuple(Playground.FieldType.WATER, false));
+                        setSentData("shotResult", new ShotResTuple(Playground.FieldType.WATER, false));
                         expectedMessage.set("SHOT");
                         sendMessage("pass");
                         break;
                     case "1":  // SHIP
-                        sentData.put("shotResult", new ShotResTuple(Playground.FieldType.SHIP, false));
+                        setSentData("shotResult", new ShotResTuple(Playground.FieldType.SHIP, false));
                         expectedMessage.set("ANSWER");
                         break;
                     case "2":  // SHIP SUNKEN
-                        sentData.put("shotResult", new ShotResTuple(Playground.FieldType.SHIP, true));
+                        setSentData("shotResult", new ShotResTuple(Playground.FieldType.SHIP, true));
                         expectedMessage.set("ANSWER");
                         break;
                 }
@@ -166,6 +168,15 @@ public abstract class Connected {
         this.player = new PlayerNetwork(1, "Network", playgroundSize, this);
     }
 
+    /**
+     * blocking till available
+     * @return
+     */
+    public int getPlaygroundSize() {
+        Object o = getSentData("playgroundSize");
+        assert o instanceof Integer: "Wrong data sent. Expected Integer got " + o;
+        return (int) o;
+    }
 
     /**
      * blocking till available
@@ -187,9 +198,16 @@ public abstract class Connected {
         return (Position) o;
     }
 
+    private void setSentData(String key, Object o) {
+        synchronized (sentData) {
+            sentData.put(key, o);
+            sentData.notifyAll();
+        }
+    }
+
     private Object getSentData(String key) {
         synchronized (this.sentData) {
-            while (this.sentData.get(key) != null) {
+            while (!this.sentData.containsKey(key)) {
                 try {
                     this.sentData.wait();
                 } catch (InterruptedException e) {

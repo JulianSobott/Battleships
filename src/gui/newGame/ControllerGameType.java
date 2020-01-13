@@ -157,6 +157,7 @@ public class ControllerGameType implements Initializable {
     private void startServer() {
         LoggerGUI.info("Starting server");
         Server server = new Server(5000);
+        networkConnection = server;
         Task<Void> task = new Task<Void>() {
             @Override
             protected Void call() {
@@ -240,19 +241,48 @@ public class ControllerGameType implements Initializable {
 
     private GameSettings buildGameSettings() {
         // TODO: Surface validation
-        // TODO: get playgroundSize from Server
-        // int playgroundSize = client.getPlaygroundSize();
-        int playgroundSize = Integer.parseInt(this.textfieldPlaygroundSize.getText());
-        Player p1 = new PlayerHuman(0, "TODO", playgroundSize);
+        // General
+        int playgroundSize = Integer.parseInt(this.textfieldPlaygroundSize.getText()); // Resets, when client
+        Player p1;
         Player p2;
-        if (this.radioButtonKI.isSelected() && this.radioButtonEasy.isSelected()) {
-            p2 = new PlayerAI(1, "KI", playgroundSize);
-        } else if (this.radioButtonNetzwerk.isSelected()) {
-            // TODO: Set player in Connected or add connected to player
-            p2 = new PlayerNetwork(1, "KI", playgroundSize, null);
-        } else {
-            p2 = new PlayerHuman(1, "KI", playgroundSize);
+
+        // AI
+        if (radioButtonKI.isSelected()) {
+            PlayerAI.Difficulty difficulty;
+            if (radioButtonEasy.isSelected()) {
+                difficulty = PlayerAI.Difficulty.EASY;
+            } else if(radioButtonMedium.isSelected()) {
+                difficulty = PlayerAI.Difficulty.MEDIUM;
+            } else if(radioButtonHard.isSelected()) {
+                difficulty = PlayerAI.Difficulty.HARD;
+            } else {
+                difficulty = PlayerAI.Difficulty.MEDIUM;
+                LoggerGUI.warning("No difficulty selected. Choosing default MEDIUM.");
+            }
+            p2 = new PlayerAI(1, "AI", playgroundSize, difficulty);
         }
+        // Network
+        else if (radioButtonNetzwerk.isSelected()) {
+            networkConnection.startCommunication();
+            if (radioButtonClient.isSelected()) {
+                playgroundSize = networkConnection.getPlaygroundSize();
+            } else if (radioButtonServer.isSelected()) {
+                ((Server)networkConnection).startGame(playgroundSize);
+            } else {
+                LoggerGUI.warning("No server/client selected.");
+            }
+            p2 = networkConnection.getPlayerNetwork();
+        }
+        // Local
+        else if (radioButtonLocal.isSelected()) {
+            p2 = new PlayerHuman(1, "Local2", playgroundSize);
+        } else {
+            // TODO: inform user
+            LoggerGUI.warning("No mode selected. Can't start game. Inform User. Check before??");
+            assert false;
+            p2 = null;
+        }
+        p1 = new PlayerHuman(0, "Local", playgroundSize);
         return new GameSettings(playgroundSize, p1, p2);
     }
 

@@ -22,12 +22,17 @@ public class PlayerAI extends Player {
     PlaygroundHeatmap playgroundHeatmap;
 
     @ConstructorProperties({"index", "name", "playgroundSize"})
-    public PlayerAI(int index, String name, int playgroundSize) {
+    public PlayerAI(int index, String name, int playgroundSize, Difficulty difficulty) {
         super(index, name, playgroundSize);
         this.playgroundOwn.placeShipsRandom();
         this.playgroundOwn.printField();
-        this.difficulty = Difficulty.MEDIUM;
+        this.difficulty = difficulty;
         this.playgroundHeatmap = new PlaygroundHeatmap(playgroundSize);
+    }
+
+    @ConstructorProperties({"index", "name", "playgroundSize"})
+    public PlayerAI(int index, String name, int playgroundSize) {
+        this(index, name, playgroundSize, Difficulty.MEDIUM);
     }
 
     @Override

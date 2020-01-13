@@ -27,6 +27,6 @@ public class TestNetworkServer extends Application {
             e.printStackTrace();
         }
         server.startGame(playgroundSize);
-        server.startCommunication(null);
+        server.startCommunication();
     }
 }

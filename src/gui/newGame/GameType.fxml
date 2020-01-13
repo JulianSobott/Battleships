@@ -39,7 +39,7 @@
                </padding>
             </HBox>
             <Label text="IP_Adresse:" />
-            <TextField fx:id="textFieldIpAddress" promptText="192.168.5.34" />
+            <TextField fx:id="textFieldIpAddress" promptText="192.168.5.34" text="localhost" />
             <Button mnemonicParsing="false" onMouseClicked="#btnConnectClicked" text="Connect" />
             <Label fx:id="labelConnectionStatus" text="Not connected" />
          </children>
