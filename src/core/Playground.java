@@ -23,7 +23,8 @@ public abstract class Playground {
      */
     protected Field[][] elements;
     protected int size;
-    ShipPool shipPool;
+    protected int numShipsFields = 0;
+    protected int numHitShipsFields = 0;
 
     public Playground() { // Jackson deserialization
     }
@@ -31,7 +32,10 @@ public abstract class Playground {
     public Playground(int size){
         this.size = size;
         this.elements = new Field[size][size];
-        this.shipPool = new ShipPool(ShipList.fromSize(size));
+        ShipList l = ShipList.fromSize(size);
+        for(ShipList.Pair p : l){
+            this.numShipsFields += p.getSize() * p.getNum();
+        }
     }
 
     /**
@@ -42,7 +46,6 @@ public abstract class Playground {
      */
     void resetAll(FieldType type){
         this.resetFields(type);
-        this.shipPool.releaseAll();
     }
 
     protected void resetFields(FieldType type){
@@ -70,7 +73,9 @@ public abstract class Playground {
         this.elements[pos.getY()][pos.getX()] = new Field(type, element, false);
     }
 
-
+    public boolean areAllShipsSunken() {
+        return numShipsFields - numHitShipsFields == 0;
+    }
 
     public enum FieldType{
         SHIP, WATER, FOG;

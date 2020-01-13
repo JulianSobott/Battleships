@@ -1,6 +1,8 @@
 package core.tests;
 
 import core.PlaygroundOwn;
+import core.PlaygroundOwnPlaceable;
+import core.PlaygroundPlaceable;
 import core.communication_data.PlaceShipResult;
 import core.communication_data.ShipID;
 import core.communication_data.ShipList;
@@ -10,15 +12,15 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
-class TestPlaygroundOwn{
+class TestPlaygroundPlaceable {
 
     // TODO: Mock ShipList to pass tests
-    private PlaygroundOwn playground;
+    private PlaygroundPlaceable playground;
     private final int SIZE = 6;
 
     @BeforeEach
     void cleanPlayground(){
-        playground = new PlaygroundOwn(SIZE);
+        playground = new PlaygroundPlaceable(SIZE);
     }
 
     @Test

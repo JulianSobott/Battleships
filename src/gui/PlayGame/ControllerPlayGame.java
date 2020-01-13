@@ -1,9 +1,6 @@
 package gui.PlayGame;
 
-import core.GameManager;
-import core.Player;
-import core.Playground;
-import core.Ship;
+import core.*;
 import core.communication_data.*;
 import core.serialization.GameData;
 import core.utils.logging.LoggerGUI;
@@ -122,11 +119,8 @@ public class ControllerPlayGame implements Initializable {
     public void initFieldsFromLoad(GameData gameData) {
         // TODO: Is Player1 always local player
         Player localPLayer = gameData.getPlayers()[0];
-        Playground ownPlayground = localPLayer.getPlaygroundOwn();
-        Playground enemyPlayground = localPLayer.getPlaygroundEnemy();
-
-        ownPlayground.printField();
-        enemyPlayground.printField();
+        PlaygroundInterface ownPlayground = (PlaygroundInterface) localPLayer.getPlaygroundOwn();
+        PlaygroundInterface enemyPlayground = (PlaygroundInterface) localPLayer.getPlaygroundEnemy();
 
         // Own playground
         this.initPlaygroundFromLoad(ownPlayground, this.gridPaneOwnField);
@@ -242,7 +236,7 @@ public class ControllerPlayGame implements Initializable {
     }
 
     // TODO: Lukas
-    private void initPlaygroundFromLoad(Playground playground, GridPane gridPane) {
+    private void initPlaygroundFromLoad(PlaygroundInterface playground, GridPane gridPane) {
         for (int y = 0; y < playground.getSize(); y++) {
             for (int x = 0; x < playground.getSize(); x++) {
                 Playground.Field field = playground.getFields()[y][x];

@@ -244,7 +244,7 @@ public class ControllerGameType implements Initializable {
         // TODO: Surface validation
         // General
         int playgroundSize = Integer.parseInt(this.textfieldPlaygroundSize.getText()); // Resets, when client
-        Player p1;
+        PlayerHuman p1;
         Player p2;
         Player startingPlayer;
         boolean p1IsStarting = true;

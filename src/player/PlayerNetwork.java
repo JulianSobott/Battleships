@@ -1,9 +1,6 @@
 package player;
 
-import core.Player;
-import core.Playground;
-import core.PlaygroundBuildUp;
-import core.Ship;
+import core.*;
 import core.communication_data.Position;
 import core.communication_data.ShotResult;
 import core.communication_data.ShotResultShip;
@@ -21,6 +18,8 @@ public class PlayerNetwork extends Player {
     public PlayerNetwork(int index, String name, int playgroundSize, Connected connected) {
         super(index, name, playgroundSize);
         this.connected = connected;
+        this.playgroundOwn = new PlaygroundOwnBuildUp(playgroundSize);
+        this.playgroundEnemy = new PlaygroundEnemyBuildUp(playgroundSize);
     }
 
     private final HashMap<String, Object> networkData = new HashMap<>();
@@ -54,13 +53,12 @@ public class PlayerNetwork extends Player {
 
     @Override
     public ShotResult gotHit(Position position) {
-
         // send SHOT and receive ANSWER
         connected.sendMessage("shot " + position.getX() + " " + position.getY());
         Connected.ShotResTuple res = connected.getShotResult();
         // Update field element and type
         if (res.type == Playground.FieldType.WATER) {
-            this.playgroundOwn.setHitWaterField(position);
+            getPlaygroundOwn().hitWater(position);
         } else {
             Ship.LifeStatus lifeStatus;
             if (res.sunken) {
@@ -68,7 +66,7 @@ public class PlayerNetwork extends Player {
             }else {
                 lifeStatus = Ship.LifeStatus.ALIVE;
             }
-            this.playgroundOwn.setHitShipField(position, lifeStatus);
+            getPlaygroundOwn().hitShip(position, lifeStatus);
         }
         return super.gotHit(position);
     }
@@ -77,5 +75,7 @@ public class PlayerNetwork extends Player {
         networkData.put("allShipsPlaced", true);
     }
 
-    public Position turnPosition;
+    public PlaygroundOwnBuildUp getPlaygroundOwn() {
+        return (PlaygroundOwnBuildUp) this.playgroundOwn;
+    }
 }

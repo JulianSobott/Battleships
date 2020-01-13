@@ -8,24 +8,16 @@ import core.communication_data.ShipList;
  */
 public class PlaygroundBuildUp extends Playground {
 
-    protected int numShipsFields = 0;
-    protected int numHitShipsFields = 0;
-
     public PlaygroundBuildUp(int size) {
         super(size);
         this.resetFields(FieldType.FOG);
-
-        ShipList l = ShipList.fromSize(size);
-        for(ShipList.Pair p : l){
-            this.numShipsFields += p.getSize() * p.getNum();
-        }
     }
 
-    public void setHitWaterField(Position position) {
+    public void hitWater(Position position) {
         this.elements[position.getY()][position.getX()] = new Field(FieldType.WATER, new WaterElement(), true);
     }
 
-    public void setHitShipField(Position position, Ship.LifeStatus lifeStatus) {
+    public void hitShip(Position position, Ship.LifeStatus lifeStatus) {
         numHitShipsFields++;
         Ship newShip = new Ship(position);
         int[][] adjacentPositions = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
@@ -39,6 +31,7 @@ public class PlaygroundBuildUp extends Playground {
         }
         newShip.setLives(lifeStatus == Ship.LifeStatus.ALIVE ? 1 : 0);
         this.elements[position.getY()][position.getX()].element = newShip;
+        this.elements[position.getY()][position.getX()] = new Field(FieldType.SHIP, newShip, true);
     }
 
     public boolean areAllShipsSunken(){

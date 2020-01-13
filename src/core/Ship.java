@@ -6,8 +6,6 @@ import core.communication_data.ShipID;
 import core.communication_data.ShipPosition;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Ship extends PlaygroundElement implements Serializable {
 
@@ -38,7 +36,7 @@ public class Ship extends PlaygroundElement implements Serializable {
     }
 
     /**
-     * Constructor for method {@link PlaygroundEnemy#updateShipObjects(Position)}}.
+     * Constructor for method {@link PlaygroundEnemyBuildUp#updateShipObjects(Position)}}.
      * Needed, when ships are only created, when they were hit.
      * @param position
      */
