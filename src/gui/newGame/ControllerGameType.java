@@ -283,7 +283,7 @@ public class ControllerGameType implements Initializable {
             p2 = null;
         }
         p1 = new PlayerHuman(0, "Local", playgroundSize);
-        return new GameSettings(playgroundSize, p1, p2);
+        return new GameSettings(playgroundSize, p1, p2, networkConnection);
     }
 
 

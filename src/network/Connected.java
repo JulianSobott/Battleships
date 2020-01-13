@@ -59,6 +59,10 @@ public abstract class Connected implements Shutdown {
         }
     }
 
+    public void sendAllShipsPlaced() {
+        sendMessage("confirmed");
+    }
+
     public void enterInGame(InGameGUI inGameGUI) {
         this.inGameGUI = inGameGUI;
     }

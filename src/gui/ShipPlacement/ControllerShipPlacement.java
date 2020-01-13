@@ -11,6 +11,9 @@ import gui.UiClasses.HBoxExends;
 import gui.WindowChange.SceneLoader;
 import gui.interfaces.Shutdown;
 import gui.newGame.ControllerGameType;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -27,6 +30,9 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
+import network.Client.Client;
+import network.Connected;
+import network.Server.Server;
 import org.controlsfx.control.Notifications;
 
 import java.net.URL;
@@ -55,6 +61,7 @@ public class ControllerShipPlacement implements Initializable, Shutdown {
     private double CELL_PERCENTAGE_WIDTH;
     private HashMap<Integer, ShipCounterPair> hashMapShipLabels = new HashMap<>();
     private ArrayList<ButtonShip> shipArrayListGui = new ArrayList<>();
+    private Connected networkConnection;
 
     /**
      * ################################################   Constructors  ################################################
@@ -65,6 +72,7 @@ public class ControllerShipPlacement implements Initializable, Shutdown {
         NewGameResult res = this.GAME_MANAGER.newGame(settings);
         this.SHIP_LIST = res.getSHIP_LIST();
         this.playgroundSize = settings.getPlaygroundSize();
+        this.networkConnection = settings.getNetworkConnection();
     }
 
 
@@ -624,8 +632,31 @@ public class ControllerShipPlacement implements Initializable, Shutdown {
 
     @FXML
     public void startGame() {
-        StartShootingRes res = GAME_MANAGER.startShooting();
-        if (res == StartShootingRes.SHOOTING_ALLOWED) {
+        if (GAME_MANAGER.getPlayers()[0].areAllShipsPlaced()) {
+            networkConnection.sendAllShipsPlaced();
+        } else {
+            LoggerGUI.info("Player hasn't placed all ships. Can't start game");
+        }
+        Task<Void> t = new Task<>() {
+            @Override
+            protected Void call() {
+                StartShootingRes res;
+                StartShootingRes lastRes = null;
+                while ((res = GAME_MANAGER.startShooting()) != StartShootingRes.SHOOTING_ALLOWED){
+                    if (lastRes != res){
+                        LoggerGUI.info("[user hint] " + res);
+                    }
+                    lastRes = res;
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return null;
+            }
+        };
+        t.setOnSucceeded(workerStateEvent -> {
             ArrayList<BattleShipGui> shipPositionList = new ArrayList<>();
             for (ButtonShip buttonShip : shipArrayListGui) {
 
@@ -636,9 +667,8 @@ public class ControllerShipPlacement implements Initializable, Shutdown {
             SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathPlayGame, controllerPlayGame);
             sceneLoader.loadSceneInExistingWindow();
             LoggerState.info("Switch state to In_Game");
-        } else {
-            LoggerGUI.info("[user hint]" + res);
-        }
+        });
+        new Thread(t).start();
     }
 
     @Override

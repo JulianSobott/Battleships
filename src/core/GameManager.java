@@ -64,7 +64,7 @@ public class GameManager implements GameManagerInterface {
         return new NewGameResult(shipList);
     }
 
-    public void initGame(Player p1, Player p2) {
+    private void initGame(Player p1, Player p2) {
         this.player1 = p1;
         this.player2 = p2;
         this.players = new Player[]{p1, p2};
