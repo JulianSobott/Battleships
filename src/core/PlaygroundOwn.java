@@ -160,6 +160,7 @@ public class PlaygroundOwn extends Playground {
             if(foundPlace) {
                 LoggerLogic.debug("Found in iteration: " + iteration);
                 printField();
+                LoggerLogic.debug("PlaygroundOwn hash=" + this.hashCode());
                 break;
             }
         }

@@ -6,6 +6,7 @@ import core.serialization.GameSerialization;
 import core.utils.logging.LoggerLogic;
 import core.utils.logging.LoggerState;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -61,6 +62,7 @@ public class GameManager implements GameManagerInterface {
     public NewGameResult newGame(GameSettings settings) {
         this.initGame(settings.getP1(), settings.getP2());
         this.currentPlayer = settings.getStartingPlayer();
+
         ShipList shipList = ShipList.fromSize(settings.getPlaygroundSize());
         return new NewGameResult(shipList);
     }
@@ -91,22 +93,22 @@ public class GameManager implements GameManagerInterface {
 
     @Override
     public PlaceShipResult placeShip(ShipPosition pos) {
-        return currentPlayer.placeShip(pos);
+        return player1.placeShip(pos);
     }
 
     @Override
     public PlaceShipsRandomRes placeShipsRandom() {
-        return this.currentPlayer.placeShipsRandom();
+        return player1.placeShipsRandom();
     }
 
     @Override
     public PlaceShipResult moveShip(ShipID id, ShipPosition pos) {
-        return currentPlayer.moveShip(id, pos);
+        return player1.moveShip(id, pos);
     }
 
     @Override
     public boolean deleteShip(ShipID id) {
-        return currentPlayer.deleteShip(id);
+        return player1.deleteShip(id);
     }
 
     /**

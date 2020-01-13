@@ -3,6 +3,7 @@ package gui.ShipPlacement;
 import core.GameManager;
 import core.communication_data.*;
 import core.utils.logging.LoggerGUI;
+import core.utils.logging.LoggerLogic;
 import core.utils.logging.LoggerState;
 import gui.PlayGame.ControllerPlayGame;
 import gui.UiClasses.BattleShipGui;
@@ -632,6 +633,8 @@ public class ControllerShipPlacement implements Initializable, Shutdown {
 
     @FXML
     public void startGame() {
+        LoggerLogic.debug("Player in GUi=" + GAME_MANAGER.getPlayers()[0].getPlaygroundOwn().hashCode());
+        GAME_MANAGER.getPlayers()[0].getPlaygroundOwn().printField();
         if (GAME_MANAGER.getPlayers()[0].areAllShipsPlaced()) {
             if (networkConnection != null){
                 networkConnection.sendAllShipsPlaced();
