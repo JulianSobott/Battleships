@@ -45,7 +45,7 @@ public class TestGameSerialization {
         int size = 10;
         GameSettings settings = new GameSettings(size,
                 new PlayerHuman(0, "human", size),
-                new PlayerAI(1, "AI", size), null);
+                new PlayerAI(1, "AI", size));
         GameManager dummyManager = new GameManager();
         dummyManager.newGame(settings);
         return dummyManager;

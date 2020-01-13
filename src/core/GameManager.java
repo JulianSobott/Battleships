@@ -60,6 +60,7 @@ public class GameManager implements GameManagerInterface {
     @Override
     public NewGameResult newGame(GameSettings settings) {
         this.initGame(settings.getP1(), settings.getP2());
+        this.currentPlayer = settings.getStartingPlayer();
         ShipList shipList = ShipList.fromSize(settings.getPlaygroundSize());
         return new NewGameResult(shipList);
     }
@@ -75,9 +76,6 @@ public class GameManager implements GameManagerInterface {
         // TODO: find better way
         idPlayerHashMap.put("GUI_1", this.player1);
         idPlayerHashMap.put("AI_2", this.player2);
-
-        // TODO: Set current player properly
-        this.currentPlayer = player1;
     }
 
     public StartShootingRes startShooting() {

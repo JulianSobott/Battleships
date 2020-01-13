@@ -3,6 +3,7 @@ package gui.newGame;
 import core.Player;
 import core.communication_data.GameSettings;
 import core.utils.logging.LoggerGUI;
+import core.utils.logging.LoggerState;
 import gui.ControllerMainMenu;
 import gui.ShipPlacement.ControllerShipPlacement;
 import gui.WindowChange.SceneLoader;
@@ -196,8 +197,8 @@ public class ControllerGameType implements Initializable {
 
     @FXML
     private void setClientInformation() {
-
-        textFieldIpAddress.clear();
+        // TODO: Remove when debug finish
+        //textFieldIpAddress.clear();
     }
 
 
@@ -245,6 +246,8 @@ public class ControllerGameType implements Initializable {
         int playgroundSize = Integer.parseInt(this.textfieldPlaygroundSize.getText()); // Resets, when client
         Player p1;
         Player p2;
+        Player startingPlayer;
+        boolean p1IsStarting = true;
 
         // AI
         if (radioButtonKI.isSelected()) {
@@ -266,6 +269,7 @@ public class ControllerGameType implements Initializable {
             networkConnection.startCommunication();
             if (radioButtonClient.isSelected()) {
                 playgroundSize = networkConnection.getPlaygroundSize();
+                p1IsStarting = false;
             } else if (radioButtonServer.isSelected()) {
                 ((Server)networkConnection).startGame(playgroundSize);
             } else {
@@ -283,7 +287,10 @@ public class ControllerGameType implements Initializable {
             p2 = null;
         }
         p1 = new PlayerHuman(0, "Local", playgroundSize);
-        return new GameSettings(playgroundSize, p1, p2, networkConnection);
+        startingPlayer = p1IsStarting ? p1 : p2;
+        GameSettings settings = new GameSettings(playgroundSize, p1, p2, networkConnection, startingPlayer);
+        LoggerGUI.info("Start game with settings=" + settings);
+        return settings;
     }
 
 
@@ -317,7 +324,7 @@ public class ControllerGameType implements Initializable {
         ControllerShipPlacement controllerShipPlacement = new ControllerShipPlacement(settings);
         SceneLoader sceneLoader = new SceneLoader(BackToMenu, filepathShipPlacement, controllerShipPlacement);
         sceneLoader.loadSceneInExistingWindow();
-
+        LoggerState.info("Start Ship_Placement");
     }
 
 }

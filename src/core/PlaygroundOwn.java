@@ -159,6 +159,7 @@ public class PlaygroundOwn extends Playground {
             }
             if(foundPlace) {
                 LoggerLogic.debug("Found in iteration: " + iteration);
+                printField();
                 break;
             }
         }

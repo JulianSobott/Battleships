@@ -633,7 +633,9 @@ public class ControllerShipPlacement implements Initializable, Shutdown {
     @FXML
     public void startGame() {
         if (GAME_MANAGER.getPlayers()[0].areAllShipsPlaced()) {
-            networkConnection.sendAllShipsPlaced();
+            if (networkConnection != null){
+                networkConnection.sendAllShipsPlaced();
+            }
         } else {
             LoggerGUI.info("Player hasn't placed all ships. Can't start game");
         }
