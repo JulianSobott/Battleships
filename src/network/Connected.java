@@ -8,6 +8,7 @@ import core.utils.logging.LoggerLogic;
 import core.utils.logging.LoggerNetwork;
 import gui.PlayGame.ControllerPlayGame;
 import gui.PlayGame.InGameGUI;
+import gui.interfaces.Shutdown;
 import player.PlayerNetwork;
 
 import java.io.*;
@@ -15,7 +16,7 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
-public abstract class Connected {
+public abstract class Connected implements Shutdown {
 
     // Todo evtl in einzelne Methoden für Server und Client aufteilen ???
     // Network
@@ -230,6 +231,14 @@ public abstract class Connected {
         }
 
     }
+
+    // Thread control
+
+    @Override
+    public void onShutdown() {
+        isRunning = false;
+    }
+
 
     // GETTER
     /**

@@ -10,6 +10,7 @@ import gui.PlayGame.ControllerPlayGame;
 import gui.Settings.ControllerSettings;
 import gui.ShipPlacement.ControllerShipPlacement;
 import gui.WindowChange.SceneLoader;
+import gui.interfaces.Shutdown;
 import gui.newGame.ControllerGameType;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -19,7 +20,7 @@ import javafx.stage.Stage;
 import player.PlayerAI;
 import player.PlayerHuman;
 
-public class ControllerMainMenu {
+public class ControllerMainMenu implements Shutdown {
 
     @FXML
     private AnchorPane anchorPane;
@@ -38,7 +39,7 @@ public class ControllerMainMenu {
 
     @FXML
     void closeApplication(MouseEvent event) {
-
+        onShutdown();
         Stage stage = (Stage) anchorPane.getScene().getWindow();
         stage.close();
     }
@@ -71,4 +72,8 @@ public class ControllerMainMenu {
 
     }
 
+    @Override
+    public void onShutdown() {
+
+    }
 }

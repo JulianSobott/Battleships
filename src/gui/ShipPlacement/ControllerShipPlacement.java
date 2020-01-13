@@ -9,6 +9,7 @@ import gui.UiClasses.BattleShipGui;
 import gui.UiClasses.ButtonShip;
 import gui.UiClasses.HBoxExends;
 import gui.WindowChange.SceneLoader;
+import gui.interfaces.Shutdown;
 import gui.newGame.ControllerGameType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -33,7 +34,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
-public class ControllerShipPlacement implements Initializable {
+public class ControllerShipPlacement implements Initializable, Shutdown {
 
     private static final String filepathBackNewGame = "../newGame/GameType.fxml";
     private static final String filepathPlayGame = "../PlayGame/PlayGame.fxml";
@@ -640,6 +641,11 @@ public class ControllerShipPlacement implements Initializable {
         }
     }
 
+    @Override
+    public void onShutdown() {
+        // shutdown server
+    }
+
 
     /**
      * #########################################   ShipCounterPair class   #############################################
@@ -686,5 +692,4 @@ public class ControllerShipPlacement implements Initializable {
             return this.counter + " x " + this.size + "-er Shiffe";
         }
     }
-
 }
