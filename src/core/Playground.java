@@ -70,6 +70,8 @@ public abstract class Playground {
         this.elements[pos.getY()][pos.getX()] = new Field(type, element, false);
     }
 
+
+
     public enum FieldType{
         SHIP, WATER, FOG;
 

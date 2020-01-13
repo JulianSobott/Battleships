@@ -2,6 +2,7 @@ package player;
 
 import core.Player;
 import core.Playground;
+import core.PlaygroundBuildUp;
 import core.Ship;
 import core.communication_data.Position;
 import core.communication_data.ShotResult;
@@ -53,19 +54,23 @@ public class PlayerNetwork extends Player {
 
     @Override
     public ShotResult gotHit(Position position) {
+
         // send SHOT and receive ANSWER
         connected.sendMessage("shot " + position.getX() + " " + position.getY());
         Connected.ShotResTuple res = connected.getShotResult();
+        // Update field element and type
         if (res.type == Playground.FieldType.WATER) {
-            return new ShotResultWater(position, Playground.FieldType.WATER);
+            this.playgroundOwn.setHitWaterField(position);
         } else {
+            Ship.LifeStatus lifeStatus;
             if (res.sunken) {
-                // TODO: get WaterFields and ShipPosition
-                return new ShotResultShip(position, Playground.FieldType.SHIP, Ship.LifeStatus.SUNKEN, null, null);
+                lifeStatus = Ship.LifeStatus.SUNKEN;
             }else {
-                return new ShotResultShip(position, Playground.FieldType.SHIP, Ship.LifeStatus.ALIVE);
+                lifeStatus = Ship.LifeStatus.ALIVE;
             }
+            this.playgroundOwn.setHitShipField(position, lifeStatus);
         }
+        return super.gotHit(position);
     }
 
     public void setAllShipsPlaced() {

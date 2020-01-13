@@ -47,17 +47,28 @@ public abstract class Player {
 
     public abstract boolean areAllShipsPlaced();
 
+    /**
+     * Enemy shot at this player
+     * @param position
+     * @return
+     */
     public ShotResult gotHit(Position position) {
         return this.playgroundOwn.gotHit(position);
     }
 
+    /**
+     * This player shot at an enemy and got an result.
+     * @param result
+     */
     public void update(ShotResult result) {
-        this.playgroundEnemy.updateField(result.getPosition(), result.getType());
         if(result.getType() == Playground.FieldType.SHIP){
             ShotResultShip resultShip = (ShotResultShip)result;
+            this.playgroundEnemy.updateField(result.getPosition(), result.getType(), resultShip.getStatus());
             if(resultShip.getStatus() == Ship.LifeStatus.SUNKEN){
                 this.playgroundEnemy.hitWaterFieldsAroundSunkenShip(resultShip.getWaterFields());
             }
+        } else {
+            this.playgroundEnemy.updateField(result.getPosition(), result.getType());
         }
     }
 
