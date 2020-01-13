@@ -177,8 +177,8 @@ public class ControllerGameType implements Initializable {
 
     private void stopServer() {
         LoggerGUI.info("Stopping server");
-        if (networkConnection != null && networkConnection.isStarted()) {
-            networkConnection.stopListening();
+        if (networkConnection instanceof Server && networkConnection.isStarted() ) {
+            ((Server) networkConnection).shutdown();
         }
     }
 

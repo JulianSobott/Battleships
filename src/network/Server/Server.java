@@ -68,4 +68,15 @@ public class Server extends Connected {
         this.initPlayer(size);
     }
 
+    public void shutdown() {
+        try {
+            if (socket != null) {
+                socket.close();
+                stopListening();
+                LoggerNetwork.info("Closed Server");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
