@@ -174,7 +174,7 @@ public abstract class Connected implements Shutdown {
      * @return
      */
     public int getPlaygroundSize() {
-        Object o = getSentData("playgroundSize");
+        Object o = popSentData("playgroundSize");
         assert o instanceof Integer: "Wrong data sent. Expected Integer got " + o;
         return (int) o;
     }
@@ -184,7 +184,7 @@ public abstract class Connected implements Shutdown {
      * @return
      */
     public ShotResTuple getShotResult() {
-        Object o = getSentData("shotResult");
+        Object o = popSentData("shotResult");
         assert o instanceof ShotResTuple: "Wrong data sent. Expected FieldType got " + o;
         return (ShotResTuple) o;
     }

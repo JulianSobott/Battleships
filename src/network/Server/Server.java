@@ -22,6 +22,7 @@ public class Server extends Connected {
 
     public Server(int port) {
         this.expectedFirstMessage = "CONFIRMED";
+        this.isStartingPlayer = true;
         try {
             socket = new ServerSocket(port);
             LoggerNetwork.info("Start server: ip=" + Utils.getIpAddress() + ", port=" + port);
