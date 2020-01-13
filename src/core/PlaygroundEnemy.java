@@ -2,6 +2,7 @@ package core;
 
 import core.communication_data.Position;
 import core.communication_data.ShipList;
+import core.communication_data.ShipPosition;
 import core.communication_data.TurnResult;
 import core.utils.logging.LoggerLogic;
 
@@ -34,6 +35,7 @@ public class PlaygroundEnemy extends Playground{
         PlaygroundElement element;
         if(type == FieldType.SHIP){
             this.numHitShipsFields++;
+            this.updateShipObjects(position);
             element = this.getShipAtPosition(position.getX(), position.getY());
         }else {
             element = new WaterElement();
@@ -41,11 +43,8 @@ public class PlaygroundEnemy extends Playground{
         this.elements[position.getY()][position.getX()] = new Field(type, element, true);
     }
 
-
-
     private Ship getShipAtPosition(int x, int y){
-        // TODO
-        return null;
+        return (Ship) this.elements[y][x].element;
     }
 
     public boolean areAllShipsSunken(){
@@ -61,6 +60,27 @@ public class PlaygroundEnemy extends Playground{
             assert !this.elements[position.getY()][position.getX()].isHit() : "When field was hit it can not be fog";
         return TurnResult.Error.NONE;
     }
+
+    /**
+     * A new ship was discovered at Position.
+     * Build new Object if no adjacent fields are also ships.
+     * If an adjacent Field is a ship add them to one object.
+     * @param position Position of the newly discovered Ship
+     */
+    public void updateShipObjects(Position position) {
+        Ship newShip = new Ship(position);
+        int[][] adjacentPositions = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+        for (int[] adjacentPos : adjacentPositions) {
+            Position p = new Position(adjacentPos[0], adjacentPos[1]);
+            if (!p.isOutsideOfPlayground(this.size) && this.elements[p.getY()][p.getX()].type == FieldType.SHIP) {
+                Ship adjacentShip = (Ship) this.elements[p.getY()][p.getX()].element;
+                newShip = Ship.concatenateShips(newShip, adjacentShip);
+                this.elements[p.getY()][p.getX()].element = newShip;
+            }
+        }
+        this.elements[position.getY()][position.getX()].element = newShip;
+    }
+
 
     public int getNumShipsFields() {
         return numShipsFields;
