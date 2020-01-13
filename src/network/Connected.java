@@ -2,11 +2,7 @@ package network;
 
 import core.*;
 import core.communication_data.Position;
-import core.communication_data.TurnResult;
-import core.serialization.GameSerialization;
-import core.utils.logging.LoggerLogic;
 import core.utils.logging.LoggerNetwork;
-import gui.PlayGame.ControllerPlayGame;
 import gui.PlayGame.InGameGUI;
 import gui.interfaces.Shutdown;
 import player.PlayerNetwork;
@@ -197,8 +193,8 @@ public abstract class Connected implements Shutdown {
      * blocking till available
      * @return
      */
-    public Position getMakeTurnPosition() {
-        Object o = getSentData("makeTurnPosition");
+    public Position popMakeTurnPosition() {
+        Object o = popSentData("makeTurnPosition");
         assert o instanceof Position: "Wrong data sent. Expected Position got " + o;
         return (Position) o;
     }
@@ -211,6 +207,14 @@ public abstract class Connected implements Shutdown {
     }
 
     private Object getSentData(String key) {
+        return getSentData(key, false);
+    }
+
+    private Object popSentData(String key) {
+        return getSentData(key, true);
+    }
+
+    private Object getSentData(String key, boolean remove) {
         synchronized (this.sentData) {
             while (!this.sentData.containsKey(key)) {
                 try {
@@ -221,7 +225,11 @@ public abstract class Connected implements Shutdown {
                     return null;
                 }
             }
-            return this.sentData.get(key);
+            if (remove) {
+                return this.sentData.remove(key);
+            } else {
+                return this.sentData.get(key);
+            }
         }
     }
 

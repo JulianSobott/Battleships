@@ -27,7 +27,7 @@ public class PlayerNetwork extends Player {
     @Override
     public Position makeTurn() {
         // received SHOT
-        return connected.getMakeTurnPosition();
+        return connected.popMakeTurnPosition();
     }
 
     @Override
