@@ -12,6 +12,7 @@ public class PlaygroundOwnPlaceable extends PlaygroundPlaceable implements Playg
 
     public PlaygroundOwnPlaceable(int size) {
         super(size);
+        this.resetFields(FieldType.WATER);
     }
 
     /**
@@ -41,30 +42,4 @@ public class PlaygroundOwnPlaceable extends PlaygroundPlaceable implements Playg
         return res;
     }
 
-    /**
-     * Get a list of all Positions around a ship that are water.
-     * When a ship is sunken it is known, that these fields are water.
-     *
-     * @param s A ship. Most likely a ship that is sunken.
-     * @return All positions around this ship
-     */
-    // TODO: maybe rewrite and move to other playground
-    public Position[] getSurroundingWaterPositions(Ship s) {
-        HashSet<Position> waterPositions = new HashSet<Position>();
-        int[][] surroundingFields = {{-1, -1}, {-1, 0}, {0, -1}, {0, 0}, {0, 1}, {1, 0}, {1, 1}, {-1, 1}, {1, -1}};
-        for (Position shipPosition : s.getShipPosition().generateIndices()) {
-            for (int[] surrPos : surroundingFields) {
-                int x = surrPos[0] + shipPosition.getX();
-                int y = surrPos[1] + shipPosition.getY();
-                if(!(x < 0 || y < 0)){
-                    Position pos = new Position(x, y);
-                    if (!pos.isOutsideOfPlayground(this.size) && this.elements[y][x].type == FieldType.WATER) {
-                        waterPositions.add(pos);
-                    }
-                }
-            }
-        }
-        Position[] positions = new Position[waterPositions.size()];
-        return waterPositions.toArray(positions);
-    }
 }

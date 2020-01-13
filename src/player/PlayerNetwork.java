@@ -4,7 +4,6 @@ import core.*;
 import core.communication_data.Position;
 import core.communication_data.ShotResult;
 import core.communication_data.ShotResultShip;
-import core.communication_data.ShotResultWater;
 import network.Connected;
 
 import java.beans.ConstructorProperties;
@@ -58,7 +57,7 @@ public class PlayerNetwork extends Player {
         Connected.ShotResTuple res = connected.getShotResult();
         // Update field element and type
         if (res.type == Playground.FieldType.WATER) {
-            getPlaygroundOwn().hitWater(position);
+            getPlaygroundOwn().setWater(position);
         } else {
             Ship.LifeStatus lifeStatus;
             if (res.sunken) {
@@ -66,7 +65,7 @@ public class PlayerNetwork extends Player {
             }else {
                 lifeStatus = Ship.LifeStatus.ALIVE;
             }
-            getPlaygroundOwn().hitShip(position, lifeStatus);
+            getPlaygroundOwn().setShip(position, lifeStatus);
         }
         return super.gotHit(position);
     }

@@ -10,6 +10,7 @@ import org.junit.platform.commons.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 @JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
@@ -44,7 +45,7 @@ public abstract class Playground {
      *
      * @param type
      */
-    void resetAll(FieldType type){
+    public void resetAll(FieldType type){
         this.resetFields(type);
     }
 
@@ -75,6 +76,32 @@ public abstract class Playground {
 
     public boolean areAllShipsSunken() {
         return numShipsFields - numHitShipsFields == 0;
+    }
+
+    /**
+     * Get a list of all Positions around a ship that are water.
+     * When a ship is sunken it is known, that these fields are water.
+     *
+     * @param s A ship. Most likely a ship that is sunken.
+     * @return All positions around this ship
+     */
+    public Position[] getSurroundingWaterPositions(Ship s) {
+        HashSet<Position> waterPositions = new HashSet<Position>();
+        int[][] surroundingFields = {{-1, -1}, {-1, 0}, {0, -1}, {0, 0}, {0, 1}, {1, 0}, {1, 1}, {-1, 1}, {1, -1}};
+        for (Position shipPosition : s.getShipPosition().generateIndices()) {
+            for (int[] surrPos : surroundingFields) {
+                int x = surrPos[0] + shipPosition.getX();
+                int y = surrPos[1] + shipPosition.getY();
+                if(!(x < 0 || y < 0)){
+                    Position pos = new Position(x, y);
+                    if (!pos.isOutsideOfPlayground(this.size) && this.elements[y][x].type == FieldType.WATER) {
+                        waterPositions.add(pos);
+                    }
+                }
+            }
+        }
+        Position[] positions = new Position[waterPositions.size()];
+        return waterPositions.toArray(positions);
     }
 
     public enum FieldType{

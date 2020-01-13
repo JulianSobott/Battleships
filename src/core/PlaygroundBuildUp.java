@@ -13,25 +13,28 @@ public class PlaygroundBuildUp extends Playground {
         this.resetFields(FieldType.FOG);
     }
 
-    public void hitWater(Position position) {
-        this.elements[position.getY()][position.getX()] = new Field(FieldType.WATER, new WaterElement(), true);
+    public void setWater(Position position) {
+        this.elements[position.getY()][position.getX()] = new Field(FieldType.WATER, new WaterElement(), false);
     }
 
-    public void hitShip(Position position, Ship.LifeStatus lifeStatus) {
+    public void setShip(Position position, Ship.LifeStatus lifeStatus) {
         numHitShipsFields++;
         Ship newShip = new Ship(position);
         int[][] adjacentPositions = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
         for (int[] adjacentPos : adjacentPositions) {
-            Position p = new Position(adjacentPos[0], adjacentPos[1]);
-            if (!p.isOutsideOfPlayground(this.size) && this.elements[p.getY()][p.getX()].type == FieldType.SHIP) {
-                Ship adjacentShip = (Ship) this.elements[p.getY()][p.getX()].element;
-                newShip = Ship.concatenateShips(newShip, adjacentShip);
-                this.elements[p.getY()][p.getX()].element = newShip;
+            int x = position.getX() + adjacentPos[0];
+            int y = position.getY() + adjacentPos[1];
+            if (x >= 0 && y >= 0) {
+                Position p = new Position(x, y);
+                if (!p.isOutsideOfPlayground(this.size) && this.elements[p.getY()][p.getX()].type == FieldType.SHIP) {
+                    Ship adjacentShip = (Ship) this.elements[p.getY()][p.getX()].element;
+                    newShip = Ship.concatenateShips(newShip, adjacentShip);
+                    this.elements[p.getY()][p.getX()].element = newShip;
+                }
             }
         }
-        newShip.setLives(lifeStatus == Ship.LifeStatus.ALIVE ? 1 : 0);
-        this.elements[position.getY()][position.getX()].element = newShip;
-        this.elements[position.getY()][position.getX()] = new Field(FieldType.SHIP, newShip, true);
+        newShip.setLives(lifeStatus == Ship.LifeStatus.ALIVE ? 2 : 1); // Got hit will take lives later on
+        this.elements[position.getY()][position.getX()] = new Field(FieldType.SHIP, newShip, false);
     }
 
     public boolean areAllShipsSunken(){

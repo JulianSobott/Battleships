@@ -1,7 +1,6 @@
 package core;
 
 import core.communication_data.*;
-import core.utils.logging.LoggerLogic;
 
 import java.beans.ConstructorProperties;
 
@@ -9,6 +8,7 @@ public class PlaygroundEnemyBuildUp extends PlaygroundBuildUp implements Playgro
 
     public PlaygroundEnemyBuildUp(int size) {
         super(size);
+        this.resetFields(FieldType.FOG);
     }
 
     @ConstructorProperties({"size", "numShipsFields", "numHitsShipsFields"})
@@ -22,9 +22,9 @@ public class PlaygroundEnemyBuildUp extends PlaygroundBuildUp implements Playgro
     public void update(ShotResult shotResult) {
         if (shotResult.getType() == FieldType.SHIP) {
             ShotResultShip res = ((ShotResultShip)shotResult);
-            hitShip(res.getPosition(), res.getStatus());
+            setShip(res.getPosition(), res.getStatus());
         } else {
-            hitWater(shotResult.getPosition());
+            setWater(shotResult.getPosition());
         }
     }
 

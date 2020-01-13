@@ -5,6 +5,7 @@ import network.Connected;
 import network.ConnectionStatus;
 
 import java.io.*;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -31,7 +32,9 @@ public class Client extends Connected {
         } catch (UnknownHostException e) {
             LoggerNetwork.warning("Unknown host: ip=" + ip + ", port=" + port);
             return ConnectionStatus.UNKNOWN_HOST;
-        } catch (IOException e) {
+        } catch (ConnectException e) {
+            return ConnectionStatus.REFUSED;
+        } catch(IOException e) {
             e.printStackTrace();
             return ConnectionStatus.UNKNOWN_HOST;
         }

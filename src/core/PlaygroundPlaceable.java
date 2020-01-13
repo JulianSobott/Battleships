@@ -198,6 +198,12 @@ public class PlaygroundPlaceable extends Playground {
         return this.shipPool.areAllShipsPlaced();
     }
 
+    @Override
+    public void resetAll(FieldType type) {
+        super.resetAll(type);
+        this.shipPool.releaseAll();
+    }
+
     /**
      *
      * @param shipID Searched shipID
