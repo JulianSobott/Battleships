@@ -179,7 +179,11 @@ public class ControllerPlayGame implements Initializable {
         gridPane.add(p, possHorizontal, possVertical);
         if (gridPane == this.gridPaneEnemyField) {
             this.addClickFieldEvent(p);
-            p.setId("FOG");
+            if (!showHeatMap) {
+                p.setId("FOG");
+            } else {
+                p.setId("");
+            }
         }
     }
 
@@ -392,13 +396,10 @@ public class ControllerPlayGame implements Initializable {
                 this.color_fields(waterFields, "Water_Hit", gridPane);
             }
         } else if (shotResult.getType() == Playground.FieldType.WATER) {
-            cellStyle = "-fx-background-color: #0055ff";
             paneExtends.setId("Water_Hit");
-
         } else {
             throw new Error("Invalid shotResult type: " + shotResult.getType());
         }
-        paneExtends.setStyle(cellStyle);
 
         if (gridPane == this.gridPaneEnemyField && this.showHeatMap) {
             this.updateHeatMap(shotResult);
@@ -431,9 +432,10 @@ public class ControllerPlayGame implements Initializable {
                 if (!this.playgroundHeatmap.isAlreadyDiscoveredShipAt(x, y)) {
                     int w = Math.min(255, heatMap[y][x]);
                     p.setStyle("-fx-background-color: rgb(" + w + ", " + w + ", " + w + ")");
-                } else {
-                    p.setStyle("-fx-background-color: rgb(255, 0, 0)");
                 }
+//                else {
+//                    p.setStyle("-fx-background-color: rgb(255, 0, 0)");
+//                }
             }
         }
     }
