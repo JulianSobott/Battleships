@@ -119,8 +119,8 @@ public class ControllerPlayGame implements Initializable {
     public void initFieldsFromLoad(GameData gameData) {
         // TODO: Is Player1 always local player
         Player localPLayer = gameData.getPlayers()[0];
-        PlaygroundInterface ownPlayground = (PlaygroundInterface) localPLayer.getPlaygroundOwn();
-        PlaygroundInterface enemyPlayground = (PlaygroundInterface) localPLayer.getPlaygroundEnemy();
+        PlaygroundInterface ownPlayground = localPLayer.getPlaygroundOwn();
+        PlaygroundInterface enemyPlayground = localPLayer.getPlaygroundEnemy();
 
         // Own playground
         this.initPlaygroundFromLoad(ownPlayground, this.gridPaneOwnField);
@@ -237,21 +237,23 @@ public class ControllerPlayGame implements Initializable {
 
     // TODO: Lukas
     private void initPlaygroundFromLoad(PlaygroundInterface playground, GridPane gridPane) {
+        // All fields to water/fog
         for (int y = 0; y < playground.getSize(); y++) {
             for (int x = 0; x < playground.getSize(); x++) {
                 Playground.Field field = playground.getFields()[y][x];
                 Position[] pos = {new Position(x, y)};
 
                 // TODO: replace color with images
-                // TODO: Are any ship objects needed?  Good Question.... Yes and i wanna know if they are sunken.... and if horizontal or vertical alignment...
 
                 String cssId = "black";
                 if (field.type == Playground.FieldType.SHIP) {
+                    Ship ship = (Ship) field.element;
+                    // TODO: Handle ship here or below!?
                     cssId = "red";
                 }
                 if (field.type == Playground.FieldType.WATER) {
 
-                    if (field.isHit() == false) {
+                    if (!field.isHit()) {
                         cssId = "Water";
                     }
                     if (field.isHit()) {
@@ -262,6 +264,16 @@ public class ControllerPlayGame implements Initializable {
                     cssId = "FOG";
                 }
                 this.color_fields(pos, cssId, gridPane);
+            }
+        }
+        // Ship fields
+        for(Ship ship : playground.getAllShips()) {
+            ShipPosition shipPosition = ship.getShipPosition();
+            for (Position pos : shipPosition.generateIndices()) {
+                Playground.Field field = playground.getFields()[pos.getY()][pos.getX()];
+
+                boolean isHit = field.isHit();
+                // TODO: Add image
             }
         }
     }
