@@ -217,7 +217,7 @@ public class ControllerPlayGame implements Initializable {
             String cssId;
             for (int i = 0; i < battleShipGui.getPosition().getLength(); i++) {
                 PaneExtends pane = (PaneExtends) gridPaneOwnField.getChildren().get(index);
-                cssId = battleShipGui.getPosition().getLength() + "_0" + (i + 1);
+                cssId = battleShipGui.getPosition().getLength() + "_0" + (i + 1) + "_H";
                 pane.setStyle("-fx-background-color: #00ff00");
                 pane.setId(cssId);
                 pane.setFieldType(PaneExtends.FieldType.SHIP);
@@ -376,7 +376,10 @@ public class ControllerPlayGame implements Initializable {
             ShotResultShip resultShip = (ShotResultShip) shotResult;
             cellStyle = "-fx-background-color: #ff0000";
             if (gridPane == gridPaneOwnField) {
-                paneExtends.setId(paneExtends.getId() + "_X");
+                if (paneExtends.getId().contains("_H"))
+                    paneExtends.setId(paneExtends.getId() + "_X");
+                else
+                    paneExtends.setId(paneExtends.getId() + "_X");
             } else {
                 paneExtends.setId("Water_Ship_Hit");
             }
