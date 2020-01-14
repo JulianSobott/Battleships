@@ -182,8 +182,8 @@ public class ControllerShipPlacement implements Initializable, Shutdown {
         Image battleShipImage = new Image(path);
         ImageView imageView = new ImageView(battleShipImage);
         addEventDragDetected(hBox);
-        imageView.setFitWidth(80);
-        imageView.setFitHeight(60);
+        imageView.setFitWidth(120);
+        imageView.setFitHeight(100);
 
         hBox.getChildren().addAll(imageView, this.hashMapShipLabels.get(shipSize).getTextLabel());
         return hBox;
