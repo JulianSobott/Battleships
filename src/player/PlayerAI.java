@@ -23,7 +23,7 @@ public class PlayerAI extends Player {
     private Random r =  new Random(seed);
     PlaygroundHeatmap playgroundHeatmap;
 
-    @ConstructorProperties({"index", "name", "playgroundSize"})
+    @ConstructorProperties({"index", "name", "playgroundSize", "difficulty"})
     public PlayerAI(int index, String name, int playgroundSize, Difficulty difficulty) {
         super(index, name, playgroundSize);
         this.playgroundOwn = new PlaygroundOwnPlaceable(playgroundSize);
@@ -34,7 +34,6 @@ public class PlayerAI extends Player {
         this.playgroundHeatmap = new PlaygroundHeatmap(playgroundSize);
     }
 
-    @ConstructorProperties({"index", "name", "playgroundSize"})
     public PlayerAI(int index, String name, int playgroundSize) {
         this(index, name, playgroundSize, Difficulty.MEDIUM);
     }

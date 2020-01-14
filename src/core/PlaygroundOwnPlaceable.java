@@ -10,6 +10,10 @@ import java.util.HashSet;
 
 public class PlaygroundOwnPlaceable extends PlaygroundPlaceable implements PlaygroundOwn {
 
+    public PlaygroundOwnPlaceable() {
+        // JSON Deserialization
+    }
+
     public PlaygroundOwnPlaceable(int size) {
         super(size);
         this.resetFields(FieldType.WATER);
