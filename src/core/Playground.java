@@ -11,10 +11,7 @@ import core.serialization.ShipHashMapSerializer;
 import core.utils.logging.LoggerLogic;
 import org.junit.platform.commons.util.StringUtils;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 @JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
 public abstract class Playground {
@@ -234,6 +231,10 @@ public abstract class Playground {
             s.append("\n");
         }
         LoggerLogic.debug(s.toString());
+    }
+
+    public Ship[] getAllShips() {
+        return new ArrayList<Ship>(shipHashMap.values()).toArray(new Ship[0]);
     }
 
     public Field[][] getFields() {
