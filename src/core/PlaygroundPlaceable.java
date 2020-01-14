@@ -8,7 +8,6 @@ import java.util.HashMap;
 
 public class PlaygroundPlaceable extends Playground {
 
-    private HashMap<ShipID, Ship> shipHashMap = new HashMap<>();
     private boolean logDeactivatedShipPlacement = false;
     private ShipPool shipPool;
 
@@ -202,15 +201,6 @@ public class PlaygroundPlaceable extends Playground {
     public void resetAll(FieldType type) {
         super.resetAll(type);
         this.shipPool.releaseAll();
-    }
-
-    /**
-     *
-     * @param shipID Searched shipID
-     * @return An Ship object if the ID exists, null otherwise
-     */
-    private Ship getShipByID(ShipID shipID){
-        return this.shipHashMap.get(shipID);
     }
 
 }

@@ -3,8 +3,11 @@ package core;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import core.communication_data.Position;
+import core.communication_data.ShipID;
 import core.communication_data.ShipList;
+import core.serialization.ShipHashMapSerializer;
 import core.utils.logging.LoggerLogic;
 import org.junit.platform.commons.util.StringUtils;
 
@@ -26,6 +29,9 @@ public abstract class Playground {
     protected int size;
     protected int numShipsFields = 0;
     protected int numHitShipsFields = 0;
+
+    @JsonSerialize(keyUsing = ShipHashMapSerializer.class)
+    protected HashMap<ShipID, Ship> shipHashMap  = new HashMap<>();
 
     public Playground() { // Jackson deserialization
     }
@@ -104,6 +110,21 @@ public abstract class Playground {
         return waterPositions.toArray(positions);
     }
 
+    protected void putShip(Ship ship) {
+        assert ship != null && !shipHashMap.containsKey(ship.getId()): "Cannot put ship in HashMap. ship=" + ship;
+        shipHashMap.put(ship.getId(), ship);
+    }
+
+    protected Ship getShipByID(ShipID shipID) {
+        assert shipID != null && !shipHashMap.containsKey(shipID): "ShipID is not in HashMap. id=" + shipID;
+        return shipHashMap.get(shipID);
+    }
+
+    protected Ship removeShipByID(ShipID shipID) {
+        assert shipID != null && !shipHashMap.containsKey(shipID): "ShipID is not in HashMap. id=" + shipID;
+        return shipHashMap.remove(shipID);
+    }
+
     public enum FieldType{
         SHIP, WATER, FOG;
 
@@ -130,6 +151,7 @@ public abstract class Playground {
             return null; // or fail
         }
     }
+
     public static class Field {
 
         private boolean hit;
@@ -224,5 +246,29 @@ public abstract class Playground {
 
     public void setSize(int size) {
         this.size = size;
+    }
+
+    public int getNumShipsFields() {
+        return numShipsFields;
+    }
+
+    public void setNumShipsFields(int numShipsFields) {
+        this.numShipsFields = numShipsFields;
+    }
+
+    public int getNumHitShipsFields() {
+        return numHitShipsFields;
+    }
+
+    public void setNumHitShipsFields(int numHitShipsFields) {
+        this.numHitShipsFields = numHitShipsFields;
+    }
+
+    public HashMap<ShipID, Ship> getShipHashMap() {
+        return shipHashMap;
+    }
+
+    public void setShipHashMap(HashMap<ShipID, Ship> shipHashMap) {
+        this.shipHashMap = shipHashMap;
     }
 }

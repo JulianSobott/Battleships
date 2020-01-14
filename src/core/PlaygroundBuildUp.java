@@ -28,6 +28,7 @@ public class PlaygroundBuildUp extends Playground {
                 Position p = new Position(x, y);
                 if (!p.isOutsideOfPlayground(this.size) && this.elements[p.getY()][p.getX()].type == FieldType.SHIP) {
                     Ship adjacentShip = (Ship) this.elements[p.getY()][p.getX()].element;
+                    this.removeShipByID(adjacentShip.getId());
                     newShip = Ship.concatenateShips(newShip, adjacentShip);
                     this.elements[p.getY()][p.getX()].element = newShip;
                 }
@@ -35,6 +36,7 @@ public class PlaygroundBuildUp extends Playground {
         }
         newShip.setLives(lifeStatus == Ship.LifeStatus.ALIVE ? 2 : 1); // Got hit will take lives later on
         this.elements[position.getY()][position.getX()] = new Field(FieldType.SHIP, newShip, false);
+        this.putShip(newShip);
     }
 
     public boolean areAllShipsSunken(){
