@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -31,10 +32,13 @@ public class ControllerPlayGame implements Initializable {
 
     @FXML
     public GridPane gridPaneOwnField;
+    @FXML
+    public Label labelOwnPlayground;
 
     @FXML
     public GridPane gridPaneEnemyField;
-
+    @FXML
+    public Label labelEnemyPlayground;
 
     @FXML
     public HBox hBoxPlaygrounds;
@@ -337,6 +341,7 @@ public class ControllerPlayGame implements Initializable {
 
                 TurnResult res;
                 do {
+                    updateShowCurrentPlayer();
                     res = gameManager.pollTurn("GUI_1");
                     if (res != null) {
                         LoggerGUI.info("TurnResult in GUI: " + res);
@@ -416,6 +421,17 @@ public class ControllerPlayGame implements Initializable {
         }
     }
 
+    private void updateShowCurrentPlayer() {
+        if (gameManager.getCurrentPlayer().getIndex() == 0) {
+            // Self
+            labelEnemyPlayground.setStyle("-fx-text-fill: grey");
+            labelOwnPlayground.setStyle("-fx-text-fill: green");
+        }else {
+            // enemy
+            labelEnemyPlayground.setStyle("-fx-text-fill: green");
+            labelOwnPlayground.setStyle("-fx-text-fill: grey");
+        }
+    }
     /**
      * ...
      */
