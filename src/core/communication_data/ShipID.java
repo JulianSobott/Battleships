@@ -52,5 +52,10 @@ public class ShipID {
         return id;
     }
 
-
+    @Override
+    public String toString() {
+        return "ShipID{" +
+                "id=" + id +
+                '}';
+    }
 }

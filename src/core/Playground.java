@@ -119,7 +119,7 @@ public abstract class Playground {
     }
 
     protected Ship removeShipByID(ShipID shipID) {
-        assert shipID != null && !shipHashMap.containsKey(shipID): "ShipID is not in HashMap. id=" + shipID;
+        assert shipID != null && shipHashMap.containsKey(shipID): "ShipID is not in HashMap. id=" + shipID;
         return shipHashMap.remove(shipID);
     }
 
