@@ -57,6 +57,7 @@ public class ControllerPlayGame implements Initializable {
 
     private PlaygroundHeatmap playgroundHeatmap;
     private boolean showHeatMap = true;
+    private boolean slowAIShooting = true;
 
     ArrayList<BattleShipGui> shipPositionList;
     GameManager gameManager;
@@ -340,6 +341,9 @@ public class ControllerPlayGame implements Initializable {
                     if (res != null) {
                         LoggerGUI.info("TurnResult in GUI: " + res);
                         if (res.getError() == TurnResult.Error.NONE) {
+                            if (res.getPlayerIndex() == 1 && slowAIShooting) {
+                                Thread.sleep(400);
+                            }
                             updateByShotResult(playerGridPaneHashMap.get(res.getPlayerIndex()), res.getSHOT_RESULT());
                         } else {
                             LoggerGUI.info("NOTIFY USER: Turn was not valid" + res.getError());

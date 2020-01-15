@@ -1,7 +1,5 @@
 # TODO's ✓
 
-
-- slower shooting from KI
 - show current player
 - ingame game abbrechen
 - show HeatMap after load
