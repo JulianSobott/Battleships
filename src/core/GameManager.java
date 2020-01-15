@@ -5,6 +5,8 @@ import core.serialization.GameData;
 import core.serialization.GameSerialization;
 import core.utils.logging.LoggerLogic;
 import core.utils.logging.LoggerState;
+import player.PlayerHuman;
+import player.PlayerPlacer;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,7 +17,8 @@ public class GameManager implements GameManagerInterface {
     // TODO: Check synchronize stuff for correctness
     // TODO: Remove deprecated methods/attributes
     // TODO: Better names for methods: shoot, makeShoot, turn, ...
-    private Player player1, player2;
+    private PlayerHuman player1;
+    private Player player2;
     private Player[] players;
     private Player currentPlayer;
 
@@ -37,7 +40,7 @@ public class GameManager implements GameManagerInterface {
      * @param round
      */
     public GameManager(Player[] players, Player currentPlayer, int round) {
-        this.initGame(players[0], players[1]);
+        this.initGame((PlayerHuman) players[0], players[1]);
         this.currentPlayer = currentPlayer;
         this.round = round;
     }
@@ -67,7 +70,7 @@ public class GameManager implements GameManagerInterface {
         return new NewGameResult(shipList);
     }
 
-    private void initGame(Player p1, Player p2) {
+    private void initGame(PlayerHuman p1, Player p2) {
         this.player1 = p1;
         this.player2 = p2;
         this.players = new Player[]{p1, p2};
@@ -172,7 +175,6 @@ public class GameManager implements GameManagerInterface {
             res = this.shoot(player, position);
         }
         LoggerLogic.info("Enemy playground from player: player=" + player);
-        player.playgroundEnemy.printField();
         LoggerLogic.info("turn result: TurnResult=" + res);
         return res;
     }

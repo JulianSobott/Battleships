@@ -3,14 +3,15 @@ package core;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import core.communication_data.Position;
+import core.communication_data.ShipID;
 import core.communication_data.ShipList;
+import core.serialization.ShipHashMapSerializer;
 import core.utils.logging.LoggerLogic;
 import org.junit.platform.commons.util.StringUtils;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
 public abstract class Playground {
@@ -23,7 +24,11 @@ public abstract class Playground {
      */
     protected Field[][] elements;
     protected int size;
-    ShipPool shipPool;
+    protected int numShipsFields = 0;
+    protected int numHitShipsFields = 0;
+
+    @JsonSerialize(keyUsing = ShipHashMapSerializer.class)
+    protected HashMap<ShipID, Ship> shipHashMap  = new HashMap<>();
 
     public Playground() { // Jackson deserialization
     }
@@ -31,7 +36,10 @@ public abstract class Playground {
     public Playground(int size){
         this.size = size;
         this.elements = new Field[size][size];
-        this.shipPool = new ShipPool(ShipList.fromSize(size));
+        ShipList l = ShipList.fromSize(size);
+        for(ShipList.Pair p : l){
+            this.numShipsFields += p.getSize() * p.getNum();
+        }
     }
 
     /**
@@ -40,9 +48,8 @@ public abstract class Playground {
      *
      * @param type
      */
-    void resetAll(FieldType type){
+    public void resetAll(FieldType type){
         this.resetFields(type);
-        this.shipPool.releaseAll();
     }
 
     protected void resetFields(FieldType type){
@@ -68,6 +75,51 @@ public abstract class Playground {
         else
             assert false: "Cannot fill field with ships";
         this.elements[pos.getY()][pos.getX()] = new Field(type, element, false);
+    }
+
+    public boolean areAllShipsSunken() {
+        return numShipsFields - numHitShipsFields == 0;
+    }
+
+    /**
+     * Get a list of all Positions around a ship that are water.
+     * When a ship is sunken it is known, that these fields are water.
+     *
+     * @param s A ship. Most likely a ship that is sunken.
+     * @return All positions around this ship
+     */
+    public Position[] getSurroundingWaterPositions(Ship s) {
+        HashSet<Position> waterPositions = new HashSet<Position>();
+        int[][] surroundingFields = {{-1, -1}, {-1, 0}, {0, -1}, {0, 0}, {0, 1}, {1, 0}, {1, 1}, {-1, 1}, {1, -1}};
+        for (Position shipPosition : s.getShipPosition().generateIndices()) {
+            for (int[] surrPos : surroundingFields) {
+                int x = surrPos[0] + shipPosition.getX();
+                int y = surrPos[1] + shipPosition.getY();
+                if(!(x < 0 || y < 0)){
+                    Position pos = new Position(x, y);
+                    if (!pos.isOutsideOfPlayground(this.size) && this.elements[y][x].type == FieldType.WATER) {
+                        waterPositions.add(pos);
+                    }
+                }
+            }
+        }
+        Position[] positions = new Position[waterPositions.size()];
+        return waterPositions.toArray(positions);
+    }
+
+    protected void putShip(Ship ship) {
+        assert ship != null && !shipHashMap.containsKey(ship.getId()): "Cannot put ship in HashMap. ship=" + ship;
+        shipHashMap.put(ship.getId(), ship);
+    }
+
+    protected Ship getShipByID(ShipID shipID) {
+        assert shipID != null && !shipHashMap.containsKey(shipID): "ShipID is not in HashMap. id=" + shipID;
+        return shipHashMap.get(shipID);
+    }
+
+    protected Ship removeShipByID(ShipID shipID) {
+        assert shipID != null && !shipHashMap.containsKey(shipID): "ShipID is not in HashMap. id=" + shipID;
+        return shipHashMap.remove(shipID);
     }
 
     public enum FieldType{
@@ -96,6 +148,7 @@ public abstract class Playground {
             return null; // or fail
         }
     }
+
     public static class Field {
 
         private boolean hit;
@@ -180,6 +233,10 @@ public abstract class Playground {
         LoggerLogic.debug(s.toString());
     }
 
+    public Ship[] getAllShips() {
+        return new ArrayList<Ship>(shipHashMap.values()).toArray(new Ship[0]);
+    }
+
     public Field[][] getFields() {
         return this.elements;
     }
@@ -190,5 +247,29 @@ public abstract class Playground {
 
     public void setSize(int size) {
         this.size = size;
+    }
+
+    public int getNumShipsFields() {
+        return numShipsFields;
+    }
+
+    public void setNumShipsFields(int numShipsFields) {
+        this.numShipsFields = numShipsFields;
+    }
+
+    public int getNumHitShipsFields() {
+        return numHitShipsFields;
+    }
+
+    public void setNumHitShipsFields(int numHitShipsFields) {
+        this.numHitShipsFields = numHitShipsFields;
+    }
+
+    public HashMap<ShipID, Ship> getShipHashMap() {
+        return shipHashMap;
+    }
+
+    public void setShipHashMap(HashMap<ShipID, Ship> shipHashMap) {
+        this.shipHashMap = shipHashMap;
     }
 }

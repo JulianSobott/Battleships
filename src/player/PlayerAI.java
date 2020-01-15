@@ -1,7 +1,9 @@
 package player;
 
 import core.Player;
-import core.PlaygroundEnemy;
+import core.PlaygroundEnemyBuildUp;
+import core.PlaygroundOwnPlaceable;
+import core.PlaygroundPlaceable;
 import core.communication_data.Position;
 import core.communication_data.ShotResult;
 import core.communication_data.TurnResult;
@@ -21,16 +23,17 @@ public class PlayerAI extends Player {
     private Random r =  new Random(seed);
     PlaygroundHeatmap playgroundHeatmap;
 
-    @ConstructorProperties({"index", "name", "playgroundSize"})
+    @ConstructorProperties({"index", "name", "playgroundSize", "difficulty"})
     public PlayerAI(int index, String name, int playgroundSize, Difficulty difficulty) {
         super(index, name, playgroundSize);
-        this.playgroundOwn.placeShipsRandom();
-        this.playgroundOwn.printField();
+        this.playgroundOwn = new PlaygroundOwnPlaceable(playgroundSize);
+        this.playgroundEnemy = new PlaygroundEnemyBuildUp(playgroundSize);
+        getPlaygroundOwn().placeShipsRandom();
+        getPlaygroundOwn().printField();
         this.difficulty = difficulty;
         this.playgroundHeatmap = new PlaygroundHeatmap(playgroundSize);
     }
 
-    @ConstructorProperties({"index", "name", "playgroundSize"})
     public PlayerAI(int index, String name, int playgroundSize) {
         this(index, name, playgroundSize, Difficulty.MEDIUM);
     }
@@ -73,8 +76,8 @@ public class PlayerAI extends Player {
     private Position makeTurnEasy() {
         Position pos;
         do {
-            int x = r.nextInt(this.playgroundOwn.getSize());
-            int y = r.nextInt(this.playgroundOwn.getSize());
+            int x = r.nextInt(getPlaygroundOwn().getSize());
+            int y = r.nextInt(getPlaygroundOwn().getSize());
             pos = new Position(x, y);
         }while (playgroundEnemy.canShootAt(pos) != TurnResult.Error.NONE);
         LoggerLogic.info("PlayerAI.makeTurn: position=" + pos);
@@ -145,8 +148,12 @@ public class PlayerAI extends Player {
         this.playgroundHeatmap = playgroundHeatmap;
     }
 
-    public void setPlaygroundEnemy(PlaygroundEnemy playgroundEnemy) {
+    public void setPlaygroundEnemy(PlaygroundEnemyBuildUp playgroundEnemy) {
         super.setPlaygroundEnemy(playgroundEnemy);
         //this.playgroundHeatmap.updateByPlayground();
+    }
+
+    public PlaygroundOwnPlaceable getPlaygroundOwn() {
+        return (PlaygroundOwnPlaceable)playgroundOwn;
     }
 }

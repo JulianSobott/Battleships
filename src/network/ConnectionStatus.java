@@ -1,5 +1,5 @@
 package network;
 
 public enum ConnectionStatus {
-    SUCCESSFUL, UNKNOWN_HOST
+    SUCCESSFUL, UNKNOWN_HOST, REFUSED
 }

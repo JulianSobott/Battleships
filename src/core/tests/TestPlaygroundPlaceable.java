@@ -1,6 +1,9 @@
 package core.tests;
 
 import core.PlaygroundOwn;
+import core.PlaygroundOwnPlaceable;
+import core.PlaygroundPlaceable;
+import core.Ship;
 import core.communication_data.PlaceShipResult;
 import core.communication_data.ShipID;
 import core.communication_data.ShipList;
@@ -10,15 +13,17 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
-class TestPlaygroundOwn{
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class TestPlaygroundPlaceable {
 
     // TODO: Mock ShipList to pass tests
-    private PlaygroundOwn playground;
+    private PlaygroundPlaceable playground;
     private final int SIZE = 6;
 
     @BeforeEach
     void cleanPlayground(){
-        playground = new PlaygroundOwn(SIZE);
+        playground = new PlaygroundPlaceable(SIZE);
     }
 
     @Test
@@ -101,5 +106,17 @@ class TestPlaygroundOwn{
     void placeShipsRandom(){
         ShipList list = ShipList.fromSize(SIZE);
         playground.placeShipsRandom(list);
+    }
+
+    @Test
+    void testGetAllShips() {
+        ShipPosition p1 = new ShipPosition(0, 0, ShipPosition.Direction.HORIZONTAL, 2);
+        ShipPosition p2 = new ShipPosition(0, 2, ShipPosition.Direction.HORIZONTAL, 3);
+        playground.placeShip(p1);
+        playground.placeShip(p2);
+        Ship[] ships = playground.getAllShips();
+        assertEquals(ships.length, 2);
+        assert ships[0].getShipPosition().equals(p1) || ships[0].getShipPosition().equals(p2);
+        assert ships[1].getShipPosition().equals(p1) || ships[1].getShipPosition().equals(p2);
     }
 }

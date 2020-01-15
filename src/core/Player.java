@@ -23,42 +23,29 @@ public abstract class Player {
         this.index = index;
         this.name = name;
         this.playgroundSize = playgroundSize;
-        this.playgroundOwn = new PlaygroundOwn(playgroundSize);
-        this.playgroundEnemy = new PlaygroundEnemy(playgroundSize);
     }
 
     public abstract Position makeTurn();
 
-    public PlaceShipResult placeShip(ShipPosition position) {
-        PlaceShipResult res = this.playgroundOwn.placeShip(position);
-        this.playgroundOwn.printField();
-        return res;
-    }
 
-    public PlaceShipResult moveShip(ShipID id, ShipPosition position) {
-        return this.playgroundOwn.moveShip(id, position);
-    }
-
-    public boolean deleteShip(ShipID id) {
-        boolean res = this.playgroundOwn.deleteShip(id);
-        this.playgroundOwn.printField();
-        return res;
-    }
 
     public abstract boolean areAllShipsPlaced();
 
+    /**
+     * Enemy shot at this player
+     * @param position
+     * @return
+     */
     public ShotResult gotHit(Position position) {
         return this.playgroundOwn.gotHit(position);
     }
 
+    /**
+     * This player shot at an enemy and got an result.
+     * @param result
+     */
     public void update(ShotResult result) {
-        this.playgroundEnemy.updateField(result.getPosition(), result.getType());
-        if(result.getType() == Playground.FieldType.SHIP){
-            ShotResultShip resultShip = (ShotResultShip)result;
-            if(resultShip.getStatus() == Ship.LifeStatus.SUNKEN){
-                this.playgroundEnemy.hitWaterFieldsAroundSunkenShip(resultShip.getWaterFields());
-            }
-        }
+        this.playgroundEnemy.update(result);
     }
 
     @Override
@@ -67,10 +54,6 @@ public abstract class Player {
                 "name='" + name + '\'' +
                 ", index=" + index +
                 '}';
-    }
-
-    public PlaceShipsRandomRes placeShipsRandom() {
-        return this.playgroundOwn.placeShipsRandom();
     }
 
     public boolean allEnemyShipsSunken() {
@@ -101,7 +84,7 @@ public abstract class Player {
         this.playgroundOwn = playgroundOwn;
     }
 
-    public void setPlaygroundEnemy(PlaygroundEnemy playgroundEnemy) {
+    public void setPlaygroundEnemy(PlaygroundEnemyBuildUp playgroundEnemy) {
         this.playgroundEnemy = playgroundEnemy;
     }
 

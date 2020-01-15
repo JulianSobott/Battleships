@@ -1,12 +1,9 @@
 package player;
 
-import core.Player;
-import core.Playground;
-import core.Ship;
+import core.*;
 import core.communication_data.Position;
 import core.communication_data.ShotResult;
 import core.communication_data.ShotResultShip;
-import core.communication_data.ShotResultWater;
 import network.Connected;
 
 import java.beans.ConstructorProperties;
@@ -20,6 +17,8 @@ public class PlayerNetwork extends Player {
     public PlayerNetwork(int index, String name, int playgroundSize, Connected connected) {
         super(index, name, playgroundSize);
         this.connected = connected;
+        this.playgroundOwn = new PlaygroundOwnBuildUp(playgroundSize);
+        this.playgroundEnemy = new PlaygroundEnemyBuildUp(playgroundSize);
     }
 
     private final HashMap<String, Object> networkData = new HashMap<>();
@@ -56,21 +55,26 @@ public class PlayerNetwork extends Player {
         // send SHOT and receive ANSWER
         connected.sendMessage("shot " + position.getX() + " " + position.getY());
         Connected.ShotResTuple res = connected.getShotResult();
+        // Update field element and type
         if (res.type == Playground.FieldType.WATER) {
-            return new ShotResultWater(position, Playground.FieldType.WATER);
+            getPlaygroundOwn().setWater(position);
         } else {
+            Ship.LifeStatus lifeStatus;
             if (res.sunken) {
-                // TODO: get WaterFields and ShipPosition
-                return new ShotResultShip(position, Playground.FieldType.SHIP, Ship.LifeStatus.SUNKEN, null, null);
+                lifeStatus = Ship.LifeStatus.SUNKEN;
             }else {
-                return new ShotResultShip(position, Playground.FieldType.SHIP, Ship.LifeStatus.ALIVE);
+                lifeStatus = Ship.LifeStatus.ALIVE;
             }
+            getPlaygroundOwn().setShip(position, lifeStatus);
         }
+        return super.gotHit(position);
     }
 
     public void setAllShipsPlaced() {
         networkData.put("allShipsPlaced", true);
     }
 
-    public Position turnPosition;
+    public PlaygroundOwnBuildUp getPlaygroundOwn() {
+        return (PlaygroundOwnBuildUp) this.playgroundOwn;
+    }
 }
