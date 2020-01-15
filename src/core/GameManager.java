@@ -263,12 +263,12 @@ public class GameManager implements GameManagerInterface {
      * @param res
      */
     private void saveTurnResult(TurnResult res){
-        // TODO: Synchronize on which object
         for(Player p : this.players){
             synchronized (this.lastTurns.get(p)){
-                this.lastTurns.get(p).add(res);
-                this.lastTurns.get(p).notifyAll();
-                // TODO: Poll from all Queues Also AI
+                if (p instanceof PlayerHuman) {
+                    this.lastTurns.get(p).add(res);
+                    this.lastTurns.get(p).notifyAll();
+                }
             }
         }
         LoggerLogic.debug("SavedResults: lastTurns=" + this.lastTurns);
