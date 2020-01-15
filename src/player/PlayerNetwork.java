@@ -45,6 +45,10 @@ public class PlayerNetwork extends Player {
         connected.sendMessage("answer " + num);
     }
 
+    public void sendSaveGame(long id) {
+        connected.sendMessage("save " + id);
+    }
+
     @Override
     public boolean areAllShipsPlaced() {
         return networkData.containsKey("allShipsPlaced");

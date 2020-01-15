@@ -1,6 +1,7 @@
 package core;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -233,6 +234,7 @@ public abstract class Playground {
         LoggerLogic.debug(s.toString());
     }
 
+    @JsonIgnore
     public Ship[] getAllShips() {
         return new ArrayList<Ship>(shipHashMap.values()).toArray(new Ship[0]);
     }

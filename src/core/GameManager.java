@@ -6,6 +6,7 @@ import core.serialization.GameSerialization;
 import core.utils.logging.LoggerLogic;
 import core.utils.logging.LoggerState;
 import player.PlayerHuman;
+import player.PlayerNetwork;
 import player.PlayerPlacer;
 
 import java.util.Arrays;
@@ -305,9 +306,12 @@ public class GameManager implements GameManagerInterface {
     }
 
     // Save game
-
     public long saveGame() {
-        return GameSerialization.saveGame(this);
+        long id = GameSerialization.saveGame(this);
+        if (this.player2 instanceof PlayerNetwork) {
+            ((PlayerNetwork)this.player2).sendSaveGame(id);
+        }
+        return id;
     }
 
     // Getters

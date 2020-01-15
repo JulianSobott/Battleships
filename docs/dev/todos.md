@@ -1,5 +1,15 @@
 # TODO's ✓
 
+
+- slower shooting from KI
+- show current player
+- ingame game abbrechen
+- show HeatMap after load
+- loadGame: loadGame -> NewGame with predefined settings
+- saveGame
+
+- error handling
+
 ## Network:
 
 - start game

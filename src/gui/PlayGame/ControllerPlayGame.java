@@ -12,9 +12,12 @@ import gui.WindowChange.SceneLoader;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 import player.PlayerHuman;
 import player.PlaygroundHeatmap;
 
@@ -452,8 +455,16 @@ public class ControllerPlayGame implements Initializable {
      */
 
     public void clickSaveGame() {
-
-        CompletableFuture.runAsync(this::saveGame);
+        CompletableFuture<Void> f = CompletableFuture.runAsync(this::saveGame);
+        // TODO: show after success (Task)
+        Notifications notifications = Notifications.create()
+                .title("SaveGame")
+                .text("Successfully saved game")
+                .darkStyle()
+                .hideCloseButton()
+                .position(Pos.CENTER)
+                .hideAfter(Duration.seconds(3.0));
+        notifications.showConfirm();
     }
 
     /**
@@ -461,8 +472,8 @@ public class ControllerPlayGame implements Initializable {
      */
 
     private void saveGame() {
-
         long id = this.gameManager.saveGame();
+
         LoggerGUI.info("USER INFO: Successfully saved game with id=" + id);
     }
 
