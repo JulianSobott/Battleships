@@ -1,17 +1,26 @@
 package network;
 
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.*;
 
 public class Utils {
 
     public static String getIpAddress() {
+        String ip;
         try {
-            return Inet4Address.getLocalHost().getHostAddress();
+            ip = Inet4Address.getLocalHost().getHostAddress();
         } catch (UnknownHostException e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
+        if (ip.equals("127.0.0.1")) {
+            try(final DatagramSocket socket = new DatagramSocket()){
+                socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
+                ip = socket.getLocalAddress().getHostAddress();
+            } catch (UnknownHostException | SocketException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        return ip;
     }
 }
