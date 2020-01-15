@@ -1,5 +1,6 @@
 package network.Server;
 
+import core.utils.logging.LoggerLogic;
 import core.utils.logging.LoggerNetwork;
 import gui.PlayGame.ControllerPlayGame;
 import network.Connected;
@@ -10,6 +11,7 @@ import player.PlayerNetwork;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
@@ -43,7 +45,10 @@ public class Server extends Connected {
                     clientConnected.notify();
                 }
                 LoggerNetwork.info("New Client connected: " + clientSocket);
-            } catch (IOException e) {
+
+            } catch (SocketException e){
+                LoggerNetwork.info("Server accept interrupted. cause=" + e.getMessage());
+            } catch(IOException e) {
                 e.printStackTrace();
             }
         }).start();
