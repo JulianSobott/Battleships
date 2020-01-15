@@ -27,8 +27,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
-public class ControllerPlayGame implements Initializable {
+public class ControllerPlayGame implements Initializable, InGameGUI {
 
     @FXML
     public GridPane gridPaneOwnField;
@@ -279,7 +280,7 @@ public class ControllerPlayGame implements Initializable {
             }
         }
         // Ship fields
-        for(Ship ship : playground.getAllShips()) {
+        for (Ship ship : playground.getAllShips()) {
             ShipPosition shipPosition = ship.getShipPosition();
             for (Position pos : shipPosition.generateIndices()) {
                 Playground.Field field = playground.getFields()[pos.getY()][pos.getX()];
@@ -426,12 +427,13 @@ public class ControllerPlayGame implements Initializable {
             // Self
             labelEnemyPlayground.setStyle("-fx-text-fill: grey");
             labelOwnPlayground.setStyle("-fx-text-fill: green");
-        }else {
+        } else {
             // enemy
             labelEnemyPlayground.setStyle("-fx-text-fill: green");
             labelOwnPlayground.setStyle("-fx-text-fill: grey");
         }
     }
+
     /**
      * ...
      */
@@ -459,9 +461,9 @@ public class ControllerPlayGame implements Initializable {
                     int w = Math.min(255, heatMap[y][x]);
                     p.setStyle("-fx-background-color: rgb(" + w + ", " + w + ", " + w + ")");
                 }
-//                else {
-//                    p.setStyle("-fx-background-color: rgb(255, 0, 0)");
-//                }
+                //                else {
+                //                    p.setStyle("-fx-background-color: rgb(255, 0, 0)");
+                //                }
             }
         }
     }
@@ -475,16 +477,7 @@ public class ControllerPlayGame implements Initializable {
      */
 
     public void clickSaveGame() {
-        CompletableFuture<Void> f = CompletableFuture.runAsync(this::saveGame);
-        // TODO: show after success (Task)
-        Notifications notifications = Notifications.create()
-                .title("SaveGame")
-                .text("Successfully saved game")
-                .darkStyle()
-                .hideCloseButton()
-                .position(Pos.CENTER)
-                .hideAfter(Duration.seconds(3.0));
-        notifications.showConfirm();
+        saveGame();
     }
 
     /**
@@ -492,9 +485,41 @@ public class ControllerPlayGame implements Initializable {
      */
 
     private void saveGame() {
-        long id = this.gameManager.saveGame();
+        saveGame(-1, false);
+    }
 
-        LoggerGUI.info("USER INFO: Successfully saved game with id=" + id);
+    private void saveGame(long id, boolean useID) {
+        Task<Long> t = new Task<>() {
+            @Override
+            protected Long call() {
+                if (useID) {
+                    return gameManager.saveGame(id);
+                }else {
+                    return gameManager.saveGame();
+                }
+            }
+        };
+        t.setOnSucceeded(e -> {
+                    Notifications notifications = Notifications.create()
+                            .title("SaveGame")
+                            .text("Successfully saved game")
+                            .darkStyle()
+                            .hideCloseButton()
+                            .position(Pos.CENTER)
+                            .hideAfter(Duration.seconds(3.0));
+                    notifications.showConfirm();
+                    try {
+                        LoggerGUI.info("USER INFO: Successfully saved game with id=" + t.get());
+                    } catch (InterruptedException | ExecutionException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+        );
+        new Thread(t).start();
+    }
+
+    public void saveGame(long id) {
+        saveGame(id, true);
     }
 
 

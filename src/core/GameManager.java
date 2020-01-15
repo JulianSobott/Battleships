@@ -314,6 +314,10 @@ public class GameManager implements GameManagerInterface {
         return id;
     }
 
+    public long saveGame(long id) {
+        return GameSerialization.saveGame(this, id);
+    }
+
     // Getters
 
     public Player[] getPlayers() {

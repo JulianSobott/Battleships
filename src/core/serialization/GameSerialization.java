@@ -24,16 +24,19 @@ public class GameSerialization {
     private static final boolean checkHashesAtValidityCheck = true;
     private static final File folderPath = new File("SaveGames/");
 
-    // TODO: Add ID as parameter
-
     public static long saveGame(GameManager gameManager) {
+        long gameID = System.currentTimeMillis();
+        return saveGame(gameManager, gameID);
+    }
+
+    public static long saveGame(GameManager gameManager, long gameID) {
         LoggerLogic.info("Saving game ...");
         // init folder
         Thread folderInitThread = new Thread(GameSerialization::initSaveGamesFolder);
         folderInitThread.start();
 
         // collect data
-        long gameID = System.currentTimeMillis();
+
         String timestamp = Instant.now().toString();
         int round = gameManager.getRound();
         Player currentPlayer = gameManager.getCurrentPlayer();
