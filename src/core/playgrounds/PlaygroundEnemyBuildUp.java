@@ -5,6 +5,10 @@ import core.communication_data.*;
 
 import java.beans.ConstructorProperties;
 
+/**
+ * Playground where ships and water is added while playing.
+ * Used, when at game it is not known where the ships are placed, which is for the enemy always the case.
+ */
 public class PlaygroundEnemyBuildUp extends PlaygroundBuildUp implements PlaygroundEnemy{
 
     public PlaygroundEnemyBuildUp(int size) {
@@ -19,6 +23,9 @@ public class PlaygroundEnemyBuildUp extends PlaygroundBuildUp implements Playgro
         this.numHitShipsFields = numHitShipsFields;
     }
 
+    /**
+     * @param shotResult Result with information what was hit
+     */
     @Override
     public void update(ShotResult shotResult) {
         if (shotResult.getType() == FieldType.SHIP) {
@@ -29,11 +36,11 @@ public class PlaygroundEnemyBuildUp extends PlaygroundBuildUp implements Playgro
         }
     }
 
-    private Ship getShipAtPosition(int x, int y){
-        return (Ship) this.elements[y][x].element;
-    }
-
-
+    /**
+     * @param position Position where to shoot.
+     * @return Possible errors, why it is an invalid position.
+     */
+    @Override
     public TurnResult.Error canShootAt(Position position) {
         if (position.isOutsideOfPlayground(this.size))
             return TurnResult.Error.NOT_ON_PLAYGROUND;
