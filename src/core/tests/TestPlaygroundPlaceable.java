@@ -1,8 +1,6 @@
 package core.tests;
 
-import core.PlaygroundOwn;
-import core.PlaygroundOwnPlaceable;
-import core.PlaygroundPlaceable;
+import core.playgrounds.PlaygroundPlaceable;
 import core.Ship;
 import core.communication_data.PlaceShipResult;
 import core.communication_data.ShipID;
@@ -10,8 +8,6 @@ import core.communication_data.ShipList;
 import core.communication_data.ShipPosition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

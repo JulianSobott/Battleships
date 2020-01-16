@@ -1,9 +1,8 @@
 package player;
 
 import core.Player;
-import core.PlaygroundEnemyBuildUp;
-import core.PlaygroundOwnPlaceable;
-import core.PlaygroundPlaceable;
+import core.playgrounds.PlaygroundEnemyBuildUp;
+import core.playgrounds.PlaygroundOwnPlaceable;
 import core.communication_data.Position;
 import core.communication_data.ShotResult;
 import core.communication_data.TurnResult;

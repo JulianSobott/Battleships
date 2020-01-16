@@ -1,7 +1,8 @@
-package core;
+package core.playgrounds;
 
+import core.Ship;
+import core.WaterElement;
 import core.communication_data.Position;
-import core.communication_data.ShipList;
 
 /**
  * playground where ships are added while playing
@@ -13,10 +14,21 @@ public class PlaygroundBuildUp extends Playground {
         this.resetFields(FieldType.FOG);
     }
 
+    /**
+     * Call when a WaterField is discovered
+     * @param position Position of the WaterField
+     */
     public void setWater(Position position) {
         this.elements[position.getY()][position.getX()] = new Field(FieldType.WATER, new WaterElement(), false);
     }
 
+    /**
+     * Call when a ship is discovered.
+     *
+     * Concatenates adjacent ship objects.
+     * @param position ShipPosition of the discovered Ship
+     * @param lifeStatus Status of the overall Ship object.
+     */
     public void setShip(Position position, Ship.LifeStatus lifeStatus) {
         numHitShipsFields++;
         Ship newShip = new Ship(position);
@@ -39,7 +51,7 @@ public class PlaygroundBuildUp extends Playground {
         this.putShip(newShip);
     }
 
-    public boolean areAllShipsSunken(){
+    public boolean areAllShipsSunken() {
         return this.numShipsFields == this.numHitShipsFields;
     }
 

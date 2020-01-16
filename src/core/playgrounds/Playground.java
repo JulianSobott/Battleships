@@ -1,10 +1,13 @@
-package core;
+package core.playgrounds;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import core.FogElement;
+import core.Ship;
+import core.WaterElement;
 import core.communication_data.Position;
 import core.communication_data.ShipID;
 import core.communication_data.ShipList;
@@ -165,7 +168,7 @@ public abstract class Playground {
             this.element = element;
         }
 
-        Field(FieldType type, PlaygroundElement element){
+        public Field(FieldType type, PlaygroundElement element){
             this(type, element, false);
         }
 

@@ -1,15 +1,13 @@
 package core;
 
 import core.communication_data.*;
-import core.serialization.GameData;
+import core.playgrounds.Playground;
 import core.serialization.GameSerialization;
 import core.utils.logging.LoggerLogic;
 import core.utils.logging.LoggerState;
 import player.PlayerHuman;
 import player.PlayerNetwork;
-import player.PlayerPlacer;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 

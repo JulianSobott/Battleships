@@ -1,5 +1,6 @@
-package core;
+package core.playgrounds;
 
+import core.Ship;
 import core.communication_data.*;
 
 import java.beans.ConstructorProperties;

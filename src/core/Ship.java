@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.*;
 import core.communication_data.Position;
 import core.communication_data.ShipID;
 import core.communication_data.ShipPosition;
+import core.playgrounds.PlaygroundElement;
+import core.playgrounds.PlaygroundEnemyBuildUp;
 
 import java.io.Serializable;
 

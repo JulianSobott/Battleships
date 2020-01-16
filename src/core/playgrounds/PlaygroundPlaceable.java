@@ -1,10 +1,10 @@
-package core;
+package core.playgrounds;
 
+import core.Ship;
+import core.ShipPool;
 import core.communication_data.*;
 import core.utils.Random;
 import core.utils.logging.LoggerLogic;
-
-import java.util.HashMap;
 
 public class PlaygroundPlaceable extends Playground {
 

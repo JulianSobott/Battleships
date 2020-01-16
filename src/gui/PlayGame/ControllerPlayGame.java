@@ -2,6 +2,8 @@ package gui.PlayGame;
 
 import core.*;
 import core.communication_data.*;
+import core.playgrounds.Playground;
+import core.playgrounds.PlaygroundInterface;
 import core.serialization.GameData;
 import core.utils.logging.LoggerGUI;
 import gui.ControllerMainMenu;
@@ -26,7 +28,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 public class ControllerPlayGame implements Initializable, InGameGUI {

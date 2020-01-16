@@ -1,4 +1,4 @@
-package core;
+package core.playgrounds;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import core.communication_data.Position;

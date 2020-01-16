@@ -1,13 +1,12 @@
 package player;
 
-import core.Playground;
+import core.playgrounds.Playground;
 import core.Ship;
 import core.communication_data.*;
 import core.utils.Random;
 import core.utils.logging.LoggerLogic;
 
 import java.beans.ConstructorProperties;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;

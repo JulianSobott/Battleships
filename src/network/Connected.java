@@ -1,7 +1,7 @@
 package network;
 
-import core.*;
 import core.communication_data.Position;
+import core.playgrounds.Playground;
 import core.utils.logging.LoggerNetwork;
 import gui.PlayGame.InGameGUI;
 import gui.interfaces.Shutdown;

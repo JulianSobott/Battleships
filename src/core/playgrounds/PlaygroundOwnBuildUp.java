@@ -1,5 +1,6 @@
-package core;
+package core.playgrounds;
 
+import core.Ship;
 import core.communication_data.Position;
 import core.communication_data.ShotResult;
 import core.communication_data.ShotResultShip;

@@ -1,9 +1,7 @@
 package player;
 
-import core.Player;
-import core.PlaygroundEnemyBuildUp;
-import core.PlaygroundOwnBuildUp;
-import core.PlaygroundOwnPlaceable;
+import core.playgrounds.PlaygroundEnemyBuildUp;
+import core.playgrounds.PlaygroundOwnPlaceable;
 import core.communication_data.Position;
 
 import java.beans.ConstructorProperties;

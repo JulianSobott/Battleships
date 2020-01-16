@@ -1,5 +1,7 @@
 package core;
 
-public class WaterElement extends PlaygroundElement{
+import core.playgrounds.PlaygroundElement;
+
+public class WaterElement extends PlaygroundElement {
 
 }

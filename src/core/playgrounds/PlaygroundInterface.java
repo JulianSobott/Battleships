@@ -1,4 +1,6 @@
-package core;
+package core.playgrounds;
+
+import core.Ship;
 
 public interface PlaygroundInterface {
 

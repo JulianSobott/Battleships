@@ -1,8 +1,8 @@
 package player;
 
 import core.Player;
-import core.PlaygroundOwnPlaceable;
-import core.PlaygroundPlaceable;
+import core.playgrounds.PlaygroundOwnPlaceable;
+import core.playgrounds.PlaygroundPlaceable;
 import core.communication_data.PlaceShipResult;
 import core.communication_data.PlaceShipsRandomRes;
 import core.communication_data.ShipID;

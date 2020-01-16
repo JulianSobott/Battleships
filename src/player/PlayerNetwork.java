@@ -4,6 +4,9 @@ import core.*;
 import core.communication_data.Position;
 import core.communication_data.ShotResult;
 import core.communication_data.ShotResultShip;
+import core.playgrounds.Playground;
+import core.playgrounds.PlaygroundEnemyBuildUp;
+import core.playgrounds.PlaygroundOwnBuildUp;
 import network.Connected;
 
 import java.beans.ConstructorProperties;
