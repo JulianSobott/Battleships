@@ -669,7 +669,9 @@ public class ControllerShipPlacement implements Initializable, Shutdown {
             }
 
             ControllerPlayGame controllerPlayGame = new ControllerPlayGame(playgroundSize, shipPositionList, this.GAME_MANAGER);
-            this.networkConnection.enterInGame(controllerPlayGame);
+            if (this.networkConnection != null) {
+                this.networkConnection.enterInGame(controllerPlayGame);
+            }
             SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathPlayGame, controllerPlayGame);
             sceneLoader.loadSceneInExistingWindow();
             LoggerState.info("Switch state to In_Game");
