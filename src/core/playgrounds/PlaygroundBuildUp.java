@@ -50,9 +50,4 @@ public class PlaygroundBuildUp extends Playground {
         this.elements[position.getY()][position.getX()] = new Field(FieldType.SHIP, newShip, false);
         this.putShip(newShip);
     }
-
-    public boolean areAllShipsSunken() {
-        return this.numShipsFields == this.numHitShipsFields;
-    }
-
 }

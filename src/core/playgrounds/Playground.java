@@ -13,11 +13,13 @@ import core.communication_data.ShipID;
 import core.communication_data.ShipList;
 import core.serialization.ShipHashMapSerializer;
 import core.utils.logging.LoggerLogic;
-import org.junit.platform.commons.util.StringUtils;
 
 import java.util.*;
 
-@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
+/**
+ * Class with necessary implementations and attributes for every Playground
+ */
+@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, property="@class")
 public abstract class Playground {
 
     /**
@@ -48,14 +50,18 @@ public abstract class Playground {
 
     /**
      * Reset all fields to type.
-     * Releases all ships. Same as creating a new Playground
      *
-     * @param type
+     * @param type Type of every field
      */
     public void resetAll(FieldType type){
         this.resetFields(type);
     }
 
+    /**
+     * Equivalent of calling {@link #resetAll(FieldType)}
+     *
+     * @param type Type of every field
+     */
     protected void resetFields(FieldType type){
         for(int y = 0; y < this.size; y++){
             for(int x = 0; x < this.size; x++){
@@ -64,12 +70,23 @@ public abstract class Playground {
         }
     }
 
+    /**
+     * Resets only certain fields to the specified type.
+     *
+     * @param type All fields will have this type
+     * @param positions All positions that shall have the new type
+     */
     protected void resetFields(FieldType type, Position[] positions){
         for(Position pos : positions){
             this.resetField(type, pos);
         }
     }
 
+    /**
+     * Resets only one field to a new type.
+     * @param type Type of the field. Only Water or Fog is allowed here.
+     * @param pos Field position
+     */
     private void resetField(FieldType type, Position pos){
         PlaygroundElement element = new WaterElement();
         if(type == FieldType.FOG)
@@ -81,6 +98,10 @@ public abstract class Playground {
         this.elements[pos.getY()][pos.getX()] = new Field(type, element, false);
     }
 
+    /**
+     *
+     * @return true, when all ships are sunken
+     */
     public boolean areAllShipsSunken() {
         return numShipsFields - numHitShipsFields == 0;
     }
@@ -111,21 +132,39 @@ public abstract class Playground {
         return waterPositions.toArray(positions);
     }
 
+    /**
+     * Add a ship object to the HashMap. Needs to be called every time a Ship is placed on the playground
+     * @param ship New Ship on the Playground
+     */
     protected void putShip(Ship ship) {
         assert ship != null && !shipHashMap.containsKey(ship.getId()): "Cannot put ship in HashMap. ship=" + ship;
         shipHashMap.put(ship.getId(), ship);
     }
 
+    /**
+     * Return the ship by the specified ID. The ship with this ID must be added before.
+     * @param shipID ShipID of the wanted Ship
+     * @return The Ship with the specified ID
+     */
     protected Ship getShipByID(ShipID shipID) {
         assert shipID != null && !shipHashMap.containsKey(shipID): "ShipID is not in HashMap. id=" + shipID;
         return shipHashMap.get(shipID);
     }
 
+    /**
+     * Remove a Ship from the HashMap. Call when a ship is removed from the Playground.
+     * @param shipID ShipID of the Ship
+     * @return The Ship that was removed.
+     */
     protected Ship removeShipByID(ShipID shipID) {
         assert shipID != null && shipHashMap.containsKey(shipID): "ShipID is not in HashMap. id=" + shipID;
         return shipHashMap.remove(shipID);
     }
 
+    /**
+     * Every field has a FieldType.
+     * Some methods are needed to serialize it with jackson.
+     */
     public enum FieldType{
         SHIP, WATER, FOG;
 
@@ -153,6 +192,11 @@ public abstract class Playground {
         }
     }
 
+    /**
+     * Every field on a Playground is of type Field.
+     * This class contains basic/general information about a field.
+     * Some fields need more special information, which is in in then stored in the {@link #element}.
+     */
     public static class Field {
 
         private boolean hit;
@@ -172,10 +216,17 @@ public abstract class Playground {
             this(type, element, false);
         }
 
+        /**
+         * Factory class for more convenient generation of a simple water field.
+         * @return A new, not hit WaterField
+         */
         public static Field newWaterField(){
             return new Field(FieldType.WATER, new WaterElement(), false);
         }
 
+        /**
+         * Call when a shoot hit this field.
+         */
         public void gotHit(){
             this.hit = true;
             this.element.gotHit();
@@ -184,6 +235,8 @@ public abstract class Playground {
         public boolean isHit() {
             return hit;
         }
+
+        // Setter needed for jackson
 
         public void setHit(boolean hit) {
             this.hit = hit;
