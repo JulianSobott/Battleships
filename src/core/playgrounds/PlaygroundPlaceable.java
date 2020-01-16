@@ -57,7 +57,7 @@ public class PlaygroundPlaceable extends Playground {
             }
             ShipID shipID = ship.getId();
             ship.setShipPosition(position);
-            this.shipHashMap.put(shipID, ship);
+            putShip(ship);
             res =  PlaceShipResult.success(position, shipID);
         }
         if (!this.logDeactivatedShipPlacement)
@@ -105,7 +105,7 @@ public class PlaygroundPlaceable extends Playground {
         else {
             this.resetFields(Playground.FieldType.WATER, ship.getShipPosition().generateIndices());
             this.shipPool.releaseShip(ship);
-            this.shipHashMap.remove(id);
+            removeShipByID(id);
             res = true;
         }
         LoggerLogic.info( "deleteShip return: PlaceShipResult=" + res);
@@ -169,7 +169,7 @@ public class PlaygroundPlaceable extends Playground {
             LoggerLogic.info("Successfully placed ships");
             PlaceShipsRandomRes.ShipData[] data = new PlaceShipsRandomRes.ShipData[shipList.getTotalNumberOfShips()];
             int i = 0;
-            for(Ship s : this.shipHashMap.values()){
+            for(Ship s : getAllShips()){
                 data[i++] = new PlaceShipsRandomRes.ShipData(new ShipPosition(s.getShipPosition()), s.getId());
             }
             return PlaceShipsRandomRes.success(data);

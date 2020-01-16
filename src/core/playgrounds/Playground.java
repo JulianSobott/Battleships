@@ -34,7 +34,7 @@ public abstract class Playground {
     protected int numHitShipsFields = 0;
 
     @JsonSerialize(keyUsing = ShipHashMapSerializer.class)
-    protected HashMap<ShipID, Ship> shipHashMap  = new HashMap<>();
+    private HashMap<ShipID, Ship> shipHashMap  = new HashMap<>();
 
     public Playground() { // Jackson deserialization
     }
@@ -49,16 +49,18 @@ public abstract class Playground {
     }
 
     /**
-     * Reset all fields to type.
+     * Reset all fields to type. ({@link #resetFields(FieldType)})
+     * Removes all elements from {@link #shipHashMap}
      *
      * @param type Type of every field
      */
     public void resetAll(FieldType type){
         this.resetFields(type);
+        this.shipHashMap = new HashMap<>();
     }
 
     /**
-     * Equivalent of calling {@link #resetAll(FieldType)}
+     * Reset all fields to type.
      *
      * @param type Type of every field
      */
