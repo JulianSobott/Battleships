@@ -90,8 +90,8 @@ public abstract class Connected implements Shutdown {
             case "CONFIRMED":
                 player.setAllShipsPlaced();
                 if (isStartingPlayer){
-                    expectedMessage.set("ANSWER");
-                } else expectedMessage.set("SHOT");
+                    expectedMessage.set("SHOT"); // PlayerNetwork starts: Enemy shoots first
+                } else expectedMessage.set("ANSWER");
                 break;
             case "ANSWER":
                 switch (splitted[1]) {
