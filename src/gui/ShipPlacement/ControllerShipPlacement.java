@@ -535,6 +535,10 @@ public class ControllerShipPlacement implements Initializable, Shutdown {
                 dataGridBattleship.getChildren().remove(buttonShip);
                 dataGridBattleship.add(buttonShip, horizontalIndex, verticalIndex, colspan, rowspan);
                 battleShipGui.getPosition().setDirection(directionNew);
+                if(directionNew == ShipPosition.Direction.HORIZONTAL)
+                    buttonShip.setId(buttonShip.getBattleShipGui().getPosition().getLength() + "_H");
+                else
+                    buttonShip.setId(buttonShip.getBattleShipGui().getPosition().getLength() + "_V");
             } else {
                 LoggerGUI.info("User Info: Not allowed to rotate ship");
                 Notifications notifications = Notifications.create()
