@@ -450,7 +450,31 @@
 
 #2_H{
     -fx-background-image: url('ShipIcons/battleship02.png');
-    -fx-background-size: 70% 90%;
+    -fx-background-size: 70% 80%;
+    -fx-padding: 5 5 5 5;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
+
+#3_H{
+    -fx-background-image: url('ShipIcons/battleship03.png');
+    -fx-background-size: 55% 100%;
+    -fx-padding: 5 5 5 5;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
+
+#4_H{
+    -fx-background-image: url('ShipIcons/battleship04.png');
+    -fx-background-size: 65% 100%;
+    -fx-padding: 5 5 5 5;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
+
+#5_H{
+    -fx-background-image: url('ShipIcons/battleship05.png');
+    -fx-background-size: 65% 100%;
     -fx-padding: 5 5 5 5;
     -fx-background-position: center;
     -fx-background-repeat: no-repeat;
