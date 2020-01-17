@@ -6,10 +6,10 @@ import core.playgrounds.PlaygroundOwnPlaceable;
 import core.communication_data.Position;
 import core.communication_data.ShotResult;
 import core.communication_data.TurnResult;
+import core.utils.Random;
 import core.utils.logging.LoggerLogic;
 
 import java.beans.ConstructorProperties;
-import java.util.Random;
 
 public class PlayerAI extends Player {
 
@@ -18,8 +18,6 @@ public class PlayerAI extends Player {
     }
 
     private Difficulty difficulty;
-    private long seed = 1000;
-    private Random r =  new Random(seed);
     PlaygroundHeatmap playgroundHeatmap;
 
     @ConstructorProperties({"index", "name", "playgroundSize", "difficulty"})
@@ -75,8 +73,8 @@ public class PlayerAI extends Player {
     private Position makeTurnEasy() {
         Position pos;
         do {
-            int x = r.nextInt(getPlaygroundOwn().getSize());
-            int y = r.nextInt(getPlaygroundOwn().getSize());
+            int x = Random.random.nextInt(getPlaygroundOwn().getSize());
+            int y = Random.random.nextInt(getPlaygroundOwn().getSize());
             pos = new Position(x, y);
         }while (playgroundEnemy.canShootAt(pos) != TurnResult.Error.NONE);
         LoggerLogic.info("PlayerAI.makeTurn: position=" + pos);

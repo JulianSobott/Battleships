@@ -61,7 +61,8 @@ public class Ship extends PlaygroundElement implements Serializable {
      * @param s2 A Ship object Adjacent to s3
      * @return A new Ship Object with updated position
      */
-    public static Ship concatenateShips(Ship s1, Ship s2) {
+    public void concatenateShips(Ship s1) {
+        Ship s2 = this;
         ShipPosition.Direction newDirection;
         Position newPosition;
         int newLength;
@@ -91,7 +92,7 @@ public class Ship extends PlaygroundElement implements Serializable {
             newPosition = new Position(topShip.getShipPosition().getX(), topShip.getShipPosition().getY());
         }
         newLength = s1.getShipPosition().getLength() + s2.getShipPosition().getLength();
-        return new Ship(new ShipPosition(newPosition.getX(), newPosition.getY(), newDirection, newLength));
+        s2.setShipPosition(new ShipPosition(newPosition.getX(), newPosition.getY(), newDirection, newLength));
     }
 
     @JsonIgnore

@@ -13,18 +13,18 @@ public class TestShip {
     void testConcatenateShips1() {
         Ship s1 = new Ship(new Position(0, 0));
         Ship s2 = new Ship(new Position(0, 1));
-        Ship newS = Ship.concatenateShips(s1, s2);
+        s1.concatenateShips(s2);
         ShipPosition expectedPosition = new ShipPosition(0, 0, ShipPosition.Direction.VERTICAL, 2);
-        assertEquals(expectedPosition, newS.getShipPosition());
+        assertEquals(expectedPosition, s1.getShipPosition());
     }
 
     @Test
     void testConcatenateShips2() {
         Ship s1 = new Ship(new Position(0, 0));
         Ship s2 = new Ship(new Position(1, 0));
-        Ship newS = Ship.concatenateShips(s1, s2);
+        s1.concatenateShips(s2);
         ShipPosition expectedPosition = new ShipPosition(0, 0, ShipPosition.Direction.HORIZONTAL, 2);
-        assertEquals(expectedPosition, newS.getShipPosition());
+        assertEquals(expectedPosition, s1.getShipPosition());
     }
 
     @Test
@@ -32,9 +32,9 @@ public class TestShip {
         Ship s1 = new Ship(new Position(0, 0));
         Ship s2 = new Ship(new Position(1, 0));
         Ship s3 = new Ship(new Position(2, 0));
-        Ship newS = Ship.concatenateShips(s1, s2);
-        newS = Ship.concatenateShips(newS, s3);
+        s1.concatenateShips(s2);
+        s1.concatenateShips(s3);
         ShipPosition expectedPosition = new ShipPosition(0, 0, ShipPosition.Direction.HORIZONTAL, 3);
-        assertEquals(expectedPosition, newS.getShipPosition());
+        assertEquals(expectedPosition, s1.getShipPosition());
     }
 }
