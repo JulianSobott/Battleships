@@ -114,7 +114,7 @@ public abstract class Connected implements Shutdown {
                 }
                 break;
             case "PASS":
-                expectedMessage.set("SHOT");
+                expectedMessage.set("ANSWER");
                 break;
             default:
                 LoggerNetwork.error("Unrecognized keyword: keyword=" + keyword);
