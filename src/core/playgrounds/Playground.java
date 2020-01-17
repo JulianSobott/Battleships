@@ -124,7 +124,7 @@ public abstract class Playground {
                 int y = surrPos[1] + shipPosition.getY();
                 if(!(x < 0 || y < 0)){
                     Position pos = new Position(x, y);
-                    if (!pos.isOutsideOfPlayground(this.size) && this.elements[y][x].type == FieldType.WATER) {
+                    if (!pos.isOutsideOfPlayground(this.size) && this.elements[y][x].type != FieldType.SHIP) {
                         waterPositions.add(pos);
                     }
                 }

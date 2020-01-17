@@ -19,7 +19,7 @@ public class PlaygroundBuildUp extends Playground {
      * @param position Position of the WaterField
      */
     public void setWater(Position position) {
-        this.elements[position.getY()][position.getX()] = new Field(FieldType.WATER, new WaterElement(), false);
+        this.elements[position.getY()][position.getX()] = new Field(FieldType.WATER, new WaterElement(), true);
     }
 
     /**
@@ -47,7 +47,12 @@ public class PlaygroundBuildUp extends Playground {
             }
         }
         newShip.setLives(lifeStatus == Ship.LifeStatus.ALIVE ? 2 : 1); // Got hit will take lives later on
-        this.elements[position.getY()][position.getX()] = new Field(FieldType.SHIP, newShip, false);
+        this.elements[position.getY()][position.getX()] = new Field(FieldType.SHIP, newShip, true);
         this.putShip(newShip);
+        if (lifeStatus == Ship.LifeStatus.SUNKEN) {
+            for(Position p : getSurroundingWaterPositions(newShip)) {
+                setWater(p);
+            }
+        }
     }
 }
