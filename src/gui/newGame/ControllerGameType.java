@@ -157,7 +157,7 @@ public class ControllerGameType implements Initializable {
 
     private void startServer() {
         LoggerGUI.info("Starting server");
-        Server server = new Server(5000);
+        Server server = new Server(50000);
         networkConnection = server;
         Task<Void> task = new Task<Void>() {
             @Override
