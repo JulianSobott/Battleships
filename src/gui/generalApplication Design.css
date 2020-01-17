@@ -441,7 +441,31 @@
 }
 
 #2_V{
-    -fx-background-image: url('ShipIcons/2erSchiffVertikal.png');
+    -fx-background-image: url('ShipIcons/battleship02_V.png');
+    -fx-background-size: 90% 70%;
+    -fx-padding: 5 5 5 5;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
+
+#3_V{
+    -fx-background-image: url('ShipIcons/battleship03_V.png');
+    -fx-background-size: 90% 70%;
+    -fx-padding: 5 5 5 5;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
+
+#4_V{
+    -fx-background-image: url('ShipIcons/battleship04_V.png');
+    -fx-background-size: 90% 70%;
+    -fx-padding: 5 5 5 5;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
+
+#5_V{
+    -fx-background-image: url('ShipIcons/battleship05_V.png');
     -fx-background-size: 90% 70%;
     -fx-padding: 5 5 5 5;
     -fx-background-position: center;
