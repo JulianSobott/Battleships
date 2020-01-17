@@ -25,10 +25,9 @@ public class LoggerNetwork {
         logger.setLevel(CoreFunctions.level);
         logger.setUseParentHandlers(false);
         logger.addHandler(handler);
+        logger.addHandler(CoreFunctions.fileHandlerAll);
         FileHandler fileHandler;
         try {
-            File logFolder = new File("logs");
-            logFolder.mkdir();
             fileHandler = new FileHandler("logs/networkProtocol.%u.log");
             Formatter netF = new SimpleFormatter() {
                 @Override
