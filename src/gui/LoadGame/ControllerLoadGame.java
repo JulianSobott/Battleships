@@ -110,7 +110,7 @@ public class ControllerLoadGame implements Initializable {
         int index;
         if (listViewSaveGames.getSelectionModel().getSelectedIndex() == -1) {
             Notifications notifications = Notifications.create()
-                    .title("No score selected")
+                    .title("no saved game selected")
                     .text("Please select one of the available games, which should be loaded")
                     .darkStyle()
                     .hideCloseButton()
