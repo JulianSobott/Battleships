@@ -439,3 +439,19 @@
     -fx-background-image: url('ShipIcons/5erSchiffTeil5KaputtHorizontal.png');
     -fx-background-size: 100% 100%;
 }
+
+#2_V{
+    -fx-background-image: url('ShipIcons/2erSchiffVertikal.png');
+    -fx-background-size: 90% 70%;
+    -fx-padding: 5 5 5 5;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
+
+#2_H{
+    -fx-background-image: url('ShipIcons/battleship02.png');
+    -fx-background-size: 70% 90%;
+    -fx-padding: 5 5 5 5;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}

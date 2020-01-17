@@ -395,11 +395,16 @@ public class ControllerShipPlacement implements Initializable, Shutdown {
 
         battleShipGui.setPosition(result.getPosition());
         battleShipGui.setShipID(result.getShipID());
+        String cssID;
 
         if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.HORIZONTAL) {
+            cssID = battleShipGui.getPosition().getLength() +  "_H";
+            buttonShip.setId(cssID);
             dataGridBattleship.add(buttonShip, result.getPosition().getX(), result.getPosition().getY(), battleShipGui.getPosition().getLength(), 1);
         }
         if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.VERTICAL) {
+            cssID = battleShipGui.getPosition().getLength() +  "_V";
+            buttonShip.setId(cssID);
             dataGridBattleship.add(buttonShip, result.getPosition().getX(), result.getPosition().getY(), 1, battleShipGui.getPosition().getLength());
         }
         buttonShip.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -437,7 +442,7 @@ public class ControllerShipPlacement implements Initializable, Shutdown {
     private ButtonShip generateNewBattleship(BattleShipGui battleShipGui) {
 
         ButtonShip button = new ButtonShip(battleShipGui);
-        button.setStyle("-fx-background-color: white");
+        button.setStyle("-fx-background-color: #2E64FE");
        // button.setId("Battleship01");
         addEventDragDetectedPlacedShip(button);
         addContextMenu(button);
