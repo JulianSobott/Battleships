@@ -261,9 +261,11 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
 
                 String cssId = "black";
                 if (field.type == Playground.FieldType.SHIP) {
+                    // TODO: Handle ship here or
                     Ship ship = (Ship) field.element;
-                    // TODO: Handle ship here or below!?
                     cssId = "red";
+                    if (gridPane == gridPaneEnemyField)
+                        cssId = "Water_Ship_Hit";
                 }
                 if (field.type == Playground.FieldType.WATER) {
 
