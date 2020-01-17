@@ -122,7 +122,7 @@ public class ControllerGameType implements Initializable {
     public void btnConnectClicked() {
         if (radioButtonClient.isSelected()) {
             String ip = textFieldIpAddress.getText();
-            int port = 5000;
+            int port = 50000;
             networkConnection= new Client(ip, port);
             ConnectionStatus status = networkConnection.start();
             LoggerGUI.info("Client connection to server: status=" + status);

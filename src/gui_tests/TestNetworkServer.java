@@ -16,7 +16,7 @@ public class TestNetworkServer extends Application {
     public void start(Stage stage) {
         int playgroundSize = 10;
         // Start server
-        Server server = new Server(5000);
+        Server server = new Server(50000);
         server.start();
         // wait for client
         server.waitTillClientConnected();
