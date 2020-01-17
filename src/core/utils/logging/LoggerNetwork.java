@@ -1,5 +1,8 @@
 package core.utils.logging;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
 import java.util.logging.*;
 
 public class LoggerNetwork {
@@ -22,6 +25,23 @@ public class LoggerNetwork {
         logger.setLevel(CoreFunctions.level);
         logger.setUseParentHandlers(false);
         logger.addHandler(handler);
+        FileHandler fileHandler;
+        try {
+            File logFolder = new File("logs");
+            logFolder.mkdir();
+            fileHandler = new FileHandler("logs/networkProtocol.%u.log");
+            Formatter netF = new SimpleFormatter() {
+                @Override
+                public synchronized String format(LogRecord lr) {
+                    return CoreFunctions.formatMinimal(lr);
+                }
+            };
+            fileHandler.setFormatter(netF);
+            fileHandler.setLevel(CustomLevel.DEBUG);
+            logger.addHandler(fileHandler);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void debug(String msg) {
