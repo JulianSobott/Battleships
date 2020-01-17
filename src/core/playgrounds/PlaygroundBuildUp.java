@@ -41,7 +41,8 @@ public class PlaygroundBuildUp extends Playground {
                 if (!p.isOutsideOfPlayground(this.size) && this.elements[p.getY()][p.getX()].type == FieldType.SHIP) {
                     Ship adjacentShip = (Ship) this.elements[p.getY()][p.getX()].element;
                     this.removeShipByID(adjacentShip.getId());
-                    newShip = Ship.concatenateShips(newShip, adjacentShip);
+                    adjacentShip.concatenateShips(newShip);
+                    newShip = adjacentShip;
                     this.elements[p.getY()][p.getX()].element = newShip;
                 }
             }
