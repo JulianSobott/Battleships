@@ -35,21 +35,11 @@ public class PlayerNetwork extends Player {
     @Override
     public void update(ShotResult shotResult) {
         super.update(shotResult);
-        String num;
-        if (shotResult.getType() == Playground.FieldType.SHIP) {
-            if (((ShotResultShip) shotResult).getStatus() == Ship.LifeStatus.SUNKEN) {
-                num = "2";
-            } else {
-                num = "1";
-            }
-        } else {
-            num = "0";
-        }
-        connected.sendMessage("answer " + num);
+        connected.sendAnswer(shotResult);
     }
 
     public void sendSaveGame(long id) {
-        connected.sendMessage("save " + id);
+        connected.sendSaveGame(id);
     }
 
     @Override
@@ -60,7 +50,7 @@ public class PlayerNetwork extends Player {
     @Override
     public ShotResult gotHit(Position position) {
         // send SHOT and receive ANSWER
-        connected.sendMessage("shot " + position.getX() + " " + position.getY());
+        connected.sendShot(position);
         Connected.ShotResTuple res = connected.getShotResult();
         // Update field element and type
         if (res.type == Playground.FieldType.WATER) {

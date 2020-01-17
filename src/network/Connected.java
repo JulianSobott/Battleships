@@ -1,6 +1,9 @@
 package network;
 
+import core.Ship;
 import core.communication_data.Position;
+import core.communication_data.ShotResult;
+import core.communication_data.ShotResultShip;
 import core.playgrounds.Playground;
 import core.utils.logging.LoggerNetwork;
 import gui.PlayGame.InGameGUI;
@@ -79,7 +82,7 @@ public abstract class Connected implements Shutdown {
             case "SHOT":
                 Position position = new Position(Integer.parseInt(splitted[1]), Integer.parseInt(splitted[2]));
                 setSentData("makeTurnPosition", position);
-                expectedMessage.set("ANSWER");
+                // expected message will be set later on
                 break;
             case "SAVE":
                 long id = Long.parseLong(splitted[1]);
@@ -145,7 +148,35 @@ public abstract class Connected implements Shutdown {
         LoggerNetwork.info("End waitMessage loop");
     }
 
-    public void sendMessage(String message){
+    public void sendStartGame(int playgroundSize) {
+        sendMessage("size " + playgroundSize);
+    }
+
+    public void sendAnswer(ShotResult res) {
+        String num;
+        if (res.getType() == Playground.FieldType.SHIP) {
+            if (((ShotResultShip) res).getStatus() == Ship.LifeStatus.SUNKEN) {
+                num = "2";
+            } else {
+                num = "1";
+            }
+            expectedMessage.set("SHOT");
+        } else {
+            num = "0";
+            expectedMessage.set("ANSWER");
+        }
+        sendMessage("answer " + num);
+    }
+
+    public void sendSaveGame(long id) {
+        sendMessage("save " + id);
+    }
+
+    public void sendShot(Position pos) {
+        sendMessage("shot " + pos.getX() + " " + pos.getY());
+    }
+
+    private void sendMessage(String message){
         if (message.equals("answer 0")) {
             synchronized (expectedMessage) {
                 expectedMessage.set("PASS");

@@ -70,7 +70,7 @@ public class Server extends Connected {
     }
 
     public void startGame(int size){
-        this.sendMessage("size " + size);
+        sendStartGame(size);
         this.initPlayer(size);
     }
 
