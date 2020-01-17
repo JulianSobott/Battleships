@@ -8,7 +8,7 @@ import java.beans.ConstructorProperties;
 import java.io.Serializable;
 
 @JsonIdentityInfo(generator= ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
-public class ShipID {
+public class ShipID implements Serializable {
 
     private final int id;
     private static int nextID = 0;
