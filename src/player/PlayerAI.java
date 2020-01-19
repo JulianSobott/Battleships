@@ -121,8 +121,25 @@ public class PlayerAI extends Player {
     }
 
     private Position makeMoveHard() {
-        // TODO
-        return makeTurnEasy();
+        // TODO evtl auslagern der 'PotentialFields', merken ob getroffen wurde um in der Nähe weiter zu schiessen(gibts dafür evtl schon ne Methode?)
+        int k = this.playgroundEnemy.getSize();
+        int iterator = 0;
+        Position target;
+        Position tuple;
+        Position [] potentialFields = new Position[(k * k) / 2];
+        for (int i = 0; i < k; i++){
+            for (int j = 0; j < k; j++){
+                if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)){
+                    potentialFields[iterator] = new Position(i, j);                 //jedes 2te feld is potentiel möglich, beginnend mit dem Feld an Stelle [0][1]
+                    iterator++;                                                     //potentielle Felder werden in extra Array gespeichert, Array könnte/sollte man evtl auslagern?
+                }
+            }
+        }
+        int randomGuess =  (int)(Math.random() * iterator);   // Ist hier nicht ne zahl > arraylength moeglich? evtl ArrayoutofBounds?
+        target = potentialFields[randomGuess];                // zufällige bestimmung eines der Felder welches markiert ist
+        System.out.println(target);
+        System.out.println(randomGuess);
+        return target;
     }
 
 
@@ -146,6 +163,7 @@ public class PlayerAI extends Player {
     }
 
     public void setPlaygroundEnemy(PlaygroundEnemyBuildUp playgroundEnemy) {
+
         super.setPlaygroundEnemy(playgroundEnemy);
         //this.playgroundHeatmap.updateByPlayground();
     }
@@ -153,4 +171,6 @@ public class PlayerAI extends Player {
     public PlaygroundOwnPlaceable getPlaygroundOwn() {
         return (PlaygroundOwnPlaceable)playgroundOwn;
     }
+
+
 }
