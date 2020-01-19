@@ -1,6 +1,7 @@
 package player;
 
 import core.Player;
+import core.playgrounds.PlaygroundEnemy;
 import core.playgrounds.PlaygroundEnemyBuildUp;
 import core.playgrounds.PlaygroundOwnPlaceable;
 import core.communication_data.Position;
@@ -79,6 +80,7 @@ public class PlayerAI extends Player {
         }while (playgroundEnemy.canShootAt(pos) != TurnResult.Error.NONE);
         LoggerLogic.info("PlayerAI.makeTurn: position=" + pos);
         return pos;
+
     }
 
     /**
@@ -122,23 +124,27 @@ public class PlayerAI extends Player {
 
     private Position makeMoveHard() {
         // TODO evtl auslagern der 'PotentialFields', merken ob getroffen wurde um in der Nähe weiter zu schiessen(gibts dafür evtl schon ne Methode?)
-        int k = this.playgroundEnemy.getSize();
+        int playgroundSize = this.playgroundEnemy.getSize();
         int iterator = 0;
         Position target;
         Position tuple;
-        Position [] potentialFields = new Position[(k * k) / 2];
-        for (int i = 0; i < k; i++){
-            for (int j = 0; j < k; j++){
-                if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)){
-                    potentialFields[iterator] = new Position(i, j);                 //jedes 2te feld is potentiel möglich, beginnend mit dem Feld an Stelle [0][1]
+        Position [] potentialFields = new Position[(playgroundSize * playgroundSize) / 2];  //(size * size) / 2, da man ja nur jedes zweite Feld anvisieren und in extra-Array speichern möchte. Heißt das extra-Array muss nur halb so groß wie das Feld sein.
+        for (int x = 0; x < playgroundSize; x++){
+            for (int y = 0; y < playgroundSize; y++){
+                if ((x % 2 == 0 && y % 2 == 1) || (x % 2 == 1 && y % 2 == 0)){
+                    potentialFields[iterator] = new Position(x, y);                 //jedes 2te feld is potentiel möglich, beginnend mit dem Feld an Stelle [0][1]
                     iterator++;                                                     //potentielle Felder werden in extra Array gespeichert, Array könnte/sollte man evtl auslagern?
                 }
             }
         }
-        int randomGuess =  (int)(Math.random() * iterator);   // Ist hier nicht ne zahl > arraylength moeglich? evtl ArrayoutofBounds?
-        target = potentialFields[randomGuess];                // zufällige bestimmung eines der Felder welches markiert ist
-        System.out.println(target);
-        System.out.println(randomGuess);
+        do {
+
+            int randomGuess = Random.random.nextInt(iterator-1);
+            LoggerLogic.debug("randomGuess: " + randomGuess);
+            target = potentialFields[randomGuess];                // zufällige bestimmung eines der Felder welches markiert ist
+            LoggerLogic.debug("Target Field: " + target);
+        } while (playgroundEnemy.canShootAt(target) != TurnResult.Error.NONE);
+
         return target;
     }
 
