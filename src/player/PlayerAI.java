@@ -123,7 +123,7 @@ public class PlayerAI extends Player {
     }
 
     private Position makeMoveHard() {
-        // TODO evtl auslagern der 'PotentialFields', merken ob getroffen wurde um in der Nähe weiter zu schiessen(gibts dafür evtl schon ne Methode?)
+
         int playgroundSize = this.playgroundEnemy.getSize();
         int iterator = 0;
         Position target;
