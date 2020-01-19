@@ -7,7 +7,7 @@
 
 .anchorPaneMainMenu{
     -fx-background-color: white;
-    -fx-background-image: url('Images/Flugzeugtraeger.jpg');
+    -fx-background-image: url('Images/MainMenuImage.png');
     -fx-background-size: 100% 100%;
 }
 
@@ -29,7 +29,13 @@
 
 .vBoxTask{
     -fx-background-radius: 6;
-    -fx-background-color: linear-gradient(lightgrey 30%, lightgrey 100%);
+    -fx-background-color: linear-gradient(white 30%, white 100%);
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.75) , 5,0,0,1 );
+}
+
+.LoadGame{
+    -fx-background-radius: 6;
+    -fx-background-color: linear-gradient(white 30%, white 100%);
     -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.75) , 5,0,0,1 );
 }
 
@@ -93,4 +99,407 @@
 }
 .menu-item .label{
     -fx-background-color: white;
+}
+
+#Welle00{
+    -fx-background-image: url('Images/GameIcons/Welle00.png');
+    -fx-background-size: 100% 100%;
+}
+
+#Welle01{
+    -fx-background-image: url('Images/GameIcons/Welle01.png');
+    -fx-background-size: 100% 100%;
+}
+
+#Battleship01{
+    -fx-background-image: url('ShipIcons/battleship02.png');
+    -fx-background-size: 100% 100%;
+}
+
+
+#listView{
+
+
+}
+
+#listView .list-cell {
+    -fx-alignment: center;
+}
+
+
+
+
+
+#Water{
+    -fx-background-image: url('ShipIcons/Wasser.png');
+    -fx-background-size: 100% 100%;
+}
+
+#Water_Ship_Hit{
+    -fx-background-image: url('ShipIcons/Wasser_mit_Treffer.png');
+    -fx-background-size: 100% 100%;
+}
+
+#Water_Hit{
+    -fx-background-image: url('ShipIcons/Wasser_ohne_treffer.png');
+    -fx-background-size: 100% 100%;
+}
+
+#FOG{
+    -fx-background-image: url('ShipIcons/Wasser_mit_Nebel.png');
+    -fx-background-size: 100% 100%;
+}
+
+#2_01{
+    -fx-background-image: url('ShipIcons/2erSchiffTeil1.png');
+    -fx-background-size: 100% 100%;
+
+}
+
+
+#2_01_X{
+    -fx-background-image: url('ShipIcons/2erSchiffTeil1Kaputt.png');
+    -fx-background-size: 100% 100%;
+}
+
+#2_02{
+    -fx-background-image: url('ShipIcons/2erSchiffTeil2.png');
+    -fx-background-size: 100% 100%;
+}
+
+#2_02_X{
+    -fx-background-image: url('ShipIcons/2erSchiffTeil2Kaputt.png');
+    -fx-background-size: 100% 100%;
+}
+
+
+#3_01{
+    -fx-background-image: url('ShipIcons/3erSchiffTeil1.png');
+    -fx-background-size: 100% 100%;
+}
+
+#3_01_X{
+    -fx-background-image: url('ShipIcons/3erSchiffTeil1Kaputt.png');
+    -fx-background-size: 100% 100%;
+}
+
+#3_02{
+    -fx-background-image: url('ShipIcons/3erSchiffTeil2.png');
+    -fx-background-size: 100% 100%;
+}
+
+#3_02_X{
+    -fx-background-image: url('ShipIcons/3erSchiffTeil2Kaputt.png');
+    -fx-background-size: 100% 100%;
+}
+
+#3_03{
+    -fx-background-image: url('ShipIcons/3erSchiffTeil3.png');
+    -fx-background-size: 100% 100%;
+}
+
+#3_03_X{
+    -fx-background-image: url('ShipIcons/3erSchiffTeil3Kaputt.png');
+    -fx-background-size: 100% 100%;
+}
+
+#4_01{
+    -fx-background-image: url('ShipIcons/4erSchiffTeil1.png');
+    -fx-background-size: 100% 100%;
+}
+
+#4_01_X{
+    -fx-background-image: url('ShipIcons/4erSchiffTeil1Kaputt.png');
+    -fx-background-size: 100% 100%;
+}
+
+#4_02{
+    -fx-background-image: url('ShipIcons/4erSchiffTeil2.png');
+    -fx-background-size: 100% 100%;
+}
+
+#4_02_X{
+    -fx-background-image: url('ShipIcons/4erSchiffTeil2Kaputt.png');
+    -fx-background-size: 100% 100%;
+}
+
+#4_03{
+    -fx-background-image: url('ShipIcons/4erSchiffTeil3.png');
+    -fx-background-size: 100% 100%;
+}
+
+#4_03_X{
+    -fx-background-image: url('ShipIcons/4erSchiffTeil3Kaputt.png');
+    -fx-background-size: 100% 100%;
+}
+
+
+#4_04{
+    -fx-background-image: url('ShipIcons/4erSchiffTeil4.png');
+    -fx-background-size: 100% 100%;
+}
+
+#4_04_X{
+    -fx-background-image: url('ShipIcons/4erSchiffTeil4Kaputt.png');
+    -fx-background-size: 100% 100%;
+}
+
+#5_01{
+    -fx-background-image: url('ShipIcons/5erSchiffTeil1.png');
+    -fx-background-size: 100% 100%;
+}
+
+#5_01_X{
+    -fx-background-image: url('ShipIcons/5erSchiffTeil1Kaputt.png');
+    -fx-background-size: 100% 100%;
+}
+
+#5_02{
+    -fx-background-image: url('ShipIcons/5erSchiffTeil2.png');
+    -fx-background-size: 100% 100%;
+}
+
+#5_02_X{
+    -fx-background-image: url('ShipIcons/5erSchiffTeil2Kaputt.png');
+    -fx-background-size: 100% 100%;
+}
+
+#5_03{
+    -fx-background-image: url('ShipIcons/5erSchiffTeil3.png');
+    -fx-background-size: 100% 100%;
+}
+
+#5_03_X{
+    -fx-background-image: url('ShipIcons/5erSchiffTeil3Kaputt.png');
+    -fx-background-size: 100% 100%;
+}
+
+
+#5_04{
+    -fx-background-image: url('ShipIcons/5erSchiffTeil4.png');
+    -fx-background-size: 100% 100%;
+}
+
+#5_04_X{
+    -fx-background-image: url('ShipIcons/5erSchiffTeil4Kaputt.png');
+    -fx-background-size: 100% 100%;
+}
+
+#5_05{
+    -fx-background-image: url('ShipIcons/5erSchiffTeil5.png');
+    -fx-background-size: 100% 100%;
+}
+
+#5_05_X{
+    -fx-background-image: url('ShipIcons/5erSchiffTeil5Kaputt.png');
+    -fx-background-size: 100% 100%;
+}
+
+
+
+#2_01_H{
+    -fx-background-image: url('ShipIcons/2erSchiffTeil1Horizontal.png');
+    -fx-background-size: 100% 100%;
+}
+
+#2_01_H_X{
+    -fx-background-image: url('ShipIcons/2erSchiffTeil1KaputtHorizontal.png');
+    -fx-background-size: 100% 100%;
+}
+
+#2_02_H{
+    -fx-background-image: url('ShipIcons/2erSchiffTeil2Horizontal.png');
+    -fx-background-size: 100% 100%;
+}
+
+#2_02_H_X{
+    -fx-background-image: url('ShipIcons/2erSchiffTeil2KaputtHorizontal.png');
+    -fx-background-size: 100% 100%;
+}
+
+
+#3_01_H{
+    -fx-background-image: url('ShipIcons/3erSchiffTeil1Horizontal.png');
+    -fx-background-size: 100% 100%;
+}
+
+#3_01_H_X{
+    -fx-background-image: url('ShipIcons/3erSchiffTeil1KaputtHorizontal.png');
+    -fx-background-size: 100% 100%;
+}
+
+#3_02_H{
+    -fx-background-image: url('ShipIcons/3erSchiffTeil2Horizontal.png');
+    -fx-background-size: 100% 100%;
+}
+
+#3_02_H_X{
+    -fx-background-image: url('ShipIcons/3erSchiffTeil2KaputtHorizontal.png');
+    -fx-background-size: 100% 100%;
+}
+
+#3_03_H{
+    -fx-background-image: url('ShipIcons/3erSchiffTeil3Horizontal.png');
+    -fx-background-size: 100% 100%;
+}
+
+#3_03_H_X{
+    -fx-background-image: url('ShipIcons/3erSchiffTeil3KaputtHorizontal.png');
+    -fx-background-size: 100% 100%;
+}
+
+#4_01_H{
+    -fx-background-image: url('ShipIcons/4erSchiffTeil1Horizontal.png');
+    -fx-background-size: 100% 100%;
+}
+
+#4_01_H_X{
+    -fx-background-image: url('ShipIcons/4erSchiffTeil1KaputtHorizontal.png');
+    -fx-background-size: 100% 100%;
+}
+
+#4_02_H{
+    -fx-background-image: url('ShipIcons/4erSchiffTeil2Horizontal.png');
+    -fx-background-size: 100% 100%;
+}
+
+#4_02_H_X{
+    -fx-background-image: url('ShipIcons/4erSchiffTeil2KaputtHorizontal.png');
+    -fx-background-size: 100% 100%;
+}
+
+#4_03_H{
+    -fx-background-image: url('ShipIcons/4erSchiffTeil3Horizontal.png');
+    -fx-background-size: 100% 100%;
+}
+
+#4_03_H_X{
+    -fx-background-image: url('ShipIcons/4erSchiffTeil3KaputtHorizontal.png');
+    -fx-background-size: 100% 100%;
+}
+
+
+#4_04_H{
+    -fx-background-image: url('ShipIcons/4erSchiffTeil4Horizontal.png');
+    -fx-background-size: 100% 100%;
+}
+
+#4_04_H_X{
+    -fx-background-image: url('ShipIcons/4erSchiffTeil4KaputtHorizontal.png');
+    -fx-background-size: 100% 100%;
+}
+
+#5_01_H{
+    -fx-background-image: url('ShipIcons/5erSchiffTeil1.png');
+    -fx-background-size: 100% 100%;
+}
+
+#5_01_H_X{
+    -fx-background-image: url('ShipIcons/5erSchiffTeil1horizontal.png');
+    -fx-background-size: 100% 100%;
+}
+
+#5_02_H{
+    -fx-background-image: url('ShipIcons/5erSchiffTeil2horizontal.png');
+    -fx-background-size: 100% 100%;
+}
+
+#5_02_H_X{
+    -fx-background-image: url('ShipIcons/5erSchiffTeil2KaputtHorizontal.png');
+    -fx-background-size: 100% 100%;
+}
+
+#5_03_H{
+    -fx-background-image: url('ShipIcons/5erSchiffTeil3horizontal.png');
+    -fx-background-size: 100% 100%;
+}
+
+#5_03_H_X{
+    -fx-background-image: url('ShipIcons/5erSchiffTeil3KaputtHorizontal.png');
+    -fx-background-size: 100% 100%;
+}
+
+
+#5_04_H{
+    -fx-background-image: url('ShipIcons/5erSchiffTeil4horizontal.png');
+    -fx-background-size: 100% 100%;
+}
+
+#5_04_H_X{
+    -fx-background-image: url('ShipIcons/5erSchiffTeil4KaputtHorizontal.png');
+    -fx-background-size: 100% 100%;
+}
+
+#5_05_H{
+    -fx-background-image: url('ShipIcons/5erSchiffTeil5horizontal.png');
+    -fx-background-size: 100% 100%;
+}
+
+#5_05_H_X{
+    -fx-background-image: url('ShipIcons/5erSchiffTeil5KaputtHorizontal.png');
+    -fx-background-size: 100% 100%;
+}
+
+#2_V{
+    -fx-background-image: url('ShipIcons/battleship02_V.png');
+    -fx-background-size: 90% 70%;
+    -fx-padding: 5 5 5 5;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
+
+#3_V{
+    -fx-background-image: url('ShipIcons/battleship03_V.png');
+    -fx-background-size: 90% 70%;
+    -fx-padding: 5 5 5 5;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
+
+#4_V{
+    -fx-background-image: url('ShipIcons/battleship04_V.png');
+    -fx-background-size: 90% 70%;
+    -fx-padding: 5 5 5 5;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
+
+#5_V{
+    -fx-background-image: url('ShipIcons/battleship05_V.png');
+    -fx-background-size: 90% 70%;
+    -fx-padding: 5 5 5 5;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
+
+#2_H{
+    -fx-background-image: url('ShipIcons/battleship02.png');
+    -fx-background-size: 70% 80%;
+    -fx-padding: 5 5 5 5;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
+
+#3_H{
+    -fx-background-image: url('ShipIcons/battleship03.png');
+    -fx-background-size: 55% 100%;
+    -fx-padding: 5 5 5 5;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
+
+#4_H{
+    -fx-background-image: url('ShipIcons/battleship04.png');
+    -fx-background-size: 65% 100%;
+    -fx-padding: 5 5 5 5;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
+
+#5_H{
+    -fx-background-image: url('ShipIcons/battleship05.png');
+    -fx-background-size: 65% 100%;
+    -fx-padding: 5 5 5 5;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
 }

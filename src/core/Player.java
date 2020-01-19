@@ -1,7 +1,15 @@
 package core;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import core.communication_data.*;
+import core.playgrounds.PlaygroundEnemy;
+import core.playgrounds.PlaygroundEnemyBuildUp;
+import core.playgrounds.PlaygroundOwn;
 
+@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
+@JsonIdentityInfo(generator= ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
 public abstract class Player {
 
     protected PlaygroundOwn playgroundOwn;
@@ -9,50 +17,46 @@ public abstract class Player {
 
     protected String name;
     private int index;
+    private int playgroundSize;
+
+    public Player() { // Jackson deserialization
+    }
 
     public Player(int index, String name, int playgroundSize) {
         this.index = index;
         this.name = name;
-        this.playgroundOwn = new PlaygroundOwn(playgroundSize);
-        this.playgroundEnemy = new PlaygroundEnemy(playgroundSize);
+        this.playgroundSize = playgroundSize;
     }
 
     public abstract Position makeTurn();
 
-    public PlaceShipResult placeShip(ShipPosition position) {
-        PlaceShipResult res = this.playgroundOwn.placeShip(position);
-        this.playgroundOwn.printField();
-        return res;
-    }
 
-    public PlaceShipResult moveShip(ShipID id, ShipPosition position) {
-        return this.playgroundOwn.moveShip(id, position);
-    }
-
-    public boolean deleteShip(ShipID id) {
-        boolean res = this.playgroundOwn.deleteShip(id);
-        this.playgroundOwn.printField();
-        return res;
-    }
 
     public abstract boolean areAllShipsPlaced();
 
+    /**
+     * Enemy shot at this player
+     * @param position
+     * @return
+     */
     public ShotResult gotHit(Position position) {
         return this.playgroundOwn.gotHit(position);
     }
 
+    /**
+     * This player shot at an enemy and got an result.
+     * @param result
+     */
     public void update(ShotResult result) {
-        this.playgroundEnemy.updateField(result.getPosition(), result.getType());
-        if(result.getType() == Playground.FieldType.SHIP){
-            ShotResultShip resultShip = (ShotResultShip)result;
-            if(resultShip.getStatus() == Ship.LifeStatus.SUNKEN){
-                this.playgroundEnemy.hitWaterFieldsAroundSunkenShip(resultShip.getWaterFields());
-            }
-        }
+        this.playgroundEnemy.update(result);
     }
 
-    public PlaceShipsRandomRes placeShipsRandom() {
-        return this.playgroundOwn.placeShipsRandom();
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "{" +
+                "name='" + name + '\'' +
+                ", index=" + index +
+                '}';
     }
 
     public boolean allEnemyShipsSunken() {
@@ -65,5 +69,33 @@ public abstract class Player {
 
     public int getIndex() {
         return this.index;
+    }
+
+    public PlaygroundOwn getPlaygroundOwn() {
+        return playgroundOwn;
+    }
+
+    public PlaygroundEnemy getPlaygroundEnemy() {
+        return playgroundEnemy;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setPlaygroundOwn(PlaygroundOwn playgroundOwn) {
+        this.playgroundOwn = playgroundOwn;
+    }
+
+    public void setPlaygroundEnemy(PlaygroundEnemyBuildUp playgroundEnemy) {
+        this.playgroundEnemy = playgroundEnemy;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }

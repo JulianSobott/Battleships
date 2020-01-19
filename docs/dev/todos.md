@@ -1,17 +1,20 @@
 # TODO's ✓
 
-## Network: _Josua_
+- ingame game abbrechen
+- show HeatMap after load
+- loadGame: loadGame -> NewGame with predefined settings
+- saveGame
 
-- shooting
-    - receive
-        - forward Position to GameManager
-        - return result
-    - send
-        - Position from GameManager
-        - ShotResult to GameManager
+- error handling
+
+## Network:
+
 - start game
 - save game
 - load game
+- Connection with GUI
+    - Implementation of Client and Server
+    - Connection between Connect and PlayerNetwork 
 
 
 ## Logic
@@ -21,6 +24,7 @@
     - Add thread that waits?
 - save game: _Julian_
 - load game: _Julian_
+- placShipsRandom multiple times
 - (statistics): _Julian_
 - (settings)
 
@@ -31,6 +35,14 @@
 - load game: _Lukas_
 - endScreen: _Lukas_
 - design: _Julien_
+- new game screen:
+    - Remove 'port' field
+    - when client selected: add button join
+    - when server selected: Show joined player
+    - Server: only start when player joined
+    - Client: start when received playground size
+- input validation
+
 - (settings)
 - (multi language support) 
 

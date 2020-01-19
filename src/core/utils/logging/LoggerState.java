@@ -23,6 +23,7 @@ public class LoggerState {
         logger.setLevel(CoreFunctions.level);
         logger.setUseParentHandlers(false);
         logger.addHandler(handler);
+        logger.addHandler(CoreFunctions.fileHandlerAll);
     }
 
     public static void debug(String msg) {

@@ -1,20 +1,23 @@
 package core;
 
 import core.communication_data.*;
-import core.utils.logging.LoggerGUI;
+import core.playgrounds.Playground;
+import core.serialization.GameSerialization;
 import core.utils.logging.LoggerLogic;
 import core.utils.logging.LoggerState;
+import player.PlayerHuman;
+import player.PlayerNetwork;
 
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.logging.Logger;
 
 public class GameManager implements GameManagerInterface {
 
     // TODO: Check synchronize stuff for correctness
     // TODO: Remove deprecated methods/attributes
     // TODO: Better names for methods: shoot, makeShoot, turn, ...
-    private Player player1, player2;
+    private PlayerHuman player1;
+    private Player player2;
     private Player[] players;
     private Player currentPlayer;
 
@@ -29,6 +32,24 @@ public class GameManager implements GameManagerInterface {
 
     private Thread inGameThread;
 
+    /**
+     * Constructor, when game was loaded
+     * @param players
+     * @param currentPlayer
+     * @param round
+     */
+    public GameManager(Player[] players, Player currentPlayer, int round) {
+        this.initGame((PlayerHuman) players[0], players[1]);
+        this.currentPlayer = currentPlayer;
+        this.round = round;
+    }
+
+    /**
+     * Constructor, when attributes will be set in the {@link #newGame(GameSettings) newGame} method.
+     */
+    public GameManager() {
+    }
+
     @Override
     public boolean connectToServer(String ip, int port) {
         return false;
@@ -41,21 +62,24 @@ public class GameManager implements GameManagerInterface {
 
     @Override
     public NewGameResult newGame(GameSettings settings) {
-        this.player1 = settings.getP1();
-        this.player2 = settings.getP2();
-        this.players = new Player[]{settings.getP1(), settings.getP2()};
-        for(Player p1 : this.players){
-            this.lastTurns.put(p1, new ConcurrentLinkedQueue<>());
-            this.nextTurns.put(p1, new ConcurrentLinkedQueue<>());
+        this.initGame(settings.getP1(), settings.getP2());
+        this.currentPlayer = settings.getStartingPlayer();
+
+        ShipList shipList = ShipList.fromSize(settings.getPlaygroundSize());
+        return new NewGameResult(shipList);
+    }
+
+    private void initGame(PlayerHuman p1, Player p2) {
+        this.player1 = p1;
+        this.player2 = p2;
+        this.players = new Player[]{p1, p2};
+        for(Player p : this.players){
+            this.lastTurns.put(p, new ConcurrentLinkedQueue<>());
+            this.nextTurns.put(p, new ConcurrentLinkedQueue<>());
         }
         // TODO: find better way
         idPlayerHashMap.put("GUI_1", this.player1);
-        idPlayerHashMap.put("AI_2", this.player1);
-
-        // TODO: Set current player properly
-        this.currentPlayer = player1;
-        ShipList shipList = ShipList.fromSize(settings.getPlaygroundSize());
-        return new NewGameResult(shipList);
+        idPlayerHashMap.put("AI_2", this.player2);
     }
 
     public StartShootingRes startShooting() {
@@ -71,22 +95,22 @@ public class GameManager implements GameManagerInterface {
 
     @Override
     public PlaceShipResult placeShip(ShipPosition pos) {
-        return currentPlayer.placeShip(pos);
+        return player1.placeShip(pos);
     }
 
     @Override
     public PlaceShipsRandomRes placeShipsRandom() {
-        return this.currentPlayer.placeShipsRandom();
+        return player1.placeShipsRandom();
     }
 
     @Override
     public PlaceShipResult moveShip(ShipID id, ShipPosition pos) {
-        return currentPlayer.moveShip(id, pos);
+        return player1.moveShip(id, pos);
     }
 
     @Override
     public boolean deleteShip(ShipID id) {
-        return currentPlayer.deleteShip(id);
+        return player1.deleteShip(id);
     }
 
     /**
@@ -99,12 +123,11 @@ public class GameManager implements GameManagerInterface {
         LoggerLogic.debug("Make shot: player=" + player + " position=" + position);
         synchronized (this.nextTurns.get(player)) {
             LoggerLogic.debug("" + this.nextTurns);
-            LoggerLogic.debug("" + this.nextTurns.get(player));
             LoggerLogic.debug("" + position);
             if (this.nextTurns.get(player).size() != 1) {
                 this.nextTurns.get(player).add(position);
                 this.nextTurns.get(player).notifyAll();
-                LoggerLogic.debug("Notify on Queue: " + this.nextTurns.get(player));
+                LoggerLogic.debug("Notify on Queue: " + this.nextTurns);
             } else {
                 LoggerLogic.debug("Player has already made a shot. player=" + player);
             }
@@ -151,7 +174,6 @@ public class GameManager implements GameManagerInterface {
             res = this.shoot(player, position);
         }
         LoggerLogic.info("Enemy playground from player: player=" + player);
-        player.playgroundEnemy.printField();
         LoggerLogic.info("turn result: TurnResult=" + res);
         return res;
     }
@@ -194,16 +216,19 @@ public class GameManager implements GameManagerInterface {
     private void gameLoop() {
         inGameThread = new Thread(() -> {
             TurnResult res;
+            LoggerState.info("Starting player: " + this.currentPlayer);
             do {
                 res = turnLoop();
                 if (res != null)
                     nextPlayer();
                 else { // game was interrupted
                 }
-            } while (res != null && res.isFINISHED() && !Thread.currentThread().isInterrupted());
+            } while (res != null && !res.isFINISHED() && !Thread.currentThread().isInterrupted());
+            LoggerLogic.info("End main gameLoop");
         });
         inGameThread.setName("Main_gameLoop");
         inGameThread.start();
+        LoggerLogic.info("Started Main_gameLoop thread");
     }
 
     /**
@@ -216,11 +241,14 @@ public class GameManager implements GameManagerInterface {
         do {
             // TODO: Find better solution for makeTurn. maybe flag in player: triggerMakeTurn needed.
             Position pos = this.currentPlayer.makeTurn();
+            LoggerLogic.debug("Position=" + pos + ", Player=" + this.currentPlayer);
             if (pos == null) {
                 pos = this.getPlayerShootPosition();
+                LoggerLogic.debug("Position=" + pos + ", Player=" + this.currentPlayer);
             }
             if (pos != null) {
                 res = this.turn(this.currentPlayer, pos);
+                LoggerLogic.debug("res=" + res + ", Player=" + this.currentPlayer);
                 this.saveTurnResult(res);
             }
         } while (res != null && res.isTURN_AGAIN() && !Thread.currentThread().isInterrupted());
@@ -233,14 +261,15 @@ public class GameManager implements GameManagerInterface {
      * @param res
      */
     private void saveTurnResult(TurnResult res){
-        // TODO: Synchronize on which object
         for(Player p : this.players){
             synchronized (this.lastTurns.get(p)){
-                this.lastTurns.get(p).add(res);
-                this.lastTurns.get(p).notifyAll();
-                // TODO: Poll from all Queues Also AI
+                if (p instanceof PlayerHuman) {
+                    this.lastTurns.get(p).add(res);
+                    this.lastTurns.get(p).notifyAll();
+                }
             }
         }
+        LoggerLogic.debug("SavedResults: lastTurns=" + this.lastTurns);
     }
 
     private Position getPlayerShootPosition() {
@@ -274,4 +303,30 @@ public class GameManager implements GameManagerInterface {
         }
     }
 
+    // Save game
+    public long saveGame() {
+        long id = GameSerialization.saveGame(this);
+        if (this.player2 instanceof PlayerNetwork) {
+            ((PlayerNetwork)this.player2).sendSaveGame(id);
+        }
+        return id;
+    }
+
+    public long saveGame(long id) {
+        return GameSerialization.saveGame(this, id);
+    }
+
+    // Getters
+
+    public Player[] getPlayers() {
+        return players;
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public int getRound() {
+        return round;
+    }
 }

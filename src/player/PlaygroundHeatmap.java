@@ -1,12 +1,12 @@
 package player;
 
-import core.Playground;
+import core.playgrounds.Playground;
 import core.Ship;
 import core.communication_data.*;
 import core.utils.Random;
 import core.utils.logging.LoggerLogic;
 
-import java.util.ArrayList;
+import java.beans.ConstructorProperties;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,7 +21,7 @@ public class PlaygroundHeatmap {
     private int finalNumShipsHit = 0;
     private int tempNumShipsHit = 0;
 
-
+    @ConstructorProperties("size")
     public PlaygroundHeatmap(int size) {
         this.shipList = ShipList.fromSize(size);
         this.SIZE = size;
@@ -217,5 +217,58 @@ public class PlaygroundHeatmap {
             s.append("\n");
         }
         LoggerLogic.debug(s.toString());
+    }
+
+
+    public Playground.FieldType[][] getFinal_fields() {
+        return final_fields;
+    }
+
+    public void setFinal_fields(Playground.FieldType[][] final_fields) {
+        this.final_fields = final_fields;
+    }
+
+    public Playground.FieldType[][] getTemp_fields() {
+        return temp_fields;
+    }
+
+    public void setTemp_fields(Playground.FieldType[][] temp_fields) {
+        this.temp_fields = temp_fields;
+    }
+
+    public List<ShipPosition> getDiscoveredSunkenShips() {
+        return discoveredSunkenShips;
+    }
+
+    public void setDiscoveredSunkenShips(List<ShipPosition> discoveredSunkenShips) {
+        this.discoveredSunkenShips = discoveredSunkenShips;
+    }
+
+    public int getSIZE() {
+        return SIZE;
+    }
+
+//    public ShipList getShipList() {
+//        return shipList;
+//    }
+//
+//    public void setShipList(ShipList shipList) {
+//        this.shipList = shipList;
+//    }
+
+    public int getFinalNumShipsHit() {
+        return finalNumShipsHit;
+    }
+
+    public void setFinalNumShipsHit(int finalNumShipsHit) {
+        this.finalNumShipsHit = finalNumShipsHit;
+    }
+
+    public int getTempNumShipsHit() {
+        return tempNumShipsHit;
+    }
+
+    public void setTempNumShipsHit(int tempNumShipsHit) {
+        this.tempNumShipsHit = tempNumShipsHit;
     }
 }

@@ -1,54 +1,43 @@
 package network.Client;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import core.utils.logging.LoggerNetwork;
+import network.Connected;
+import network.ConnectionStatus;
+
+import java.io.*;
+import java.net.ConnectException;
 import java.net.Socket;
-import java.util.Scanner;
+import java.net.UnknownHostException;
 
-public class Client {
+public class Client extends Connected {
 
-    public static void main(String[] args) {
+    private Socket socket;
+    private String ip;
+    private int port;
+
+    public Client(String ip, int port) {
+        this.ip = ip;
+        this.port = port;
+        this.expectedFirstMessage = "SIZE";
+        this.isStartingPlayer = true;
+    }
+
+    @Override
+    public ConnectionStatus start() {
         try {
-            Socket s = new Socket("localhost", 4999);
-//            PrintWriter pr = new PrintWriter(s.getOutputStream());
-//            pr.println("is it working");
-//            pr.flush();
-//
-//            InputStreamReader in = new InputStreamReader(s.getInputStream());
-//            BufferedReader bf = new BufferedReader(in);
-//
-//            String str = bf.readLine();
-//            System.out.println("Server: " + str);
-
-            //
-            //
-
-            while (true) {
-
-                PrintWriter pr = new PrintWriter(s.getOutputStream());
-                Scanner scanner = new Scanner(System.in);
-                String nextline = scanner.nextLine();
-                pr.println(nextline);
-                pr.flush();
-
-                InputStreamReader in = new InputStreamReader(s.getInputStream());
-                BufferedReader bf = new BufferedReader(in);
-
-                String str = bf.readLine();
-                System.out.println("[Server]: " + str);
-            }
-
-            //
-            //
-
-        } catch (IOException e) {
+            socket = new Socket(ip, port);
+            super.connected(socket);
+            isStarted = true;
+            LoggerNetwork.info("Client connected to server: ip=" + ip + ", port=" + port);
+            return ConnectionStatus.SUCCESSFUL;
+        } catch (UnknownHostException e) {
+            LoggerNetwork.warning("Unknown host: ip=" + ip + ", port=" + port);
+            return ConnectionStatus.UNKNOWN_HOST;
+        } catch (ConnectException e) {
+            return ConnectionStatus.REFUSED;
+        } catch(IOException e) {
             e.printStackTrace();
+            return ConnectionStatus.UNKNOWN_HOST;
         }
-
-
-
-
     }
 }

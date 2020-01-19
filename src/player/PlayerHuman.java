@@ -1,17 +1,31 @@
 package player;
 
-import core.Player;
-import core.communication_data.TurnResult;
+import core.playgrounds.PlaygroundEnemyBuildUp;
+import core.playgrounds.PlaygroundOwnPlaceable;
+import core.communication_data.Position;
 
-public class PlayerHuman extends Player {
+import java.beans.ConstructorProperties;
 
-    public PlayerHuman(String name, int playgroundSize) {
+public class PlayerHuman extends PlayerPlacer {
 
-        super(name, playgroundSize);
+    @ConstructorProperties({"index", "name", "playgroundSize"})
+    public PlayerHuman(int index, String name, int playgroundSize) {
+        super(index, name, playgroundSize);
+        this.playgroundOwn = new PlaygroundOwnPlaceable(playgroundSize);
+        this.playgroundEnemy = new PlaygroundEnemyBuildUp(playgroundSize);
     }
 
     @Override
-    public TurnResult makeTurn() {
+    public boolean areAllShipsPlaced() {
+        return this.getPlaygroundOwn().areAllShipsPlaced();
+    }
+
+    @Override
+    public Position makeTurn() {
         return null;
+    }
+
+    public PlaygroundOwnPlaceable getPlaygroundOwn() {
+        return (PlaygroundOwnPlaceable) this.playgroundOwn;
     }
 }

@@ -1,6 +1,6 @@
 package core.communication_data;
 
-import core.Playground;
+import core.playgrounds.Playground;
 import core.Ship;
 
 import java.util.Arrays;

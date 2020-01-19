@@ -3,13 +3,18 @@ package gui.ShipPlacement;
 import core.GameManager;
 import core.communication_data.*;
 import core.utils.logging.LoggerGUI;
+import core.utils.logging.LoggerLogic;
 import core.utils.logging.LoggerState;
 import gui.PlayGame.ControllerPlayGame;
 import gui.UiClasses.BattleShipGui;
 import gui.UiClasses.ButtonShip;
 import gui.UiClasses.HBoxExends;
 import gui.WindowChange.SceneLoader;
+import gui.interfaces.Shutdown;
 import gui.newGame.ControllerGameType;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -25,13 +30,18 @@ import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
+import javafx.util.Duration;
+import network.Client.Client;
+import network.Connected;
+import network.Server.Server;
+import org.controlsfx.control.Notifications;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
-public class ControllerShipPlacement implements Initializable {
+public class ControllerShipPlacement implements Initializable, Shutdown {
 
     private static final String filepathBackNewGame = "../newGame/GameType.fxml";
     private static final String filepathPlayGame = "../PlayGame/PlayGame.fxml";
@@ -46,9 +56,13 @@ public class ControllerShipPlacement implements Initializable {
     private Button buttonBack;
     @FXML
     private Button buttonPlaceShipsRandom;
+    @FXML
+    private Button startGame;
+
     private double CELL_PERCENTAGE_WIDTH;
     private HashMap<Integer, ShipCounterPair> hashMapShipLabels = new HashMap<>();
     private ArrayList<ButtonShip> shipArrayListGui = new ArrayList<>();
+    private Connected networkConnection;
 
     /**
      * ################################################   Constructors  ################################################
@@ -59,6 +73,7 @@ public class ControllerShipPlacement implements Initializable {
         NewGameResult res = this.GAME_MANAGER.newGame(settings);
         this.SHIP_LIST = res.getSHIP_LIST();
         this.playgroundSize = settings.getPlaygroundSize();
+        this.networkConnection = settings.getNetworkConnection();
     }
 
 
@@ -99,10 +114,6 @@ public class ControllerShipPlacement implements Initializable {
             row.setPercentHeight(CELL_PERCENTAGE_WIDTH);
             dataGridBattleship.getRowConstraints().add(row);
         }
-
-        Image battleShipImage = new Image("/gui/ShipIcons/Wasser_Groß.jpg");
-        BackgroundImage im = new BackgroundImage(battleShipImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
-        // dataGridBattleship.setBackground(new Background(im));
     }
 
 
@@ -143,6 +154,7 @@ public class ControllerShipPlacement implements Initializable {
     private void generateWater(int possHorizontal, int possVertical) {
         Pane p = new Pane();
         p.setStyle("-fx-background-color: #2E64FE");
+        p.setId("Welle01");
         dataGridBattleship.add(p, possHorizontal, possVertical);
         handleDragOver(p);
         handleDrop(p);
@@ -154,7 +166,7 @@ public class ControllerShipPlacement implements Initializable {
      * This method generates the different types of ships that the player sees on the right side of the board
      * and can then distribute on the board.
      *
-     * @param shipSize      length of the ship type
+     * @param shipSize length of the ship type
      */
 
     private HBoxExends createNewGuiShipType(int shipSize) {
@@ -164,11 +176,14 @@ public class ControllerShipPlacement implements Initializable {
         hBox.setSpacing(20);
         hBox.setAlignment(Pos.CENTER);
 
-        Image battleShipImage = new Image("/gui/ShipIcons/Testschiff.png");
+        String shipIcon = "battleship0" + shipSize;
+        String path = "/gui/ShipIcons/battleship0" + shipSize + ".png";
+
+        Image battleShipImage = new Image(path);
         ImageView imageView = new ImageView(battleShipImage);
         addEventDragDetected(hBox);
-        imageView.setFitWidth(140);
-        imageView.setFitHeight(60);
+        imageView.setFitWidth(120);
+        imageView.setFitHeight(100);
 
         hBox.getChildren().addAll(imageView, this.hashMapShipLabels.get(shipSize).getTextLabel());
         return hBox;
@@ -282,10 +297,26 @@ public class ControllerShipPlacement implements Initializable {
         if (res.isSuccessfullyPlaced()) {
 
             addShipToPlayground(button, battleShipGui, res);
-
             this.hashMapShipLabels.get(battleShipGui.getPosition().getLength()).decreaseCounter();
         } else {
+            //TODO: no ships are left
+            String title = "Not allowed to place here a Ship";
+            String content = "Parts of the ship collapse either with another ship or the edge of the field";
+            ShipCounterPair shipCounterPair = this.hashMapShipLabels.get(battleShipGui.getPosition().getLength());
+            if(shipCounterPair.getCounter() == 0){
+
+                title = "no length " + battleShipGui.getPosition().getLength() + " vessel available";
+                content = "You have already placed all ships of this size on the board";
+            }
             // TODO: inform user about failure
+            Notifications notifications = Notifications.create()
+                    .title(title)
+                    .text(content)
+                    .darkStyle()
+                    .hideCloseButton()
+                    .position(Pos.CENTER)
+                    .hideAfter(Duration.seconds(6.0));
+            notifications.showError();
         }
     }
 
@@ -317,8 +348,17 @@ public class ControllerShipPlacement implements Initializable {
             addShipToPlayground(buttonShip, battleShipGui, res);
 
         } else {
+
             LoggerGUI.info("[USER HINT] Cannot move ship to new position: " + res.getERROR());
             // TODO: inform user
+            Notifications notifications = Notifications.create()
+                    .title("Cannot move ship to new position")
+                    .text("Parts of the ship collapse either with another ship or the edge of the field")
+                    .darkStyle()
+                    .hideCloseButton()
+                    .position(Pos.CENTER)
+                    .hideAfter(Duration.seconds(6.0));
+            notifications.showError();
         }
     }
 
@@ -351,17 +391,20 @@ public class ControllerShipPlacement implements Initializable {
      * @param result        the result contains the new information about the graphical object.
      */
 
-    //ToDO PlaceShipReslult möglicherweiße durch anderen Datentypen ersetzen ??
-
     private void addShipToPlayground(ButtonShip buttonShip, BattleShipGui battleShipGui, PlaceShipResult result) {
 
         battleShipGui.setPosition(result.getPosition());
         battleShipGui.setShipID(result.getShipID());
+        String cssID;
 
         if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.HORIZONTAL) {
+            cssID = battleShipGui.getPosition().getLength() +  "_H";
+            buttonShip.setId(cssID);
             dataGridBattleship.add(buttonShip, result.getPosition().getX(), result.getPosition().getY(), battleShipGui.getPosition().getLength(), 1);
         }
         if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.VERTICAL) {
+            cssID = battleShipGui.getPosition().getLength() +  "_V";
+            buttonShip.setId(cssID);
             dataGridBattleship.add(buttonShip, result.getPosition().getX(), result.getPosition().getY(), 1, battleShipGui.getPosition().getLength());
         }
         buttonShip.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -399,7 +442,8 @@ public class ControllerShipPlacement implements Initializable {
     private ButtonShip generateNewBattleship(BattleShipGui battleShipGui) {
 
         ButtonShip button = new ButtonShip(battleShipGui);
-        button.setStyle("-fx-background-color: #00ff00");
+        button.setStyle("-fx-background-color: #2E64FE");
+       // button.setId("Battleship01");
         addEventDragDetectedPlacedShip(button);
         addContextMenu(button);
 
@@ -453,6 +497,13 @@ public class ControllerShipPlacement implements Initializable {
         });
     }
 
+    /**
+     * Ships can be turned on the playground
+     *
+     * @param menuItemTurnShip menu Item of the ship
+     * @param buttonShip       ship which should be turned
+     */
+
     private void addMenuItemTurnShip(MenuItem menuItemTurnShip, ButtonShip buttonShip) {
         menuItemTurnShip.setOnAction(event -> {
 
@@ -484,8 +535,20 @@ public class ControllerShipPlacement implements Initializable {
                 dataGridBattleship.getChildren().remove(buttonShip);
                 dataGridBattleship.add(buttonShip, horizontalIndex, verticalIndex, colspan, rowspan);
                 battleShipGui.getPosition().setDirection(directionNew);
+                if(directionNew == ShipPosition.Direction.HORIZONTAL)
+                    buttonShip.setId(buttonShip.getBattleShipGui().getPosition().getLength() + "_H");
+                else
+                    buttonShip.setId(buttonShip.getBattleShipGui().getPosition().getLength() + "_V");
             } else {
                 LoggerGUI.info("User Info: Not allowed to rotate ship");
+                Notifications notifications = Notifications.create()
+                        .title("Not allowed to rotate ship")
+                        .text("Parts of the ship collapse either with another ship or the edge of the field")
+                        .darkStyle()
+                        .hideCloseButton()
+                        .position(Pos.CENTER)
+                        .hideAfter(Duration.seconds(6.0));
+                notifications.showError();
             }
         });
     }
@@ -495,13 +558,16 @@ public class ControllerShipPlacement implements Initializable {
      */
 
 
+    /**
+     * ...
+     */
+
     @FXML
     public void placeShipsRandom() {
 
-        if(shipArrayListGui.size() > 0)
-        {
-            while ( shipArrayListGui.size() > 0) {
-               BattleShipGui battleShipGui =  shipArrayListGui.get(0).getBattleShipGui();
+        if (shipArrayListGui.size() > 0) {
+            while (shipArrayListGui.size() > 0) {
+                BattleShipGui battleShipGui = shipArrayListGui.get(0).getBattleShipGui();
                 deleteShipFromPlayground(battleShipGui);
             }
         }
@@ -515,23 +581,32 @@ public class ControllerShipPlacement implements Initializable {
                 PlaceShipResult placeShipResult = new PlaceShipResult(true, ship.getPOSITION(), ship.getId(), PlaceShipResult.Error.NONE);
                 addShipToPlayground(buttonShip, battleShipGui, placeShipResult);
             }
-            for(ShipCounterPair lbl :this.hashMapShipLabels.values()) {
+            for (ShipCounterPair lbl : this.hashMapShipLabels.values()) {
                 lbl.setCounter(0);
             }
         } else {
             LoggerGUI.info("[USER HINT]: Can not place ships random");
             // TODO: inform user
+
         }
 
     }
 
+    /**
+     * ...
+     */
+
     @FXML
-    private void deletePlacedShips(){
+    private void deletePlacedShips() {
         while (!shipArrayListGui.isEmpty()) {
             ButtonShip buttonShip = shipArrayListGui.remove(0);
             deleteShipFromPlayground(buttonShip);
         }
     }
+
+    /**
+     * ...
+     */
 
     private boolean deleteShipFromPlayground(ButtonShip buttonShip) {
         boolean success = GAME_MANAGER.deleteShip(buttonShip.getBattleShipGui().getShipID());
@@ -566,23 +641,56 @@ public class ControllerShipPlacement implements Initializable {
      */
 
     @FXML
-    public void startGame(){
-        StartShootingRes res = GAME_MANAGER.startShooting();
-        if (res == StartShootingRes.SHOOTING_ALLOWED) {
+    public void startGame() {
+        LoggerLogic.debug("Player in GUi=" + GAME_MANAGER.getPlayers()[0].getPlaygroundOwn().hashCode());
+        GAME_MANAGER.getPlayers()[0].getPlaygroundOwn().printField();
+        if (GAME_MANAGER.getPlayers()[0].areAllShipsPlaced()) {
+            if (networkConnection != null){
+                networkConnection.sendAllShipsPlaced();
+            }
+        } else {
+            LoggerGUI.info("Player hasn't placed all ships. Can't start game");
+        }
+        Task<Void> t = new Task<>() {
+            @Override
+            protected Void call() {
+                StartShootingRes res;
+                StartShootingRes lastRes = null;
+                while ((res = GAME_MANAGER.startShooting()) != StartShootingRes.SHOOTING_ALLOWED){
+                    if (lastRes != res){
+                        LoggerGUI.info("[user hint] " + res);
+                    }
+                    lastRes = res;
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return null;
+            }
+        };
+        t.setOnSucceeded(workerStateEvent -> {
             ArrayList<BattleShipGui> shipPositionList = new ArrayList<>();
-            for (ButtonShip buttonShip :shipArrayListGui) {
+            for (ButtonShip buttonShip : shipArrayListGui) {
 
                 shipPositionList.add(buttonShip.getBattleShipGui());
             }
 
             ControllerPlayGame controllerPlayGame = new ControllerPlayGame(playgroundSize, shipPositionList, this.GAME_MANAGER);
+            if (this.networkConnection != null) {
+                this.networkConnection.enterInGame(controllerPlayGame);
+            }
             SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathPlayGame, controllerPlayGame);
             sceneLoader.loadSceneInExistingWindow();
             LoggerState.info("Switch state to In_Game");
-        }
-        else {
-            LoggerGUI.info("[user hint]" + res);
-        }
+        });
+        new Thread(t).start();
+    }
+
+    @Override
+    public void onShutdown() {
+        // shutdown server
     }
 
 
@@ -590,6 +698,10 @@ public class ControllerShipPlacement implements Initializable {
      * #########################################   ShipCounterPair class   #############################################
      */
 
+
+    /**
+     * ...
+     */
 
     static class ShipCounterPair {
         private final int size;
@@ -627,5 +739,4 @@ public class ControllerShipPlacement implements Initializable {
             return this.counter + " x " + this.size + "-er Shiffe";
         }
     }
-
 }

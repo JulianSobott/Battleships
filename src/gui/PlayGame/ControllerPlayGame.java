@@ -1,35 +1,46 @@
 package gui.PlayGame;
 
-import core.GameManager;
-import core.Player;
-import core.Playground;
-import core.Ship;
+import core.*;
 import core.communication_data.*;
+import core.playgrounds.Playground;
+import core.playgrounds.PlaygroundInterface;
+import core.serialization.GameData;
 import core.utils.logging.LoggerGUI;
-import core.utils.logging.LoggerLogic;
 import gui.ControllerMainMenu;
+import gui.GameOver.ControllerGameOver;
 import gui.UiClasses.BattleShipGui;
 import gui.UiClasses.PaneExtends;
 import gui.WindowChange.SceneLoader;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
+import player.PlayerHuman;
 import player.PlaygroundHeatmap;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
 
-public class ControllerPlayGame implements Initializable {
+public class ControllerPlayGame implements Initializable, InGameGUI {
 
     @FXML
     public GridPane gridPaneOwnField;
+    @FXML
+    public Label labelOwnPlayground;
 
     @FXML
     public GridPane gridPaneEnemyField;
-
+    @FXML
+    public Label labelEnemyPlayground;
 
     @FXML
     public HBox hBoxPlaygrounds;
@@ -43,12 +54,16 @@ public class ControllerPlayGame implements Initializable {
     @FXML
     public Button buttonBack;
 
+    @FXML
+    public AnchorPane anchorPanePlayGame;
+
 
     private double CELL_PERCENTAGE_WIDTH;
     private int playgroundSize;
 
     private PlaygroundHeatmap playgroundHeatmap;
     private boolean showHeatMap = true;
+    private boolean slowAIShooting = true;
 
     ArrayList<BattleShipGui> shipPositionList;
     GameManager gameManager;
@@ -58,13 +73,28 @@ public class ControllerPlayGame implements Initializable {
     private Thread playgroundUpdaterThread;
 
     private static final String filepathBackMainMenu = "../Main_Menu.fxml";
-
+    private static final String filepathGameOver = "../GameOver/GameOver.fxml";
 
     public ControllerPlayGame(int playgroudSize, ArrayList<BattleShipGui> shipPositionList, GameManager gameManager) {
         this.playgroundSize = playgroudSize;
         this.playgroundHeatmap = new PlaygroundHeatmap(playgroudSize);
         this.shipPositionList = shipPositionList;
         this.gameManager = gameManager;
+    }
+
+    /**
+     * Constructor when game was loaded
+     *
+     * @param gameData from loading
+     */
+    public static ControllerPlayGame fromLoad(GameData gameData) {
+
+        GameManager manager = new GameManager(gameData.getPlayers(), gameData.getCurrentPlayer(), gameData.getRound());
+        int playgroundSize = gameData.getCurrentPlayer().getPlaygroundOwn().getSize();
+        ArrayList<BattleShipGui> shipPositionList = new ArrayList<>();
+
+        ControllerPlayGame controllerPlayGame = new ControllerPlayGame(playgroundSize, shipPositionList, manager);
+        return controllerPlayGame;
     }
 
     /**
@@ -94,6 +124,19 @@ public class ControllerPlayGame implements Initializable {
         this.playerGridPaneHashMap.put(0, gridPaneEnemyField);
         this.gameManager.startGame();
         this.startPlaygroundUpdaterThread();
+    }
+
+    public void initFieldsFromLoad(GameData gameData) {
+        // TODO: Is Player1 always local player
+        Player localPLayer = gameData.getPlayers()[0];
+        PlaygroundInterface ownPlayground = localPLayer.getPlaygroundOwn();
+        PlaygroundInterface enemyPlayground = localPLayer.getPlaygroundEnemy();
+
+        // Own playground
+        this.initPlaygroundFromLoad(ownPlayground, this.gridPaneOwnField);
+
+        // Enemy playground
+        this.initPlaygroundFromLoad(enemyPlayground, this.gridPaneEnemyField);
     }
 
 
@@ -142,9 +185,15 @@ public class ControllerPlayGame implements Initializable {
 
         PaneExtends p = new PaneExtends(PaneExtends.FieldType.FOG);
         p.setStyle("-fx-background-color: #aaaaaa");
+        p.setId("Water");
         gridPane.add(p, possHorizontal, possVertical);
         if (gridPane == this.gridPaneEnemyField) {
             this.addClickFieldEvent(p);
+            if (!showHeatMap) {
+                p.setId("FOG");
+            } else {
+                p.setId("");
+            }
         }
     }
 
@@ -159,7 +208,6 @@ public class ControllerPlayGame implements Initializable {
 
             addShipToPlayground(battleShipGui);
         }
-
     }
 
 
@@ -174,23 +222,74 @@ public class ControllerPlayGame implements Initializable {
         if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.HORIZONTAL) {
 
             int index = battleShipGui.getPosition().getX() * playgroundSize + battleShipGui.getPosition().getY();
+            String cssId;
             for (int i = 0; i < battleShipGui.getPosition().getLength(); i++) {
                 PaneExtends pane = (PaneExtends) gridPaneOwnField.getChildren().get(index);
+                cssId = battleShipGui.getPosition().getLength() + "_0" + (i + 1) + "_H";
                 pane.setStyle("-fx-background-color: #00ff00");
+                pane.setId(cssId);
                 pane.setFieldType(PaneExtends.FieldType.SHIP);
                 index += playgroundSize;
             }
-        }
+        }       //TODO Bilder mit 90 grad drehung müssen geladen werden
         if (battleShipGui.getPosition().getDirection() == ShipPosition.Direction.VERTICAL) {
 
             int index = battleShipGui.getPosition().getX() * playgroundSize + battleShipGui.getPosition().getY();
+            String cssId;
             for (int i = 0; i < battleShipGui.getPosition().getLength(); i++) {
 
                 PaneExtends pane = (PaneExtends) gridPaneOwnField.getChildren().get(index);
+                cssId = battleShipGui.getPosition().getLength() + "_0" + (i + 1);
                 pane.setStyle("-fx-background-color: #00ff00");
+                pane.setId(cssId);
                 pane.setFieldType(PaneExtends.FieldType.SHIP);
                 index++;
 
+            }
+        }
+    }
+
+    // TODO: Lukas
+    private void initPlaygroundFromLoad(PlaygroundInterface playground, GridPane gridPane) {
+        // All fields to water/fog
+        for (int y = 0; y < playground.getSize(); y++) {
+            for (int x = 0; x < playground.getSize(); x++) {
+                Playground.Field field = playground.getFields()[y][x];
+                Position[] pos = {new Position(x, y)};
+
+                // TODO: replace color with images
+
+                String cssId = "black";
+                if (field.type == Playground.FieldType.SHIP) {
+                    // TODO: Handle ship here or
+                    Ship ship = (Ship) field.element;
+                    cssId = "red";
+                    if (gridPane == gridPaneEnemyField)
+                        cssId = "Water_Ship_Hit";
+                }
+                if (field.type == Playground.FieldType.WATER) {
+
+                    if (!field.isHit()) {
+                        cssId = "Water";
+                    }
+                    if (field.isHit()) {
+                        cssId = "Water_Hit";
+                    }
+                }
+                if (field.type == Playground.FieldType.FOG) {
+                    cssId = "FOG";
+                }
+                this.color_fields(pos, cssId, gridPane);
+            }
+        }
+        // Ship fields
+        for (Ship ship : playground.getAllShips()) {
+            ShipPosition shipPosition = ship.getShipPosition();
+            for (Position pos : shipPosition.generateIndices()) {
+                Playground.Field field = playground.getFields()[pos.getY()][pos.getX()];
+
+                boolean isHit = field.isHit();
+                // TODO: Add image
             }
         }
     }
@@ -200,7 +299,14 @@ public class ControllerPlayGame implements Initializable {
      * ############################################# Turn #######################################################
      */
 
+    /**
+     * add Click Event to a field on the playground
+     *
+     * @param p Element witch the event is added
+     */
+
     private void addClickFieldEvent(PaneExtends p) {
+
         p.setOnMouseClicked(mouseEvent -> {
             int col = GridPane.getColumnIndex(p);
             int row = GridPane.getRowIndex(p);
@@ -209,67 +315,216 @@ public class ControllerPlayGame implements Initializable {
         });
     }
 
-    private void color_fields(Position[] waterFields, String color, GridPane gridPane) {
+    /**
+     * cssID field to show what kind of element it on the playground  is
+     *
+     * @param cssID       cssID of the field
+     * @param gridPane    playground from one of the player
+     * @param waterFields fields which should get a cssID
+     */
+
+    private void color_fields(Position[] waterFields, String cssID, GridPane gridPane) {
+
         for (Position position : waterFields) {
             PaneExtends p = this.getPaneAtPosition(gridPane, position.getX(), position.getY());
-            p.setStyle("-fx-background-color: " + color);
+            p.setStyle("-fx-background-color: " + cssID); // später auskomentieren
+            p.setId(cssID);
         }
     }
 
     /**
      * Permanently updates all playgrounds in the background.
      * Every time a player makes a shot.
-     *
      */
+
     private void startPlaygroundUpdaterThread() {
-        playgroundUpdaterThread = new Thread(() -> {
-            TurnResult res;
-            do {
-                res = gameManager.pollTurn("GUI_1");
-                if (res != null) {
-                    LoggerGUI.info("TurnResult in GUI: " + res);
-                    if (res.getError() == TurnResult.Error.NONE) {
-                        this.updateByShotResult(this.playerGridPaneHashMap.get(res.getPlayerIndex()), res.getSHOT_RESULT());
+
+        Task task = new Task<Boolean>() {
+            @Override
+            protected Boolean call() throws Exception {
+
+                TurnResult res;
+                do {
+                    updateShowCurrentPlayer();
+                    res = gameManager.pollTurn("GUI_1");
+                    if (res != null) {
+                        LoggerGUI.info("TurnResult in GUI: " + res);
+                        if (res.getError() == TurnResult.Error.NONE) {
+                            if (res.getPlayerIndex() == 1 && slowAIShooting) {
+                                Thread.sleep(400);
+                            }
+                            updateByShotResult(playerGridPaneHashMap.get(res.getPlayerIndex()), res.getSHOT_RESULT());
+                        } else {
+                            LoggerGUI.info("NOTIFY USER: Turn was not valid" + res.getError());
+                        }
                     } else {
-                        LoggerGUI.info("NOTIFY USER: Turn was not valid" + res.getError());
+                        if (!Thread.currentThread().isInterrupted())
+                            LoggerGUI.error("Received TurnResult with value null");
+                        else {
+                            // Thread was stopped
+                        }
                     }
-                } else {
-                    if (!Thread.currentThread().isInterrupted())
-                        LoggerGUI.error("Received TurnResult with value null");
-                    else {
-                        // Thread was stopped
-                    }
-                }
-            } while (res != null && !res.isFINISHED() && !Thread.currentThread().isInterrupted());
-            LoggerGUI.info("PlaygroundUpdaterThread was stopped. No more results will be displayed");
+                } while (res != null && !res.isFINISHED() && !Thread.currentThread().isInterrupted());
+
+                LoggerGUI.info("PlaygroundUpdaterThread was stopped. No more results will be displayed");
+                return true;
+            }
+        };
+
+        //TODO: Fehler bei Current Player ???
+        task.setOnSucceeded(e -> {
+            Player player = gameManager.getCurrentPlayer();
+            Boolean playerHumanWins = true;
+            if (player.getClass() == PlayerHuman.class) {
+
+                playerHumanWins = false;
+            }
+            loadEndScreen(playerHumanWins);
         });
+
+        playgroundUpdaterThread = new Thread(task);
         playgroundUpdaterThread.setName("GUI_PlaygroundUpdater");
         playgroundUpdaterThread.start();
     }
 
+
+    /**
+     * ...
+     */
+
     private void updateByShotResult(GridPane gridPane, ShotResult shotResult) {
+
         String cellStyle;
+        PaneExtends paneExtends = this.getPaneAtPosition(gridPane, shotResult.getPosition().getX(),
+                shotResult.getPosition().getY());
+
         if (shotResult.getType() == Playground.FieldType.SHIP) {
             ShotResultShip resultShip = (ShotResultShip) shotResult;
             cellStyle = "-fx-background-color: #ff0000";
+            if (gridPane == gridPaneOwnField) {
+                if (paneExtends.getId().contains("_H"))
+                    paneExtends.setId(paneExtends.getId() + "_X");
+                else
+                    paneExtends.setId(paneExtends.getId() + "_X");
+            } else {
+                paneExtends.setId("Water_Ship_Hit");
+            }
+
             if (resultShip.getStatus() == Ship.LifeStatus.SUNKEN) {
                 Position[] waterFields = resultShip.getWaterFields();
-                this.color_fields(waterFields, "#0000ff", gridPane);
+                this.color_fields(waterFields, "Water_Hit", gridPane);
             }
         } else if (shotResult.getType() == Playground.FieldType.WATER) {
-            cellStyle = "-fx-background-color: #0055ff";
+            paneExtends.setId("Water_Hit");
         } else {
             throw new Error("Invalid shotResult type: " + shotResult.getType());
         }
-        PaneExtends paneExtends = this.getPaneAtPosition(gridPane, shotResult.getPosition().getX(),
-                shotResult.getPosition().getY());
-        paneExtends.setStyle(cellStyle);
+
+        if (gridPane == this.gridPaneEnemyField && this.showHeatMap) {
+            this.updateHeatMap(shotResult);
+        }
     }
 
+    private void updateShowCurrentPlayer() {
+        if (gameManager.getCurrentPlayer().getIndex() == 0) {
+            // Self
+            labelEnemyPlayground.setStyle("-fx-text-fill: grey");
+            labelOwnPlayground.setStyle("-fx-text-fill: green");
+        } else {
+            // enemy
+            labelEnemyPlayground.setStyle("-fx-text-fill: green");
+            labelOwnPlayground.setStyle("-fx-text-fill: grey");
+        }
+    }
+
+    /**
+     * ...
+     */
+
     private PaneExtends getPaneAtPosition(GridPane gridPane, int x, int y) {
+
         int index = x * playgroundSize + y;
         return (PaneExtends) gridPane.getChildren().get(index);
     }
+
+    /**
+     * ...
+     */
+
+    private void updateHeatMap(ShotResult result) {
+
+        this.playgroundHeatmap.update(result);
+        int[][] heatMap = this.playgroundHeatmap.buildHeatMap(255);
+        this.playgroundHeatmap.printFields();
+        PlaygroundHeatmap.printHeatMap(heatMap);
+        for (int y = 0; y < playgroundSize; y++) {
+            for (int x = 0; x < playgroundSize; x++) {
+                PaneExtends p = getPaneAtPosition(gridPaneEnemyField, x, y);
+                if (!this.playgroundHeatmap.isAlreadyDiscoveredShipAt(x, y)) {
+                    int w = Math.min(255, heatMap[y][x]);
+                    p.setStyle("-fx-background-color: rgb(" + w + ", " + w + ", " + w + ")");
+                }
+                //                else {
+                //                    p.setStyle("-fx-background-color: rgb(255, 0, 0)");
+                //                }
+            }
+        }
+    }
+
+    /**
+     * ########################################## (Menu )Actions #####################################################
+     */
+
+    /**
+     * ...
+     */
+
+    public void clickSaveGame() {
+        saveGame();
+    }
+
+    /**
+     * ...
+     */
+
+    private void saveGame() {
+        saveGame(-1, false);
+    }
+
+    private void saveGame(long id, boolean useID) {
+        Task<Long> t = new Task<>() {
+            @Override
+            protected Long call() {
+                if (useID) {
+                    return gameManager.saveGame(id);
+                }else {
+                    return gameManager.saveGame();
+                }
+            }
+        };
+        t.setOnSucceeded(e -> {
+                    Notifications notifications = Notifications.create()
+                            .title("SaveGame")
+                            .text("Successfully saved game")
+                            .darkStyle()
+                            .hideCloseButton()
+                            .position(Pos.CENTER)
+                            .hideAfter(Duration.seconds(3.0));
+                    notifications.showConfirm();
+                    try {
+                        LoggerGUI.info("USER INFO: Successfully saved game with id=" + t.get());
+                    } catch (InterruptedException | ExecutionException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+        );
+        new Thread(t).start();
+    }
+
+    public void saveGame(long id) {
+        saveGame(id, true);
+    }
+
 
     /** ##########################################   Window Navigation  ############################################## */
 
@@ -277,23 +532,43 @@ public class ControllerPlayGame implements Initializable {
      * go back to previous Scene
      */
 
-    //TODO wo soll der Spieler beim Spielabruch landen ?? Wieder im Hauptmenü??
     public void goBackToMainMenu() {
+
         ControllerMainMenu controllerMainMenu = new ControllerMainMenu();
         SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathBackMainMenu, controllerMainMenu);
         sceneLoader.loadSceneInExistingWindow();
     }
 
+    /**
+     * if one player wins new screen is loaded
+     */
 
+    private synchronized void loadEndScreen(boolean humanPlayerWins) {
+
+        ControllerGameOver controllerGameOver = new ControllerGameOver(anchorPanePlayGame, humanPlayerWins);
+        SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathGameOver, controllerGameOver);
+        sceneLoader.loadSceneInExistingWindowWithoutButtons("", (Stage) buttonBack.getScene().getWindow());
+    }
+
+
+    /**
+     * ...
+     */
     // TODO place
-
     public void leaveGame() {
+
         LoggerGUI.debug("Leave game");
         this.exitInGameThread();
         this.goBackToMainMenu();
     }
 
+
+    /**
+     * ...
+     */
+
     public void exitInGameThread() {
+
         LoggerGUI.debug("Num threads before exit: " + Thread.activeCount());
         this.playgroundUpdaterThread.interrupt();
         try {
