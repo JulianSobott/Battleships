@@ -389,6 +389,7 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
         };
 
         //TODO: Fehler bei Current Player ???
+        //TODO Beim Abruch des Spiels versucht der Thread ein Fenster zu laden obwohl diese nicht geladen werden soll...
         task.setOnSucceeded(e -> {
             Player player = gameManager.getCurrentPlayer();
             Boolean playerHumanWins = true;
