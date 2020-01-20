@@ -249,7 +249,6 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
         }
     }
 
-    // TODO: Lukas
     private void initPlaygroundFromLoad(PlaygroundInterface playground, GridPane gridPane) {
         // All fields to water/fog
         for (int y = 0; y < playground.getSize(); y++) {
@@ -257,11 +256,9 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
                 Playground.Field field = playground.getFields()[y][x];
                 Position[] pos = {new Position(x, y)};
 
-                // TODO: replace color with images
-
                 String cssId = "black";
                 if (field.type == Playground.FieldType.SHIP) {
-                    // TODO: Handle ship here or
+
                     Ship ship = (Ship) field.element;
                     cssId = "red";
                     if (gridPane == gridPaneEnemyField)
