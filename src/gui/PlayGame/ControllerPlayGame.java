@@ -282,14 +282,34 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
                 this.color_fields(pos, cssId, gridPane);
             }
         }
+        String cssID = "";
         // Ship fields
         for (Ship ship : playground.getAllShips()) {
             ShipPosition shipPosition = ship.getShipPosition();
+            int shipPart = 1;
             for (Position pos : shipPosition.generateIndices()) {
                 Playground.Field field = playground.getFields()[pos.getY()][pos.getX()];
+                if (gridPane == gridPaneOwnField) {
 
-                boolean isHit = field.isHit();
-                // TODO: Add image
+                    if (ship.getShipPosition().getDirection() == ShipPosition.Direction.HORIZONTAL) {
+                        cssID = ship.getShipPosition().getLength() + "_0" + shipPart + "_H";
+                        if (field.isHit())
+                            cssID += "_X";
+                        //boolean isHit = field.isHit();
+                    }
+
+                    if (ship.getShipPosition().getDirection() == ShipPosition.Direction.VERTICAL) {
+                        cssID = ship.getShipPosition().getLength() + "_0" + shipPart;
+                        if (field.isHit())
+                            cssID += "_X";
+                        //boolean isHit = field.isHit();
+                    }
+
+                    Position[] arrPos = new Position[1];
+                    arrPos[0] = pos;
+                    this.color_fields(arrPos, cssID, gridPaneOwnField);
+                    shipPart++;
+                }
             }
         }
     }
@@ -497,7 +517,7 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
             protected Long call() {
                 if (useID) {
                     return gameManager.saveGame(id);
-                }else {
+                } else {
                     return gameManager.saveGame();
                 }
             }
