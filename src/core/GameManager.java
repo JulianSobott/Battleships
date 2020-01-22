@@ -24,7 +24,6 @@ public class GameManager implements GameManagerInterface {
 
     // Player A wants to shoot at position: nextTurns.get(A)
     // Queue must only contain 0 to 1 item.
-    private HashMap<Player, ConcurrentLinkedQueue<Position>> nextTurns = new HashMap<>();
     private int round = 1;
 
     // Player A wants the lastTurns from Player B: lastTurns.get(A).get(B)
@@ -75,7 +74,6 @@ public class GameManager implements GameManagerInterface {
         this.players = new Player[]{p1, p2};
         for(Player p : this.players){
             this.lastTurns.put(p, new ConcurrentLinkedQueue<>());
-            this.nextTurns.put(p, new ConcurrentLinkedQueue<>());
         }
         // TODO: find better way
         idPlayerHashMap.put("GUI_1", this.player1);
@@ -120,30 +118,11 @@ public class GameManager implements GameManagerInterface {
      * enemy turns.
      * Validity of the turn is checked in {@link #turn(Player, Position)} and stored in the TurnResult.
      *
-     * @param player The Player that wants to make a shot
-     * @param position The target position
+     * @param pos The target position
      */
-    private void makeShot(Player player, Position position) {
-        LoggerLogic.debug("Make shot: player=" + player + " position=" + position);
-        synchronized (this.nextTurns.get(player)) {
-            LoggerLogic.debug("" + this.nextTurns);
-            LoggerLogic.debug("" + position);
-            if (this.nextTurns.get(player).size() != 1) {
-                this.nextTurns.get(player).add(position);
-                this.nextTurns.get(player).notifyAll();
-                LoggerLogic.debug("Notify on Queue: " + this.nextTurns);
-            } else {
-                LoggerLogic.debug("Player has already made a shot. player=" + player);
-            }
-        }
-    }
-
     public void shootP1(Position pos) {
-        makeShot(this.player1, pos);
-    }
-
-    public void shootP2(Position pos) {
-        this.makeShot(this.player2, pos);
+        assert player1 instanceof PlayerHuman: "Only PLayerHuman can make a 'external' Shot";
+        ((PlayerHuman)player1).addNextShot(pos);
     }
 
     public TurnResult pollTurn(String id) {
@@ -240,13 +219,8 @@ public class GameManager implements GameManagerInterface {
     private TurnResult turnLoop() {
         TurnResult res = null;
         do {
-            // TODO: Find better solution for makeTurn. maybe flag in player: triggerMakeTurn needed.
             Position pos = this.currentPlayer.makeTurn();
             LoggerLogic.debug("Position=" + pos + ", Player=" + this.currentPlayer);
-            if (pos == null) {
-                pos = this.getPlayerShootPosition();
-                LoggerLogic.debug("Position=" + pos + ", Player=" + this.currentPlayer);
-            }
             if (pos != null) {
                 res = this.turn(this.currentPlayer, pos);
                 LoggerLogic.debug("res=" + res + ", Player=" + this.currentPlayer);
@@ -267,25 +241,9 @@ public class GameManager implements GameManagerInterface {
                 if (p instanceof PlayerHuman || (player1 instanceof PlayerAI && player1 == p)) {
                     this.lastTurns.get(p).add(res);
                     this.lastTurns.get(p).notifyAll();
+                    LoggerLogic.debug("SavedResult: res=" + res + ". lastTurns size=" + this.lastTurns.get(p).size());
                 }
             }
-        }
-        LoggerLogic.debug("SavedResults: lastTurns=" + this.lastTurns);
-    }
-
-    private Position getPlayerShootPosition() {
-        synchronized (this.nextTurns.get(this.currentPlayer)) {
-            while (this.nextTurns.get(this.currentPlayer).isEmpty()) {
-                try {
-                    LoggerLogic.debug("Queue "+ this.nextTurns.get(this.currentPlayer) +" was empty: waiting...");
-                    this.nextTurns.get(this.currentPlayer).wait();
-                    LoggerLogic.debug("Queue is no longer empty");
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    return null;
-                }
-            }
-            return this.nextTurns.get(this.currentPlayer).poll();
         }
     }
 
