@@ -1,11 +1,13 @@
 package gui.LoadGame;
 
 
+import core.Player;
 import core.communication_data.LoadGameResult;
 import core.serialization.GameData;
 import core.serialization.GameSerialization;
 import gui.PlayGame.ControllerPlayGame;
 import gui.WindowChange.SceneLoader;
+import gui.newGame.ControllerGameType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,6 +19,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
+import player.PlayerNetwork;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -84,13 +87,22 @@ public class ControllerLoadGame implements Initializable {
             return;
         }
         long id = saveGames.get(index).getGameID();
-
+        Player[] ps = saveGames.get(index).getPlayers();
         closeWindow();
-        // Hardcoded for debug purposes
         LoadGameResult res = GameSerialization.loadGame(id);
         if (res.getStatus() == LoadGameResult.LoadStatus.SUCCESS) {
 
             GameData gameData = res.getGameData();
+            if(ps[1].getClass() == PlayerNetwork.class)
+            {
+                ControllerGameType controllerGameType = new ControllerGameType();
+                SceneLoader sceneLoader = new SceneLoader(this.ANCHORPANEMAINMENU, "../newGame/GameType.fxml", controllerGameType);
+                sceneLoader.loadSceneInExistingWindow();
+
+                //TODO: Methode aufrufen die felder mit Werten belegt...
+                return;
+            }
+
             ControllerPlayGame controller = ControllerPlayGame.fromLoad(gameData);
             SceneLoader sceneLoader = new SceneLoader(this.ANCHORPANEMAINMENU, "../PlayGame/PlayGame.fxml", controller);
             sceneLoader.loadSceneInExistingWindow();
@@ -102,7 +114,7 @@ public class ControllerLoadGame implements Initializable {
     }
 
     /**
-     *
+     * Returns the desired index of the score to be loaded
      */
 
     private int getSelectedSaveGame() {
@@ -126,7 +138,7 @@ public class ControllerLoadGame implements Initializable {
     }
 
     /**
-     *
+     * closes the window in which the scores are selected
      */
 
     public void closeWindow() {
