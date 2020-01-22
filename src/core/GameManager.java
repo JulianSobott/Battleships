@@ -219,12 +219,17 @@ public class GameManager implements GameManagerInterface {
             LoggerState.info("Starting player: " + this.currentPlayer);
             do {
                 res = turnLoop();
-                if (res != null)
+                if (res != null && !res.isFINISHED()) {
+                    round++;
                     nextPlayer();
+                }
                 else { // game was interrupted
                 }
             } while (res != null && !res.isFINISHED() && !Thread.currentThread().isInterrupted());
             LoggerLogic.info("End main gameLoop");
+            if(res != null && res.isFINISHED()) {
+                LoggerState.info("Winner after " + round + " rounds: " + players[res.getPlayerIndex()].toString());
+            }
         });
         inGameThread.setName("Main_gameLoop");
         inGameThread.start();
