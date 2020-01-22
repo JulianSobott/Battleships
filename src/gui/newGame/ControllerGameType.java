@@ -304,18 +304,18 @@ public class ControllerGameType implements Initializable {
         }
         // Network
         else if (radioButtonNetzwerk.isSelected()) {
-            networkConnection.startCommunication();
+
             if (radioButtonClient.isSelected()) {
                 playgroundSize = networkConnection.getPlaygroundSize();
                 p1IsStarting = false;
             } else if (radioButtonServer.isSelected()) {
                 ((Server) networkConnection).startGame(playgroundSize);
             } else {
-                //TODO Funktioniert nicht.. Warum ???
                 showNotification("Server or Client","You must specify whether you want to be server or client");
                 LoggerGUI.warning("No server/client selected.");
                 return null;
             }
+            networkConnection.startCommunication();
             p2 = networkConnection.getPlayerNetwork();
         }
         // Local
