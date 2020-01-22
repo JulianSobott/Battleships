@@ -5,6 +5,7 @@ import core.playgrounds.Playground;
 import core.serialization.GameSerialization;
 import core.utils.logging.LoggerLogic;
 import core.utils.logging.LoggerState;
+import player.PlayerAI;
 import player.PlayerHuman;
 import player.PlayerNetwork;
 
@@ -16,7 +17,7 @@ public class GameManager implements GameManagerInterface {
     // TODO: Check synchronize stuff for correctness
     // TODO: Remove deprecated methods/attributes
     // TODO: Better names for methods: shoot, makeShoot, turn, ...
-    private PlayerHuman player1;
+    private Player player1;
     private Player player2;
     private Player[] players;
     private Player currentPlayer;
@@ -64,12 +65,11 @@ public class GameManager implements GameManagerInterface {
     public NewGameResult newGame(GameSettings settings) {
         this.initGame(settings.getP1(), settings.getP2());
         this.currentPlayer = settings.getStartingPlayer();
-
         ShipList shipList = ShipList.fromSize(settings.getPlaygroundSize());
         return new NewGameResult(shipList);
     }
 
-    private void initGame(PlayerHuman p1, Player p2) {
+    private void initGame(Player p1, Player p2) {
         this.player1 = p1;
         this.player2 = p2;
         this.players = new Player[]{p1, p2};
@@ -95,22 +95,22 @@ public class GameManager implements GameManagerInterface {
 
     @Override
     public PlaceShipResult placeShip(ShipPosition pos) {
-        return player1.placeShip(pos);
+        return ((PlayerHuman)player1).placeShip(pos);
     }
 
     @Override
     public PlaceShipsRandomRes placeShipsRandom() {
-        return player1.placeShipsRandom();
+        return ((PlayerHuman)player1).placeShipsRandom();
     }
 
     @Override
     public PlaceShipResult moveShip(ShipID id, ShipPosition pos) {
-        return player1.moveShip(id, pos);
+        return ((PlayerHuman)player1).moveShip(id, pos);
     }
 
     @Override
     public boolean deleteShip(ShipID id) {
-        return player1.deleteShip(id);
+        return ((PlayerHuman)player1).deleteShip(id);
     }
 
     /**
@@ -268,7 +268,7 @@ public class GameManager implements GameManagerInterface {
     private void saveTurnResult(TurnResult res){
         for(Player p : this.players){
             synchronized (this.lastTurns.get(p)){
-                if (p instanceof PlayerHuman) {
+                if (p instanceof PlayerHuman || (player1 instanceof PlayerAI && player1 == p)) {
                     this.lastTurns.get(p).add(res);
                     this.lastTurns.get(p).notifyAll();
                 }
