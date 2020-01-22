@@ -391,11 +391,7 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
 
         task.setOnSucceeded(e -> {
             Player player = gameManager.getCurrentPlayer();
-            Boolean playerHumanWins = true;
-            if (player.getClass() == PlayerHuman.class) {
-
-                playerHumanWins = false;
-            }
+            boolean playerHumanWins = player instanceof PlayerHuman;
             if(loadEndScreen) {
                 loadEndScreen(playerHumanWins);
             }

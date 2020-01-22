@@ -13,8 +13,6 @@ import gui.WindowChange.SceneLoader;
 import gui.interfaces.Shutdown;
 import gui.newGame.ControllerGameType;
 import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -31,9 +29,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
-import network.Client.Client;
 import network.Connected;
-import network.Server.Server;
 import org.controlsfx.control.Notifications;
 
 import java.net.URL;
@@ -656,7 +652,7 @@ public class ControllerShipPlacement implements Initializable, Shutdown {
             protected Void call() {
                 StartShootingRes res;
                 StartShootingRes lastRes = null;
-                while ((res = GAME_MANAGER.startShooting()) != StartShootingRes.SHOOTING_ALLOWED){
+                while ((res = GAME_MANAGER.allPlayersReady()) != StartShootingRes.SHOOTING_ALLOWED){
                     if (lastRes != res){
                         LoggerGUI.info("[user hint] " + res);
                     }

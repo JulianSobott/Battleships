@@ -5,6 +5,7 @@ import core.playgrounds.Playground;
 import core.serialization.GameSerialization;
 import core.utils.logging.LoggerLogic;
 import core.utils.logging.LoggerState;
+import player.PlayerAI;
 import player.PlayerHuman;
 import player.PlayerNetwork;
 
@@ -13,20 +14,14 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class GameManager implements GameManagerInterface {
 
-    // TODO: Check synchronize stuff for correctness
-    // TODO: Remove deprecated methods/attributes
-    // TODO: Better names for methods: shoot, makeShoot, turn, ...
-    private PlayerHuman player1;
+    private Player player1;
     private Player player2;
     private Player[] players;
     private Player currentPlayer;
 
-    // Player A wants to shoot at position: nextTurns.get(A)
-    // Queue must only contain 0 to 1 item.
-    private HashMap<Player, ConcurrentLinkedQueue<Position>> nextTurns = new HashMap<>();
     private int round = 1;
 
-    // Player A wants the lastTurns from Player B: lastTurns.get(A).get(B)
+    // Player A wants the lastTurn: lastTurns.get(A)
     private HashMap<Player, ConcurrentLinkedQueue<TurnResult>> lastTurns = new HashMap<>();
     private HashMap<String, Player> idPlayerHashMap = new HashMap<>();
 
@@ -34,12 +29,12 @@ public class GameManager implements GameManagerInterface {
 
     /**
      * Constructor, when game was loaded
-     * @param players
-     * @param currentPlayer
-     * @param round
+     * @param players All Players
+     * @param currentPlayer The player that was the currentPlayer, when the game was saved
+     * @param round The round in which the game was saved
      */
     public GameManager(Player[] players, Player currentPlayer, int round) {
-        this.initGame((PlayerHuman) players[0], players[1]);
+        this.initGame(players[0], players[1]);
         this.currentPlayer = currentPlayer;
         this.round = round;
     }
@@ -51,97 +46,93 @@ public class GameManager implements GameManagerInterface {
     }
 
     @Override
-    public boolean connectToServer(String ip, int port) {
-        return false;
-    }
-
-    @Override
-    public GameSettings getGameSettings() {
-        return null;
-    }
-
-    @Override
     public NewGameResult newGame(GameSettings settings) {
         this.initGame(settings.getP1(), settings.getP2());
         this.currentPlayer = settings.getStartingPlayer();
-
         ShipList shipList = ShipList.fromSize(settings.getPlaygroundSize());
         return new NewGameResult(shipList);
     }
 
-    private void initGame(PlayerHuman p1, Player p2) {
+    /**
+     * Set attributes and init queues and maps.
+     * @param p1 PlayerHuman or PlayerAI
+     * @param p2 PlayerAI or PlayerNetwork
+     */
+    private void initGame(Player p1, Player p2) {
         this.player1 = p1;
         this.player2 = p2;
         this.players = new Player[]{p1, p2};
         for(Player p : this.players){
             this.lastTurns.put(p, new ConcurrentLinkedQueue<>());
-            this.nextTurns.put(p, new ConcurrentLinkedQueue<>());
         }
         // TODO: find better way
         idPlayerHashMap.put("GUI_1", this.player1);
         idPlayerHashMap.put("AI_2", this.player2);
     }
 
-    public StartShootingRes startShooting() {
-        // TODO: return or wait till both finished? new thread? User should be somehow informed what is going on.
+    /**
+     * Asks if all ships are placed.
+     *
+     * @return Enum with information who who is not ready.
+     */
+    public StartShootingRes allPlayersReady() {
         if (!this.player1.areAllShipsPlaced()) return StartShootingRes.OWN_NOT_ALL_SHIPS_PLACED;
         if (!this.player2.areAllShipsPlaced()) return StartShootingRes.ENEMY_NOT_ALL_SHIPS_PLACED;
         return StartShootingRes.SHOOTING_ALLOWED;
     }
 
+    /**
+     * Starts the {@link #gameLoop()} which is responsible for the main turn logic.
+     */
     public void startGame() {
         this.gameLoop();
     }
 
     @Override
     public PlaceShipResult placeShip(ShipPosition pos) {
-        return player1.placeShip(pos);
+        return ((PlayerHuman)player1).placeShip(pos);
     }
 
     @Override
     public PlaceShipsRandomRes placeShipsRandom() {
-        return player1.placeShipsRandom();
+        return ((PlayerHuman)player1).placeShipsRandom();
     }
 
     @Override
     public PlaceShipResult moveShip(ShipID id, ShipPosition pos) {
-        return player1.moveShip(id, pos);
+        return ((PlayerHuman)player1).moveShip(id, pos);
     }
 
     @Override
     public boolean deleteShip(ShipID id) {
-        return player1.deleteShip(id);
+        return ((PlayerHuman)player1).deleteShip(id);
     }
 
     /**
-     * TODO: difference between shoot?
+     * The GUI player wants to make a shot.
+     * The information is stored and used when the GameManager is ready to use this.
+     * Nothing is returned. Instead the GUI should call {@link #pollTurn(String)} to get the results of his own and the
+     * enemy turns.
+     * Validity of the turn is checked in {@link #turn(Player, Position)} and stored in the TurnResult.
      *
-     * @param player
-     * @param position
+     * @param pos The target position
      */
-    private void makeShot(Player player, Position position) {
-        LoggerLogic.debug("Make shot: player=" + player + " position=" + position);
-        synchronized (this.nextTurns.get(player)) {
-            LoggerLogic.debug("" + this.nextTurns);
-            LoggerLogic.debug("" + position);
-            if (this.nextTurns.get(player).size() != 1) {
-                this.nextTurns.get(player).add(position);
-                this.nextTurns.get(player).notifyAll();
-                LoggerLogic.debug("Notify on Queue: " + this.nextTurns);
-            } else {
-                LoggerLogic.debug("Player has already made a shot. player=" + player);
-            }
-        }
-    }
-
     public void shootP1(Position pos) {
-        makeShot(this.player1, pos);
+        assert player1 instanceof PlayerHuman: "Only PLayerHuman can make a 'external' Shot";
+        ((PlayerHuman)player1).addNextShot(pos);
     }
 
-    public void shootP2(Position pos) {
-        this.makeShot(this.player2, pos);
-    }
-
+    /**
+     * Poll the last turn that happened.
+     * Turn can be from both players. TurnResult can also indicate an invalid turn.
+     * If no turn happened till now this method blocks until a turn happens.
+     * Once a turn is polled it is removed from the list and can't be polled from the same id again.
+     * For other id's it is still available.
+     *
+     * @param id ID that matches to a player. The id must match to the PLayer that wants the turn.
+     *           id's see {@link #initGame(Player, Player)}
+     * @return A TurnResult. Results are stored in a FIFO-Queue.
+     */
     public TurnResult pollTurn(String id) {
         Player player = this.idPlayerHashMap.get(id);
         synchronized (this.lastTurns.get(player)) {
@@ -154,6 +145,7 @@ public class GameManager implements GameManagerInterface {
                 }
             }
             TurnResult res = this.lastTurns.get(player).poll();
+            assert res != null: "Result shouldn't be possible to be null";
             LoggerLogic.debug("Returning player " + res.getPlayerIndex() +" Result:");
             return res;
         }
@@ -161,36 +153,27 @@ public class GameManager implements GameManagerInterface {
 
 
     private boolean isAllowedToShoot(Player player) {
-        if (player != this.currentPlayer) return false;
-        return true;
-    }
-
-    private TurnResult turn(Player player, Position position) {
-        LoggerLogic.info("turn: player=" + player + ", position=" + position);
-        TurnResult res;
-        if (!this.isAllowedToShoot(player)) {
-            res = TurnResult.failure(player, TurnResult.Error.NOT_YOUR_TURN);
-        } else {
-            res = this.shoot(player, position);
-        }
-        LoggerLogic.info("Enemy playground from player: player=" + player);
-        LoggerLogic.info("turn result: TurnResult=" + res);
-        return res;
+        return player == this.currentPlayer;
     }
 
     /**
-     * Player is shooting at position.
-     * Validation checks are made here.
+     * A Player wants to make a turn and shoot at a field.
+     * Validity checks are made here.
      *
-     * @param player   Player which is currently shooting
-     * @param position Where the shot is placed
-     * @return TurnResult
+     * @param player The Player that makes the turn.
+     * @param position Target of the shoot.
+     * @return A TurnResult with if information if the turn was valid and if so what was hit.
      */
-    private TurnResult shoot(Player player, Position position) {
-        TurnResult.Error shootError = player.canShootAt(position);
+    private TurnResult turn(Player player, Position position) {
+        LoggerLogic.info("turn: player=" + player + ", position=" + position);
         TurnResult res;
-        if (shootError != TurnResult.Error.NONE)
+        TurnResult.Error shootError;
+        if (!this.isAllowedToShoot(player)) {
+            res = TurnResult.failure(player, TurnResult.Error.NOT_YOUR_TURN);
+        }
+        else if ((shootError = player.canShootAt(position)) != TurnResult.Error.NONE) {
             res = TurnResult.failure(player, shootError);
+        }
         else {
             ShotResult resShot = this.otherPlayer(player).gotHit(position);
             player.update(resShot);
@@ -198,6 +181,7 @@ public class GameManager implements GameManagerInterface {
             boolean shootAgain = resShot.getType() == Playground.FieldType.SHIP && !isFinished;
             res = new TurnResult(player, resShot, shootAgain, isFinished);
         }
+        LoggerLogic.info("turn result: TurnResult=" + res);
         return res;
     }
 
@@ -219,12 +203,17 @@ public class GameManager implements GameManagerInterface {
             LoggerState.info("Starting player: " + this.currentPlayer);
             do {
                 res = turnLoop();
-                if (res != null)
+                if (res != null && !res.isFINISHED()) {
+                    round++;
                     nextPlayer();
+                }
                 else { // game was interrupted
                 }
             } while (res != null && !res.isFINISHED() && !Thread.currentThread().isInterrupted());
             LoggerLogic.info("End main gameLoop");
+            if(res != null && res.isFINISHED()) {
+                LoggerState.info("Winner after " + round + " rounds: " + players[res.getPlayerIndex()].toString());
+            }
         });
         inGameThread.setName("Main_gameLoop");
         inGameThread.start();
@@ -239,13 +228,8 @@ public class GameManager implements GameManagerInterface {
     private TurnResult turnLoop() {
         TurnResult res = null;
         do {
-            // TODO: Find better solution for makeTurn. maybe flag in player: triggerMakeTurn needed.
             Position pos = this.currentPlayer.makeTurn();
             LoggerLogic.debug("Position=" + pos + ", Player=" + this.currentPlayer);
-            if (pos == null) {
-                pos = this.getPlayerShootPosition();
-                LoggerLogic.debug("Position=" + pos + ", Player=" + this.currentPlayer);
-            }
             if (pos != null) {
                 res = this.turn(this.currentPlayer, pos);
                 LoggerLogic.debug("res=" + res + ", Player=" + this.currentPlayer);
@@ -258,33 +242,17 @@ public class GameManager implements GameManagerInterface {
     /**
      * Saves the TurnResult everywhere, where it is needed.
      *
-     * @param res
+     * @param res The TurnResult that is to save.
      */
     private void saveTurnResult(TurnResult res){
         for(Player p : this.players){
             synchronized (this.lastTurns.get(p)){
-                if (p instanceof PlayerHuman) {
+                if (p instanceof PlayerHuman || (player1 instanceof PlayerAI && player1 == p)) {
                     this.lastTurns.get(p).add(res);
                     this.lastTurns.get(p).notifyAll();
+                    LoggerLogic.debug("SavedResult: res=" + res + ". lastTurns size=" + this.lastTurns.get(p).size());
                 }
             }
-        }
-        LoggerLogic.debug("SavedResults: lastTurns=" + this.lastTurns);
-    }
-
-    private Position getPlayerShootPosition() {
-        synchronized (this.nextTurns.get(this.currentPlayer)) {
-            while (this.nextTurns.get(this.currentPlayer).isEmpty()) {
-                try {
-                    LoggerLogic.debug("Queue "+ this.nextTurns.get(this.currentPlayer) +" was empty: waiting...");
-                    this.nextTurns.get(this.currentPlayer).wait();
-                    LoggerLogic.debug("Queue is no longer empty");
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    return null;
-                }
-            }
-            return this.nextTurns.get(this.currentPlayer).poll();
         }
     }
 
@@ -294,6 +262,9 @@ public class GameManager implements GameManagerInterface {
     }
 
 
+    /**
+     * Stops the inGameThread and waits till it is joined.
+     */
     public void exitInGameThread() {
         inGameThread.interrupt();
         try {
