@@ -64,6 +64,7 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
     private PlaygroundHeatmap playgroundHeatmap;
     private boolean showHeatMap = true;
     private boolean slowAIShooting = true;
+    private boolean loadEndScreen = true;
 
     ArrayList<BattleShipGui> shipPositionList;
     GameManager gameManager;
@@ -388,8 +389,6 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
             }
         };
 
-        //TODO: Fehler bei Current Player ???
-        //TODO Beim Abruch des Spiels versucht der Thread ein Fenster zu laden obwohl diese nicht geladen werden soll...
         task.setOnSucceeded(e -> {
             Player player = gameManager.getCurrentPlayer();
             Boolean playerHumanWins = true;
@@ -397,7 +396,9 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
 
                 playerHumanWins = false;
             }
-            loadEndScreen(playerHumanWins);
+            if(loadEndScreen) {
+                loadEndScreen(playerHumanWins);
+            }
         });
 
         playgroundUpdaterThread = new Thread(task);
@@ -574,6 +575,7 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
      */
     // TODO place
     public void leaveGame() {
+        loadEndScreen = false;
 
         LoggerGUI.debug("Leave game");
         this.exitInGameThread();
