@@ -161,36 +161,19 @@ public class GameManager implements GameManagerInterface {
 
 
     private boolean isAllowedToShoot(Player player) {
-        if (player != this.currentPlayer) return false;
-        return true;
+        return player == this.currentPlayer;
     }
 
     private TurnResult turn(Player player, Position position) {
         LoggerLogic.info("turn: player=" + player + ", position=" + position);
         TurnResult res;
+        TurnResult.Error shootError;
         if (!this.isAllowedToShoot(player)) {
             res = TurnResult.failure(player, TurnResult.Error.NOT_YOUR_TURN);
-        } else {
-            res = this.shoot(player, position);
         }
-        LoggerLogic.info("Enemy playground from player: player=" + player);
-        LoggerLogic.info("turn result: TurnResult=" + res);
-        return res;
-    }
-
-    /**
-     * Player is shooting at position.
-     * Validation checks are made here.
-     *
-     * @param player   Player which is currently shooting
-     * @param position Where the shot is placed
-     * @return TurnResult
-     */
-    private TurnResult shoot(Player player, Position position) {
-        TurnResult.Error shootError = player.canShootAt(position);
-        TurnResult res;
-        if (shootError != TurnResult.Error.NONE)
+        else if ((shootError = player.canShootAt(position)) != TurnResult.Error.NONE) {
             res = TurnResult.failure(player, shootError);
+        }
         else {
             ShotResult resShot = this.otherPlayer(player).gotHit(position);
             player.update(resShot);
@@ -198,6 +181,7 @@ public class GameManager implements GameManagerInterface {
             boolean shootAgain = resShot.getType() == Playground.FieldType.SHIP && !isFinished;
             res = new TurnResult(player, resShot, shootAgain, isFinished);
         }
+        LoggerLogic.info("turn result: TurnResult=" + res);
         return res;
     }
 
