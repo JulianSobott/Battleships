@@ -1,6 +1,7 @@
 package gui.ShipPlacement;
 
 import core.GameManager;
+import core.Ship;
 import core.communication_data.*;
 import core.utils.logging.LoggerGUI;
 import core.utils.logging.LoggerLogic;
@@ -71,6 +72,9 @@ public class ControllerShipPlacement implements Initializable, Shutdown {
         this.playgroundSize = settings.getPlaygroundSize();
         this.networkConnection = settings.getNetworkConnection();
         if(settings.isAiVsAi()) {
+            for(Ship s : settings.getP1().getPlaygroundOwn().getAllShips()) {
+                shipArrayListGui.add(new ButtonShip(new BattleShipGui(s.getId(), s.getShipPosition())));
+            }
             startGame();
         }
     }
