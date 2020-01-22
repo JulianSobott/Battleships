@@ -12,14 +12,17 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 import network.Client.Client;
 import network.Connected;
 import network.ConnectionStatus;
 import network.Server.Server;
 import network.Utils;
+import org.controlsfx.control.Notifications;
 import player.PlayerAI;
 import player.PlayerHuman;
 import player.PlayerNetwork;
@@ -123,7 +126,7 @@ public class ControllerGameType implements Initializable {
         if (radioButtonClient.isSelected()) {
             String ip = textFieldIpAddress.getText();
             int port = 50000;
-            networkConnection= new Client(ip, port);
+            networkConnection = new Client(ip, port);
             ConnectionStatus status = networkConnection.start();
             LoggerGUI.info("Client connection to server: status=" + status);
             labelConnectionStatus.setText("" + status);
@@ -176,7 +179,7 @@ public class ControllerGameType implements Initializable {
      */
 
     private void stopServer() {
-        if (networkConnection instanceof Server && networkConnection.isStarted() ) {
+        if (networkConnection instanceof Server && networkConnection.isStarted()) {
             LoggerGUI.info("Stopping server");
             ((Server) networkConnection).shutdown();
         }
@@ -197,8 +200,7 @@ public class ControllerGameType implements Initializable {
 
     @FXML
     private void setClientInformation() {
-        // TODO: Remove when debug finish
-        //textFieldIpAddress.clear();
+        textFieldIpAddress.clear();
     }
 
 
@@ -215,13 +217,13 @@ public class ControllerGameType implements Initializable {
             vBoxNetzwerk.setStyle("-fx-background-color: lightgray");
             vBoxLocal.setStyle("-fx-background-color: lightgray");
             vBoxPlaygroundSettings.setStyle("-fx-background-color: #626D71");
-        } else if (radioButtonNetzwerk.isSelected()){
+        } else if (radioButtonNetzwerk.isSelected()) {
 
             vBoxKI.setStyle("-fx-background-color: lightgray");
             vBoxNetzwerk.setStyle("-fx-background-color: #626D71");
             vBoxLocal.setStyle("-fx-background-color: lightgray");
             vBoxPlaygroundSettings.setStyle("-fx-background-color: #626D71");
-        } else if (radioButtonLocal.isSelected()){
+        } else if (radioButtonLocal.isSelected()) {
 
             vBoxKI.setStyle("-fx-background-color: lightgray");
             vBoxNetzwerk.setStyle("-fx-background-color: lightgray");
@@ -243,6 +245,22 @@ public class ControllerGameType implements Initializable {
     private GameSettings buildGameSettings() {
         // TODO: Surface validation
         // General
+        if (textfieldPlaygroundSize.getText().trim().isEmpty()) {
+            showNotification("missing field size", "Please specify a playing field size between 5 and 30");
+            return null;
+        } else if (!textfieldPlaygroundSize.getText().trim().isEmpty()) {
+            String fieldSize = textfieldPlaygroundSize.getText().trim();
+            for( int i = 0, n = fieldSize.length(); i<n; i++ )
+                if( ! Character.isDigit( fieldSize.charAt( i ))){
+                    showNotification("Only numbers allowed","Only numbers are allowed in the field for the field size");
+                    return null;
+            }
+
+        } else if (Integer.parseInt(textfieldPlaygroundSize.getText().trim()) < 5 || Integer.parseInt(textfieldPlaygroundSize.getText().trim()) > 30) {
+            showNotification("unallowed field size", "Only field sizes between 5 and 30 fields are allowed");
+            return null;
+        }
+
         int playgroundSize = Integer.parseInt(this.textfieldPlaygroundSize.getText()); // Resets, when client
         PlayerHuman p1;
         Player p2;
@@ -254,9 +272,9 @@ public class ControllerGameType implements Initializable {
             PlayerAI.Difficulty difficulty;
             if (radioButtonEasy.isSelected()) {
                 difficulty = PlayerAI.Difficulty.EASY;
-            } else if(radioButtonMedium.isSelected()) {
+            } else if (radioButtonMedium.isSelected()) {
                 difficulty = PlayerAI.Difficulty.MEDIUM;
-            } else if(radioButtonHard.isSelected()) {
+            } else if (radioButtonHard.isSelected()) {
                 difficulty = PlayerAI.Difficulty.HARD;
             } else {
                 difficulty = PlayerAI.Difficulty.MEDIUM;
@@ -271,7 +289,7 @@ public class ControllerGameType implements Initializable {
                 playgroundSize = networkConnection.getPlaygroundSize();
                 p1IsStarting = false;
             } else if (radioButtonServer.isSelected()) {
-                ((Server)networkConnection).startGame(playgroundSize);
+                ((Server) networkConnection).startGame(playgroundSize);
             } else {
                 LoggerGUI.warning("No server/client selected.");
             }
@@ -318,13 +336,30 @@ public class ControllerGameType implements Initializable {
      */
 
     @FXML
-    public void loadShipPöacementScene() {
+    public void loadShipPlacementScene() {
         GameSettings settings = buildGameSettings();
+
+        if (settings == null)
+            return;
 
         ControllerShipPlacement controllerShipPlacement = new ControllerShipPlacement(settings);
         SceneLoader sceneLoader = new SceneLoader(BackToMenu, filepathShipPlacement, controllerShipPlacement);
         sceneLoader.loadSceneInExistingWindow();
         LoggerState.info("Start Ship_Placement");
+    }
+
+
+    private void showNotification(String title, String message) {
+
+        Notifications notifications = Notifications.create()
+                .title(title)
+                .text(message)
+                .darkStyle()
+                .hideCloseButton()
+                .position(Pos.CENTER)
+                .hideAfter(Duration.seconds(6.0));
+        notifications.showWarning();
+
     }
 
 }
