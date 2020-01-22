@@ -178,5 +178,8 @@ public class PlayerAI extends Player {
         return (PlaygroundOwnPlaceable)playgroundOwn;
     }
 
-
+    @Override
+    public String toString() {
+        return "{" + super.toString() + ", difficulty=" + difficulty + "}";
+    }
 }

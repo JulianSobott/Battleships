@@ -31,6 +31,7 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.concurrent.CompletableFuture;
 
@@ -84,6 +85,10 @@ public class ControllerGameType implements Initializable {
 
     @FXML
     public Label labelConnectionStatus;
+    @FXML
+    public ChoiceBox<String> choiceBoxAI1Difficulty;
+    @FXML
+    public ChoiceBox<String> choiceBoxAI2Difficulty;
 
 
     private static final String filepathBackMainMenu = "../Main_Menu.fxml";
@@ -315,8 +320,13 @@ public class ControllerGameType implements Initializable {
         }
         // Local
         else if (radioButtonLocal.isSelected()) {
-            p1 = new PlayerAI(0, "AI1", playgroundSize, PlayerAI.Difficulty.EASY);
-            p2 = new PlayerAI(1, "AI2", playgroundSize, PlayerAI.Difficulty.MEDIUM);
+            HashMap<String, PlayerAI.Difficulty> hashMap = new HashMap<>() {{
+                put("Leicht", PlayerAI.Difficulty.EASY);
+                put("Mittel", PlayerAI.Difficulty.MEDIUM);
+                put("Schwer", PlayerAI.Difficulty.HARD);
+            }};
+            p1 = new PlayerAI(0, "AI1", playgroundSize, hashMap.get(choiceBoxAI1Difficulty.getValue()));
+            p2 = new PlayerAI(1, "AI2", playgroundSize, hashMap.get(choiceBoxAI2Difficulty.getValue()));
             aiVsAi = true;
         } else {
             // TODO: inform user  ??? Problem ???? noch implementieren ???

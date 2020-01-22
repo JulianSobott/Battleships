@@ -65,7 +65,7 @@
             <ChoiceBox fx:id="choiceBoxAI2Difficulty" prefWidth="150.0" value="Schwer">
                <items>
                   <FXCollections fx:factory="observableArrayList">
-                     <String fx:value="Leicht" />
+                     <String fx:value="Leicht"/>
                      <String fx:value="Mittel" />
                      <String fx:value="Schwer" />
                   </FXCollections>
