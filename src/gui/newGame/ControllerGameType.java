@@ -239,7 +239,7 @@ public class ControllerGameType implements Initializable {
 
 
     /**
-     * ...
+     * The method creates a Settings object that contains the required information about game type, field size, etc
      */
 
     private GameSettings buildGameSettings() {
@@ -250,11 +250,11 @@ public class ControllerGameType implements Initializable {
             return null;
         } else if (!textfieldPlaygroundSize.getText().trim().isEmpty()) {
             String fieldSize = textfieldPlaygroundSize.getText().trim();
-            for( int i = 0, n = fieldSize.length(); i<n; i++ )
-                if( ! Character.isDigit( fieldSize.charAt( i ))){
-                    showNotification("Only numbers allowed","Only numbers are allowed in the field for the field size");
+            for (int i = 0, n = fieldSize.length(); i < n; i++)
+                if (!Character.isDigit(fieldSize.charAt(i))) {
+                    showNotification("Only numbers allowed", "Only numbers are allowed in the field for the field size");
                     return null;
-            }
+                }
 
         } else if (Integer.parseInt(textfieldPlaygroundSize.getText().trim()) < 5 || Integer.parseInt(textfieldPlaygroundSize.getText().trim()) > 30) {
             showNotification("unallowed field size", "Only field sizes between 5 and 30 fields are allowed");
@@ -267,9 +267,14 @@ public class ControllerGameType implements Initializable {
         Player startingPlayer;
         boolean p1IsStarting = true;
 
+        if (!radioButtonKI.isSelected() && !radioButtonNetzwerk.isSelected() && !radioButtonLocal.isSelected()) {
+            showNotification("no variety selected", "Please select your desired game type");
+            return null;
+        }
+
         // AI
         if (radioButtonKI.isSelected()) {
-            PlayerAI.Difficulty difficulty;
+            PlayerAI.Difficulty difficulty = null;
             if (radioButtonEasy.isSelected()) {
                 difficulty = PlayerAI.Difficulty.EASY;
             } else if (radioButtonMedium.isSelected()) {
@@ -277,7 +282,11 @@ public class ControllerGameType implements Initializable {
             } else if (radioButtonHard.isSelected()) {
                 difficulty = PlayerAI.Difficulty.HARD;
             } else {
-                difficulty = PlayerAI.Difficulty.MEDIUM;
+                if (!radioButtonEasy.isSelected() && !radioButtonMedium.isSelected() && !radioButtonHard.isSelected()) {
+                    showNotification("no difficulty chosen", "Please select one of the available difficulty levels:\n" +
+                            "Light - Medium - Heavy");
+                    return null;
+                }
                 LoggerGUI.warning("No difficulty selected. Choosing default MEDIUM.");
             }
             p2 = new PlayerAI(1, "AI", playgroundSize, difficulty);
@@ -291,7 +300,9 @@ public class ControllerGameType implements Initializable {
             } else if (radioButtonServer.isSelected()) {
                 ((Server) networkConnection).startGame(playgroundSize);
             } else {
+                showNotification("Server or Client","You must specify whether you want to be server or client");
                 LoggerGUI.warning("No server/client selected.");
+                return null;
             }
             p2 = networkConnection.getPlayerNetwork();
         }
@@ -318,7 +329,7 @@ public class ControllerGameType implements Initializable {
 
 
     /**
-     * ...
+     * method loads the previous window Main menu
      */
 
     @FXML
@@ -332,7 +343,7 @@ public class ControllerGameType implements Initializable {
     }
 
     /**
-     * ...
+     * method loads the next window Place ships
      */
 
     @FXML
@@ -349,6 +360,10 @@ public class ControllerGameType implements Initializable {
     }
 
 
+    /**
+     * method informs the user for his misconduct
+     */
+
     private void showNotification(String title, String message) {
 
         Notifications notifications = Notifications.create()
@@ -357,7 +372,7 @@ public class ControllerGameType implements Initializable {
                 .darkStyle()
                 .hideCloseButton()
                 .position(Pos.CENTER)
-                .hideAfter(Duration.seconds(6.0));
+                .hideAfter(Duration.seconds(3.0));
         notifications.showWarning();
 
     }
