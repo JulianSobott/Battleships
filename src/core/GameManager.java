@@ -114,10 +114,14 @@ public class GameManager implements GameManagerInterface {
     }
 
     /**
-     * TODO: difference between shoot?
+     * A GUI player wants to make a shot.
+     * The information is stored and used when the GameManager is ready to use this.
+     * Nothing is returned. Instead the GUI should call {@link #pollTurn(String)} to get the results of his own and the
+     * enemy turns.
+     * Validity of the turn is checked in {@link #turn(Player, Position)} and stored in the TurnResult.
      *
-     * @param player
-     * @param position
+     * @param player The Player that wants to make a shot
+     * @param position The target position
      */
     private void makeShot(Player player, Position position) {
         LoggerLogic.debug("Make shot: player=" + player + " position=" + position);
@@ -164,6 +168,14 @@ public class GameManager implements GameManagerInterface {
         return player == this.currentPlayer;
     }
 
+    /**
+     * A Player wants to make a turn and shoot at a field.
+     * Validity checks are made here.
+     *
+     * @param player The Player that makes the turn.
+     * @param position Target of the shoot.
+     * @return A TurnResult with if information if the turn was valid and if so what was hit.
+     */
     private TurnResult turn(Player player, Position position) {
         LoggerLogic.info("turn: player=" + player + ", position=" + position);
         TurnResult res;
