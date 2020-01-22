@@ -14,19 +14,14 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class GameManager implements GameManagerInterface {
 
-    // TODO: Check synchronize stuff for correctness
-    // TODO: Remove deprecated methods/attributes
-    // TODO: Better names for methods: shoot, makeShoot, turn, ...
     private Player player1;
     private Player player2;
     private Player[] players;
     private Player currentPlayer;
 
-    // Player A wants to shoot at position: nextTurns.get(A)
-    // Queue must only contain 0 to 1 item.
     private int round = 1;
 
-    // Player A wants the lastTurns from Player B: lastTurns.get(A).get(B)
+    // Player A wants the lastTurn: lastTurns.get(A)
     private HashMap<Player, ConcurrentLinkedQueue<TurnResult>> lastTurns = new HashMap<>();
     private HashMap<String, Player> idPlayerHashMap = new HashMap<>();
 
@@ -34,12 +29,12 @@ public class GameManager implements GameManagerInterface {
 
     /**
      * Constructor, when game was loaded
-     * @param players
-     * @param currentPlayer
-     * @param round
+     * @param players All Players
+     * @param currentPlayer The player that was the currentPlayer, when the game was saved
+     * @param round The round in which the game was saved
      */
     public GameManager(Player[] players, Player currentPlayer, int round) {
-        this.initGame((PlayerHuman) players[0], players[1]);
+        this.initGame(players[0], players[1]);
         this.currentPlayer = currentPlayer;
         this.round = round;
     }
@@ -51,16 +46,6 @@ public class GameManager implements GameManagerInterface {
     }
 
     @Override
-    public boolean connectToServer(String ip, int port) {
-        return false;
-    }
-
-    @Override
-    public GameSettings getGameSettings() {
-        return null;
-    }
-
-    @Override
     public NewGameResult newGame(GameSettings settings) {
         this.initGame(settings.getP1(), settings.getP2());
         this.currentPlayer = settings.getStartingPlayer();
@@ -68,6 +53,11 @@ public class GameManager implements GameManagerInterface {
         return new NewGameResult(shipList);
     }
 
+    /**
+     * Set attributes and init queues and maps.
+     * @param p1 PlayerHuman or PlayerAI
+     * @param p2 PlayerAI or PlayerNetwork
+     */
     private void initGame(Player p1, Player p2) {
         this.player1 = p1;
         this.player2 = p2;
@@ -80,13 +70,20 @@ public class GameManager implements GameManagerInterface {
         idPlayerHashMap.put("AI_2", this.player2);
     }
 
-    public StartShootingRes startShooting() {
-        // TODO: return or wait till both finished? new thread? User should be somehow informed what is going on.
+    /**
+     * Asks if all ships are placed.
+     *
+     * @return Enum with information who who is not ready.
+     */
+    public StartShootingRes allPlayersReady() {
         if (!this.player1.areAllShipsPlaced()) return StartShootingRes.OWN_NOT_ALL_SHIPS_PLACED;
         if (!this.player2.areAllShipsPlaced()) return StartShootingRes.ENEMY_NOT_ALL_SHIPS_PLACED;
         return StartShootingRes.SHOOTING_ALLOWED;
     }
 
+    /**
+     * Starts the {@link #gameLoop()} which is responsible for the main turn logic.
+     */
     public void startGame() {
         this.gameLoop();
     }
@@ -112,7 +109,7 @@ public class GameManager implements GameManagerInterface {
     }
 
     /**
-     * A GUI player wants to make a shot.
+     * The GUI player wants to make a shot.
      * The information is stored and used when the GameManager is ready to use this.
      * Nothing is returned. Instead the GUI should call {@link #pollTurn(String)} to get the results of his own and the
      * enemy turns.
@@ -125,6 +122,17 @@ public class GameManager implements GameManagerInterface {
         ((PlayerHuman)player1).addNextShot(pos);
     }
 
+    /**
+     * Poll the last turn that happened.
+     * Turn can be from both players. TurnResult can also indicate an invalid turn.
+     * If no turn happened till now this method blocks until a turn happens.
+     * Once a turn is polled it is removed from the list and can't be polled from the same id again.
+     * For other id's it is still available.
+     *
+     * @param id ID that matches to a player. The id must match to the PLayer that wants the turn.
+     *           id's see {@link #initGame(Player, Player)}
+     * @return A TurnResult. Results are stored in a FIFO-Queue.
+     */
     public TurnResult pollTurn(String id) {
         Player player = this.idPlayerHashMap.get(id);
         synchronized (this.lastTurns.get(player)) {
@@ -137,6 +145,7 @@ public class GameManager implements GameManagerInterface {
                 }
             }
             TurnResult res = this.lastTurns.get(player).poll();
+            assert res != null: "Result shouldn't be possible to be null";
             LoggerLogic.debug("Returning player " + res.getPlayerIndex() +" Result:");
             return res;
         }
@@ -233,7 +242,7 @@ public class GameManager implements GameManagerInterface {
     /**
      * Saves the TurnResult everywhere, where it is needed.
      *
-     * @param res
+     * @param res The TurnResult that is to save.
      */
     private void saveTurnResult(TurnResult res){
         for(Player p : this.players){
@@ -253,6 +262,9 @@ public class GameManager implements GameManagerInterface {
     }
 
 
+    /**
+     * Stops the inGameThread and waits till it is joined.
+     */
     public void exitInGameThread() {
         inGameThread.interrupt();
         try {

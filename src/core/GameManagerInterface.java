@@ -3,9 +3,6 @@ package core;
 import core.communication_data.*;
 
 public interface GameManagerInterface {
-    // Server
-    public boolean connectToServer(String ip, int port);
-    public GameSettings getGameSettings();
 
     // create game
     public NewGameResult newGame(GameSettings settings);
