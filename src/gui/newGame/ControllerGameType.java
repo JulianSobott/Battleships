@@ -267,10 +267,11 @@ public class ControllerGameType implements Initializable {
         }
 
         int playgroundSize = Integer.parseInt(this.textfieldPlaygroundSize.getText()); // Resets, when client
-        PlayerHuman p1;
+        Player p1 = null;
         Player p2;
         Player startingPlayer;
         boolean p1IsStarting = true;
+        boolean aiVsAi = false;
 
         if (!radioButtonKI.isSelected() && !radioButtonNetzwerk.isSelected() && !radioButtonLocal.isSelected()) {
             showNotification("no variety selected", "Please select your desired game type");
@@ -314,16 +315,20 @@ public class ControllerGameType implements Initializable {
         }
         // Local
         else if (radioButtonLocal.isSelected()) {
-            p2 = new PlayerHuman(1, "Local2", playgroundSize);
+            p1 = new PlayerAI(0, "AI1", playgroundSize, PlayerAI.Difficulty.EASY);
+            p2 = new PlayerAI(1, "AI2", playgroundSize, PlayerAI.Difficulty.MEDIUM);
+            aiVsAi = true;
         } else {
             // TODO: inform user  ??? Problem ???? noch implementieren ???
             LoggerGUI.warning("No mode selected. Can't start game. Inform User. Check before??");
             assert false;
             p2 = null;
         }
-        p1 = new PlayerHuman(0, "Local", playgroundSize);
+        if (p1 == null) {
+            p1 = new PlayerHuman(0, "Local", playgroundSize);
+        }
         startingPlayer = p1IsStarting ? p1 : p2;
-        GameSettings settings = new GameSettings(playgroundSize, p1, p2, networkConnection, startingPlayer);
+        GameSettings settings = new GameSettings(playgroundSize, p1, p2, networkConnection, startingPlayer, aiVsAi);
         LoggerGUI.info("Start game with settings=" + settings);
         return settings;
     }

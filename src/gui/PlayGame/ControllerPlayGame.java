@@ -64,6 +64,7 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
     private PlaygroundHeatmap playgroundHeatmap;
     private boolean showHeatMap = true;
     private boolean slowAIShooting = true;
+    private long AI_SHOOTING_DELAY_MS = 800;
     private boolean loadEndScreen = true;
 
     ArrayList<BattleShipGui> shipPositionList;
@@ -369,7 +370,7 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
                         LoggerGUI.info("TurnResult in GUI: " + res);
                         if (res.getError() == TurnResult.Error.NONE) {
                             if (res.getPlayerIndex() == 1 && slowAIShooting) {
-                                Thread.sleep(400);
+                                Thread.sleep(AI_SHOOTING_DELAY_MS);
                             }
                             updateByShotResult(playerGridPaneHashMap.get(res.getPlayerIndex()), res.getSHOT_RESULT());
                         } else {

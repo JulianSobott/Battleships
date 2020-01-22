@@ -11,17 +11,20 @@ public class GameSettings {
     private final Player p2;
     private final Player startingPlayer;
     private final Connected networkConnection;
+    private final boolean aiVsAi;
 
-    public GameSettings(int playgroundSize, Player p1, Player p2, Connected networkConnection, Player startingPlayer) {
+    public GameSettings(int playgroundSize, Player p1, Player p2, Connected networkConnection, Player startingPlayer,
+                        boolean aiVsAi) {
         this.playgroundSize = playgroundSize;
         this.p1 = p1;
         this.p2 = p2;
         this.networkConnection = networkConnection;
         this.startingPlayer = startingPlayer;
+        this.aiVsAi = aiVsAi;
     }
 
     public GameSettings(int playgroundSize, Player p1, Player p2) {
-        this(playgroundSize, p1, p2, null, p1);
+        this(playgroundSize, p1, p2, null, p1, false);
     }
 
     public int getPlaygroundSize() {
@@ -42,6 +45,10 @@ public class GameSettings {
 
     public Player getStartingPlayer() {
         return startingPlayer;
+    }
+
+    public boolean isAiVsAi() {
+        return aiVsAi;
     }
 
     @Override

@@ -70,6 +70,9 @@ public class ControllerShipPlacement implements Initializable, Shutdown {
         this.SHIP_LIST = res.getSHIP_LIST();
         this.playgroundSize = settings.getPlaygroundSize();
         this.networkConnection = settings.getNetworkConnection();
+        if(settings.isAiVsAi()) {
+            startGame();
+        }
     }
 
 
