@@ -110,6 +110,11 @@ public class ControllerGameType implements Initializable {
         radioButtonMedium.setToggleGroup(toggleGroupDifficulty);
         radioButtonHard.setToggleGroup(toggleGroupDifficulty);
 
+        vBoxKI.setStyle("-fx-background-color: lightgray");
+        vBoxNetzwerk.setStyle("-fx-background-color: lightgray");
+        vBoxLocal.setStyle("-fx-background-color: lightgray");
+        vBoxPlaygroundSettings.setStyle("-fx-background-color: lightgray");
+
 
     }
 
@@ -248,7 +253,7 @@ public class ControllerGameType implements Initializable {
         if (textfieldPlaygroundSize.getText().trim().isEmpty()) {
             showNotification("missing field size", "Please specify a playing field size between 5 and 30");
             return null;
-        } else if (!textfieldPlaygroundSize.getText().trim().isEmpty()) {
+        }  if (!textfieldPlaygroundSize.getText().trim().isEmpty()) {
             String fieldSize = textfieldPlaygroundSize.getText().trim();
             for (int i = 0, n = fieldSize.length(); i < n; i++)
                 if (!Character.isDigit(fieldSize.charAt(i))) {
@@ -256,7 +261,7 @@ public class ControllerGameType implements Initializable {
                     return null;
                 }
 
-        } else if (Integer.parseInt(textfieldPlaygroundSize.getText().trim()) < 5 || Integer.parseInt(textfieldPlaygroundSize.getText().trim()) > 30) {
+        }  if (Integer.parseInt(textfieldPlaygroundSize.getText().trim()) < 5 || Integer.parseInt(textfieldPlaygroundSize.getText().trim()) > 30) {
             showNotification("unallowed field size", "Only field sizes between 5 and 30 fields are allowed");
             return null;
         }
@@ -300,6 +305,7 @@ public class ControllerGameType implements Initializable {
             } else if (radioButtonServer.isSelected()) {
                 ((Server) networkConnection).startGame(playgroundSize);
             } else {
+                //TODO Funktioniert nicht.. Warum ???
                 showNotification("Server or Client","You must specify whether you want to be server or client");
                 LoggerGUI.warning("No server/client selected.");
                 return null;
@@ -310,7 +316,7 @@ public class ControllerGameType implements Initializable {
         else if (radioButtonLocal.isSelected()) {
             p2 = new PlayerHuman(1, "Local2", playgroundSize);
         } else {
-            // TODO: inform user
+            // TODO: inform user  ??? Problem ???? noch implementieren ???
             LoggerGUI.warning("No mode selected. Can't start game. Inform User. Check before??");
             assert false;
             p2 = null;
