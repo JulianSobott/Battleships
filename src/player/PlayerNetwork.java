@@ -16,12 +16,16 @@ public class PlayerNetwork extends Player {
 
     private Connected connected;
 
-    @ConstructorProperties({"index", "name", "playgroundSize"})
     public PlayerNetwork(int index, String name, int playgroundSize, Connected connected) {
         super(index, name, playgroundSize);
         this.connected = connected;
         this.playgroundOwn = new PlaygroundOwnBuildUp(playgroundSize);
         this.playgroundEnemy = new PlaygroundEnemyBuildUp(playgroundSize);
+    }
+
+    @ConstructorProperties({"index", "name", "playgroundSize"})
+    public PlayerNetwork(int index, String name, int playgroundSize) {
+        this(index, name, playgroundSize, null);
     }
 
     private final HashMap<String, Object> networkData = new HashMap<>();

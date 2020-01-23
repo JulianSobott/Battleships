@@ -9,6 +9,9 @@ import core.communication_data.Position;
  */
 public class PlaygroundBuildUp extends Playground {
 
+    public PlaygroundBuildUp() {
+    }
+
     public PlaygroundBuildUp(int size) {
         super(size);
         this.resetFields(FieldType.FOG);

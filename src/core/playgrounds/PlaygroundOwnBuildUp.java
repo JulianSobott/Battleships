@@ -9,6 +9,9 @@ import core.utils.logging.LoggerLogic;
 
 public class PlaygroundOwnBuildUp extends PlaygroundBuildUp implements PlaygroundOwn {
 
+    public PlaygroundOwnBuildUp() { // JSON deserialization
+    }
+
     public PlaygroundOwnBuildUp(int size) {
         super(size);
         this.resetFields(FieldType.WATER);
