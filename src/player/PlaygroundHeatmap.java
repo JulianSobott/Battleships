@@ -7,6 +7,7 @@ import core.utils.Random;
 import core.utils.logging.LoggerLogic;
 
 import java.beans.ConstructorProperties;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,6 +21,7 @@ public class PlaygroundHeatmap {
     private ShipList shipList;
     private int finalNumShipsHit = 0;
     private int tempNumShipsHit = 0;
+
 
     // Dynamic programming
     private int[][] lastHeatMap;
@@ -40,22 +42,28 @@ public class PlaygroundHeatmap {
         rebuildMap = true;
         if (fieldType == Playground.FieldType.SHIP) {
             this.finalNumShipsHit++;
-            if(position.equals(lastPosition)) {
-                rebuildMap = false;
-            }
+            // rebuildMap = false;
+        } else {
+            if(lastHeatMap != null)
+                this.lastHeatMap[position.getY()][position.getX()] = 0;
         }
         this.final_fields[position.getY()][position.getX()] = fieldType;
     }
 
     public int[][] buildHeatMap(int numIterations) {
         int[][] heatMap = new int[SIZE][SIZE];
+        int numFails = 0;
         for (int i = 0; i < numIterations; i++) {
             boolean succeed = this.buildPossiblePlacements();
             if (succeed)
                 this.addPossiblePlacementsToHeatMap(heatMap);
-            else
-                LoggerLogic.debug("Could not buildPossiblePlacements");
+            else {
+                numFails++;
+            }
         }
+        if(numFails == numIterations)
+            return lastHeatMap;
+        LoggerLogic.debug("Num of fails, where no ships could be placed: " + numFails);
         lastHeatMap = heatMap;
         return heatMap;
     }
@@ -77,7 +85,10 @@ public class PlaygroundHeatmap {
                 }
             }
         }
-        if(maxHeat == 0) return null;
+        if(maxHeat == 0) {
+            assert false: "Should find solution:";
+            return null;
+        }
         lastPosition = new Position(xMax, yMax);
         return lastPosition;
     }
@@ -114,6 +125,8 @@ public class PlaygroundHeatmap {
     }
 
     private boolean placeShipsRandom() {
+        //tempFreeFields.addAll(freeFields);
+
         for (ShipList.Pair pair : this.shipList) {
             for (int shipI = 0; shipI < pair.getNum(); shipI++) {
                 if (!this.placeSingleShipRandom(pair.getSize())) {
@@ -279,14 +292,6 @@ public class PlaygroundHeatmap {
     public int getSIZE() {
         return SIZE;
     }
-
-//    public ShipList getShipList() {
-//        return shipList;
-//    }
-//
-//    public void setShipList(ShipList shipList) {
-//        this.shipList = shipList;
-//    }
 
     public int getFinalNumShipsHit() {
         return finalNumShipsHit;

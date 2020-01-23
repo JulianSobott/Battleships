@@ -121,7 +121,7 @@ public class PlayerAI extends Player {
     private Position makeMoveMedium() {
         round++;
         // The higher the better the prediction. Too high values can slow down the game
-        int numPossiblePlacements = 1000;
+        int numPossiblePlacements = 100;
 
         LoggerProfile.start("buildHeatMap_" + round);
         Position target = this.playgroundHeatmap.getHottestPosition(numPossiblePlacements);
