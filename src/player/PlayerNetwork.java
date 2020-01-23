@@ -78,4 +78,8 @@ public class PlayerNetwork extends Player {
     public PlaygroundOwnBuildUp getPlaygroundOwn() {
         return (PlaygroundOwnBuildUp) this.playgroundOwn;
     }
+
+    public void setConnected(Connected connected) {
+        this.connected = connected;
+    }
 }

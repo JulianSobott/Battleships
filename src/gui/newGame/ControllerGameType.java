@@ -2,9 +2,11 @@ package gui.newGame;
 
 import core.Player;
 import core.communication_data.GameSettings;
+import core.serialization.GameData;
 import core.utils.logging.LoggerGUI;
 import core.utils.logging.LoggerState;
 import gui.ControllerMainMenu;
+import gui.PlayGame.ControllerPlayGame;
 import gui.ShipPlacement.ControllerShipPlacement;
 import gui.WindowChange.SceneLoader;
 import javafx.concurrent.Task;
@@ -93,6 +95,8 @@ public class ControllerGameType implements Initializable {
 
     private static final String filepathBackMainMenu = "../Main_Menu.fxml";
     private static final String filepathShipPlacement = "../ShipPlacement/ShipPlacement.fxml";
+    private boolean fromNetworkLoad = false;
+    private GameData loadedGameData;
 
     // Network
     private Connected networkConnection;
@@ -123,6 +127,34 @@ public class ControllerGameType implements Initializable {
 
     }
 
+    /**
+     * When a game is loaded, but this window is needed as lobby
+     * @param gameData Loaded GameData
+     */
+    public void initFromNetworkLoad(GameData gameData) {
+        fromNetworkLoad = true;
+        loadedGameData = gameData;
+        radioButtonNetzwerk.setSelected(true);
+        radioButtonServer.setSelected(true);
+        textfieldPlaygroundSize.setText(gameData.getCurrentPlayer().getPlaygroundOwn().getSize() + "");
+        disableAllInput();
+        onServerSelected();
+    }
+
+    private void disableAllInput() {
+        radioButtonKI.setDisable(true);
+        radioButtonLocal.setDisable(true);
+        radioButtonServer.setDisable(true);
+        radioButtonEasy.setDisable(true);
+        radioButtonMedium.setDisable(true);
+        radioButtonHard.setDisable(true);
+        radioButtonClient.setDisable(true);
+        radioButtonServer.setDisable(true);
+        choiceBoxAI1Difficulty.setDisable(true);
+        choiceBoxAI2Difficulty.setDisable(true);
+        textfieldPlaygroundSize.setDisable(true);
+        textFieldIpAddress.setDisable(true);
+    }
 
     /**
      * #################################################   JavaFX Events  ############################################
@@ -305,13 +337,21 @@ public class ControllerGameType implements Initializable {
         // Network
         else if (radioButtonNetzwerk.isSelected()) {
 
-            if(networkConnection != null) {
+            if(networkConnection != null && networkConnection.isConnected()) {
                 networkConnection.startCommunication();
             }
             if (radioButtonClient.isSelected()) {
+                if(!networkConnection.isConnected()) {
+                    showNotification("No connection to Server", "Please connect first to the server");
+                    return null;
+                }
                 playgroundSize = networkConnection.getPlaygroundSize();
                 p1IsStarting = false;
             } else if (radioButtonServer.isSelected()) {
+                if(!networkConnection.isConnected()) {
+                    showNotification("No client connected", "Please wait till a client has connected");
+                    return null;
+                }
                 ((Server) networkConnection).startGame(playgroundSize);
             } else {
                 showNotification("Server or Client","You must specify whether you want to be server or client");
@@ -375,6 +415,14 @@ public class ControllerGameType implements Initializable {
 
         if (settings == null)
             return;
+        if (fromNetworkLoad) {
+            // TODO: send to client
+            ControllerPlayGame controller = ControllerPlayGame.fromLoad(this.loadedGameData);
+            // TODO: null??
+            SceneLoader sceneLoader = new SceneLoader(BackToMenu, "../PlayGame/PlayGame.fxml", controller);
+            sceneLoader.loadSceneInExistingWindow();
+            controller.initFieldsFromLoad(this.loadedGameData);
+        }
 
         ControllerShipPlacement controllerShipPlacement = new ControllerShipPlacement(settings);
         SceneLoader sceneLoader = new SceneLoader(BackToMenu, filepathShipPlacement, controllerShipPlacement);

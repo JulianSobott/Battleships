@@ -98,6 +98,7 @@ public class ControllerLoadGame implements Initializable {
                 ControllerGameType controllerGameType = new ControllerGameType();
                 SceneLoader sceneLoader = new SceneLoader(this.ANCHORPANEMAINMENU, "../newGame/GameType.fxml", controllerGameType);
                 sceneLoader.loadSceneInExistingWindow();
+                controllerGameType.initFromNetworkLoad(res.getGameData());
 
                 //TODO: Methode aufrufen die felder mit Werten belegt...
                 return;
