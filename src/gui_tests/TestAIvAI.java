@@ -21,13 +21,14 @@ public class TestAIvAI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        int playgroundSize = 5;
-        Player p1 = new PlayerAI(0, "AI1", playgroundSize, PlayerAI.Difficulty.EASY);
-        Player p2 = new PlayerAI(1, "AI2", playgroundSize, PlayerAI.Difficulty.MEDIUM);
-        GameManager manager = new GameManager();
-        manager.newGame(new GameSettings(playgroundSize, p1, p2));
-        ControllerPlayGame controllerPlayGame = new ControllerPlayGame(playgroundSize, new ArrayList<>(), manager);
-        SceneLoader sceneLoader = new SceneLoader(null, "../../gui/PlayGame/PlayGame.fxml", controllerPlayGame);
-        sceneLoader.loadSceneInNewWindow("Test Ship Placement");
+        int playgroundSize = 20;
+        Player p1 = new PlayerAI(0, "AI1", playgroundSize, PlayerAI.Difficulty.MEDIUM);
+        Player p2 = new PlayerAI(1, "AI2", playgroundSize, PlayerAI.Difficulty.EASY);
+        GameSettings settings = new GameSettings(playgroundSize, p1, p2, null, p1, true);
+
+        ControllerShipPlacement controllerShipPlacement = new ControllerShipPlacement(settings);
+        SceneLoader sceneLoader = new SceneLoader(null, "../../gui/ShipPlacement/ShipPlacement.fxml",
+                controllerShipPlacement);
+        sceneLoader.loadSceneInNewWindow("AI vs AI");
     }
 }
