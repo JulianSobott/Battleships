@@ -5,6 +5,7 @@ import core.Ship;
 import core.communication_data.*;
 import core.utils.Random;
 import core.utils.logging.LoggerLogic;
+import core.utils.logging.LoggerState;
 
 import java.beans.ConstructorProperties;
 import java.util.ArrayList;
@@ -28,8 +29,19 @@ public class PlaygroundHeatmap {
     private Position lastPosition;
     private boolean rebuildMap = true;
 
+    // Hyper parameters
+    private int numPlacements = 200;
+    private int numTriesSingleShip = 500;
+    private int numTriesAllShips = 80;
+
+    // statistics
+    private int numCorrectGuesses = 0;
+    private int numWrongGuesses = 0;
+
+
     @ConstructorProperties("size")
     public PlaygroundHeatmap(int size) {
+        Random.random.setSeed(23);
         this.shipList = ShipList.fromSize(size);
         this.SIZE = size;
         this.final_fields = new Playground.FieldType[size][size];
@@ -71,6 +83,7 @@ public class PlaygroundHeatmap {
     public Position getHottestPosition(int numIterations) {
         int[][] heatMap;
         if(rebuildMap) {
+            numIterations = numPlacements;
             heatMap = buildHeatMap(numIterations);
         } else{
             heatMap = lastHeatMap;
@@ -103,8 +116,7 @@ public class PlaygroundHeatmap {
     }
 
     private boolean buildPossiblePlacements() {
-        int maxIterations = 1000;
-        for (int i = 0; i < maxIterations; i++) {
+        for (int i = 0; i < numTriesAllShips; i++) {
             this.clearField(this.temp_fields);
             this.tempNumShipsHit = 0;
             this.placeAlreadySunkenShips();
@@ -139,10 +151,10 @@ public class PlaygroundHeatmap {
     }
 
     private boolean placeSingleShipRandom(int shipLength) {
-        int maxIterations = 50;
-        for (int i = 0; i < maxIterations; i++) {
+        for (int i = 0; i < numTriesSingleShip; i++) {
             int x = Random.random.nextInt(SIZE);
             int y = Random.random.nextInt(SIZE);
+
             ShipPosition.Direction dir = Random.random.nextBoolean() ? ShipPosition.Direction.HORIZONTAL :
                     ShipPosition.Direction.VERTICAL;
             ShipPosition position = new ShipPosition(x, y, dir, shipLength);
@@ -249,6 +261,12 @@ public class PlaygroundHeatmap {
                 this.discoveredSunkenShips.add(resultShip.getShipPosition());
                 this.shipList.decreaseNumShips(resultShip.getShipPosition().getLength());
             }
+            numCorrectGuesses++;
+        }else{
+            numWrongGuesses++;
+        }
+        if(shipList.getTotalNumberOfShips() == 0) {
+            printStatistics();
         }
     }
 
@@ -262,6 +280,12 @@ public class PlaygroundHeatmap {
             s.append("\n");
         }
         LoggerLogic.debug(s.toString());
+    }
+
+    public void printStatistics() {
+        LoggerState.info("Statistics: avgScore="+ ((float)numCorrectGuesses)/numWrongGuesses+ ", " +
+                "numCorrectGuesses=" + numCorrectGuesses +
+                ", numWrongGuesses=" + numWrongGuesses);
     }
 
 
