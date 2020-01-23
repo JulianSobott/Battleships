@@ -77,6 +77,7 @@ public abstract class Connected implements Shutdown {
                 int playgroundSize = Integer.parseInt(splitted[1]);
                 this.initPlayer(playgroundSize);
                 setSentData("playgroundSize", playgroundSize);
+                setSentData("isLoadGame", false);
                 expectedMessage.set("CONFIRMED");
                 break;
             case "SHOT":
@@ -89,6 +90,9 @@ public abstract class Connected implements Shutdown {
                 inGameGUI.saveGame(id);
                 break;
             case "LOAD":
+                id = Long.parseLong(splitted[1]);
+                setSentData("isLoadGame", true);
+                setSentData("gameID", id);
                 break;
             case "CONFIRMED":
                 player.setAllShipsPlaced();
@@ -176,6 +180,10 @@ public abstract class Connected implements Shutdown {
         sendMessage("shot " + pos.getX() + " " + pos.getY());
     }
 
+    public void sendLoadGame(long gameID) {
+        sendMessage("load " + gameID);
+    }
+
     private void sendMessage(String message){
         if (message.equals("answer 0")) {
             synchronized (expectedMessage) {
@@ -230,6 +238,27 @@ public abstract class Connected implements Shutdown {
         return (Position) o;
     }
 
+    /**
+     * blocking till available
+     * @return
+     */
+    public boolean isLoadGame() {
+        Object o = popSentData("isLoadGame");
+        assert o instanceof Boolean: "Wrong data stored. Expected Boolean got " + o;
+        return (Boolean) o;
+    }
+
+    /**
+     * blocking till available
+     * @return
+     */
+    public long getGameID() {
+        Object o = popSentData("gameID");
+        assert o instanceof Long: "Wrong data stored. Expected long got " + o;
+        return (Long) o;
+    }
+
+
     private void setSentData(String key, Object o) {
         synchronized (sentData) {
             sentData.put(key, o);
@@ -263,6 +292,8 @@ public abstract class Connected implements Shutdown {
             }
         }
     }
+
+
 
     public static class ShotResTuple {
 

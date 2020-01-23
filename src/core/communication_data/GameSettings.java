@@ -12,6 +12,7 @@ public class GameSettings {
     private final Player startingPlayer;
     private final Connected networkConnection;
     private final boolean aiVsAi;
+    private long gameID;
 
     public GameSettings(int playgroundSize, Player p1, Player p2, Connected networkConnection, Player startingPlayer,
                         boolean aiVsAi) {
@@ -49,6 +50,15 @@ public class GameSettings {
 
     public boolean isAiVsAi() {
         return aiVsAi;
+    }
+
+    public GameSettings addGameID(long gameID) {
+        this.gameID = gameID;
+        return this;
+    }
+
+    public long getGameID() {
+        return gameID;
     }
 
     @Override

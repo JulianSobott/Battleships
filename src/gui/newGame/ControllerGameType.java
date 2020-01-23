@@ -2,7 +2,9 @@ package gui.newGame;
 
 import core.Player;
 import core.communication_data.GameSettings;
+import core.communication_data.LoadGameResult;
 import core.serialization.GameData;
+import core.serialization.GameSerialization;
 import core.utils.logging.LoggerGUI;
 import core.utils.logging.LoggerState;
 import gui.ControllerMainMenu;
@@ -309,6 +311,7 @@ public class ControllerGameType implements Initializable {
         Player startingPlayer;
         boolean p1IsStarting = true;
         boolean aiVsAi = false;
+        long gameID = -1;
 
         if (!radioButtonKI.isSelected() && !radioButtonNetzwerk.isSelected() && !radioButtonLocal.isSelected()) {
             showNotification("no variety selected", "Please select your desired game type");
@@ -340,25 +343,40 @@ public class ControllerGameType implements Initializable {
             if(networkConnection != null && networkConnection.isConnected()) {
                 networkConnection.startCommunication();
             }
+            // Client
             if (radioButtonClient.isSelected()) {
                 if(!networkConnection.isConnected()) {
                     showNotification("No connection to Server", "Please connect first to the server");
                     return null;
                 }
-                playgroundSize = networkConnection.getPlaygroundSize();
+                boolean loadGame = networkConnection.isLoadGame();
+                if (loadGame) {
+                    fromNetworkLoad = true;
+                    gameID = networkConnection.getGameID();
+                } else{
+                    playgroundSize = networkConnection.getPlaygroundSize();
+                }
                 p1IsStarting = false;
-            } else if (radioButtonServer.isSelected()) {
+            }
+            // Server
+            else if (radioButtonServer.isSelected()) {
                 if(!networkConnection.isConnected()) {
                     showNotification("No client connected", "Please wait till a client has connected");
                     return null;
                 }
-                ((Server) networkConnection).startGame(playgroundSize);
+                if (!fromNetworkLoad) {
+                    ((Server) networkConnection).startGame(playgroundSize);
+                }
             } else {
                 showNotification("Server or Client","You must specify whether you want to be server or client");
                 LoggerGUI.warning("No server/client selected.");
                 return null;
             }
-            p2 = networkConnection.getPlayerNetwork();
+            if (!fromNetworkLoad) {
+                p2 = networkConnection.getPlayerNetwork();
+            } else {
+                p2 = null; // Will be set to loaded Player later
+            }
         }
         // Local
         else if (radioButtonLocal.isSelected()) {
@@ -380,7 +398,8 @@ public class ControllerGameType implements Initializable {
             p1 = new PlayerHuman(0, "Local", playgroundSize);
         }
         startingPlayer = p1IsStarting ? p1 : p2;
-        GameSettings settings = new GameSettings(playgroundSize, p1, p2, networkConnection, startingPlayer, aiVsAi);
+        GameSettings settings =
+                new GameSettings(playgroundSize, p1, p2, networkConnection, startingPlayer, aiVsAi).addGameID(gameID);
         LoggerGUI.info("Start game with settings=" + settings);
         return settings;
     }
@@ -397,7 +416,7 @@ public class ControllerGameType implements Initializable {
 
     @FXML
     public void goBacktoMainMenus(MouseEvent event) {
-
+        // TODO: stop network
         ControllerMainMenu controllerMainMenu = new ControllerMainMenu();
         SceneLoader sceneLoader = new SceneLoader(BackToMenu, filepathBackMainMenu, controllerMainMenu);
         sceneLoader.loadSceneInExistingWindow();
@@ -416,18 +435,34 @@ public class ControllerGameType implements Initializable {
         if (settings == null)
             return;
         if (fromNetworkLoad) {
-            // TODO: send to client
+            if (loadedGameData == null) { // Client
+                long gameID = settings.getGameID();
+                LoadGameResult res = GameSerialization.loadGame(gameID);
+                if(res.getStatus() == LoadGameResult.LoadStatus.SUCCESS) {
+                    this.loadedGameData = res.getGameData();
+                } else {
+                    showNotification("Can not load game", "Could not load game. Maybe it is not available on your " +
+                            "device");
+                }
+            } else { // Server
+                networkConnection.sendLoadGame(loadedGameData.getGameID());
+            }
+
+            ((PlayerNetwork) loadedGameData.getPlayers()[1]).setConnected(networkConnection);
+
+            // load new scene: PlayGame
             ControllerPlayGame controller = ControllerPlayGame.fromLoad(this.loadedGameData);
-            // TODO: null??
             SceneLoader sceneLoader = new SceneLoader(BackToMenu, "../PlayGame/PlayGame.fxml", controller);
             sceneLoader.loadSceneInExistingWindow();
             controller.initFieldsFromLoad(this.loadedGameData);
-        }
 
-        ControllerShipPlacement controllerShipPlacement = new ControllerShipPlacement(settings);
-        SceneLoader sceneLoader = new SceneLoader(BackToMenu, filepathShipPlacement, controllerShipPlacement);
-        sceneLoader.loadSceneInExistingWindow();
-        LoggerState.info("Start Ship_Placement");
+        }else {
+            // load new scene: ShipPlacement
+            ControllerShipPlacement controllerShipPlacement = new ControllerShipPlacement(settings);
+            SceneLoader sceneLoader = new SceneLoader(BackToMenu, filepathShipPlacement, controllerShipPlacement);
+            sceneLoader.loadSceneInExistingWindow();
+            LoggerState.info("Start Ship_Placement");
+        }
     }
 
 
