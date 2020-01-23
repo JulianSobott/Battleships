@@ -8,6 +8,7 @@ import core.playgrounds.PlaygroundEnemyBuildUp;
 import core.playgrounds.PlaygroundOwnPlaceable;
 import core.utils.Random;
 import core.utils.logging.LoggerLogic;
+import core.utils.logging.LoggerProfile;
 import javafx.geometry.Pos;
 
 import javax.swing.*;
@@ -33,6 +34,8 @@ public class PlayerAI extends Player {
 
     int randomValueBorder;
     Ship.LifeStatus lastShipSunken = null;
+
+    int round = 0;
 
 
     @ConstructorProperties({"index", "name", "playgroundSize", "difficulty"})
@@ -116,9 +119,13 @@ public class PlayerAI extends Player {
      * @return Position
      */
     private Position makeMoveMedium() {
+        round++;
         // The higher the better the prediction. Too high values can slow down the game
         int numPossiblePlacements = 1000;
+        LoggerProfile.start("buildHeatMap_" + round);
         int[][] heatMap = this.playgroundHeatmap.buildHeatMap(numPossiblePlacements);
+        LoggerProfile.stop("buildHeatMap_" + round);
+
         int xMax = 0, yMax = 0, maxHeat = 0;
         PlaygroundHeatmap.printHeatMap(heatMap);
         for (int y = 0; y < this.playgroundEnemy.getSize(); y++) {
@@ -130,6 +137,7 @@ public class PlayerAI extends Player {
                 }
             }
         }
+
         Position target = new Position(xMax, yMax);
         LoggerLogic.debug("Picked Position=" + target + " with heat=" + maxHeat);
         if (maxHeat == 0){

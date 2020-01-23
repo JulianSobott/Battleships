@@ -63,7 +63,7 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
 
     private PlaygroundHeatmap playgroundHeatmap;
     private boolean showHeatMap = true;
-    private boolean slowAIShooting = true;
+    private boolean slowAIShooting = false;
     private long AI_SHOOTING_DELAY_MS = 800;
     private boolean loadEndScreen = true;
 
