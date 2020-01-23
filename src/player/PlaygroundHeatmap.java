@@ -21,6 +21,11 @@ public class PlaygroundHeatmap {
     private int finalNumShipsHit = 0;
     private int tempNumShipsHit = 0;
 
+    // Dynamic programming
+    private int[][] lastHeatMap;
+    private Position lastPosition;
+    private boolean rebuildMap = true;
+
     @ConstructorProperties("size")
     public PlaygroundHeatmap(int size) {
         this.shipList = ShipList.fromSize(size);
@@ -32,8 +37,12 @@ public class PlaygroundHeatmap {
     }
 
     public void updateField(Position position, Playground.FieldType fieldType) {
+        rebuildMap = true;
         if (fieldType == Playground.FieldType.SHIP) {
             this.finalNumShipsHit++;
+            if(position.equals(lastPosition)) {
+                rebuildMap = false;
+            }
         }
         this.final_fields[position.getY()][position.getX()] = fieldType;
     }
@@ -47,7 +56,30 @@ public class PlaygroundHeatmap {
             else
                 LoggerLogic.debug("Could not buildPossiblePlacements");
         }
+        lastHeatMap = heatMap;
         return heatMap;
+    }
+
+    public Position getHottestPosition(int numIterations) {
+        int[][] heatMap;
+        if(rebuildMap) {
+            heatMap = buildHeatMap(numIterations);
+        } else{
+            heatMap = lastHeatMap;
+        }
+        int xMax = 0, yMax = 0, maxHeat = 0;
+        for (int y = 0; y < SIZE; y++) {
+            for (int x = 0; x < SIZE; x++) {
+                if(heatMap[y][x] > maxHeat && !this.isAlreadyDiscoveredShipAt(x, y)) {
+                    xMax = x;
+                    yMax = y;
+                    maxHeat = heatMap[y][x];
+                }
+            }
+        }
+        if(maxHeat == 0) return null;
+        lastPosition = new Position(xMax, yMax);
+        return lastPosition;
     }
 
     private void addPossiblePlacementsToHeatMap(int[][] heatMap) {

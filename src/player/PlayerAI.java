@@ -122,25 +122,12 @@ public class PlayerAI extends Player {
         round++;
         // The higher the better the prediction. Too high values can slow down the game
         int numPossiblePlacements = 1000;
+
         LoggerProfile.start("buildHeatMap_" + round);
-        int[][] heatMap = this.playgroundHeatmap.buildHeatMap(numPossiblePlacements);
+        Position target = this.playgroundHeatmap.getHottestPosition(numPossiblePlacements);
         LoggerProfile.stop("buildHeatMap_" + round);
 
-        int xMax = 0, yMax = 0, maxHeat = 0;
-        PlaygroundHeatmap.printHeatMap(heatMap);
-        for (int y = 0; y < this.playgroundEnemy.getSize(); y++) {
-            for (int x = 0; x < this.playgroundEnemy.getSize(); x++) {
-                if(heatMap[y][x] > maxHeat && !this.playgroundHeatmap.isAlreadyDiscoveredShipAt(x, y)) {
-                    xMax = x;
-                    yMax = y;
-                    maxHeat = heatMap[y][x];
-                }
-            }
-        }
-
-        Position target = new Position(xMax, yMax);
-        LoggerLogic.debug("Picked Position=" + target + " with heat=" + maxHeat);
-        if (maxHeat == 0){
+        if (target == null){
             LoggerLogic.error("Could not find a clever solution-> Making random move");
             return this.makeTurnEasy();
         }
