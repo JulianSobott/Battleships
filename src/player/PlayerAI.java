@@ -13,6 +13,7 @@ import javafx.geometry.Pos;
 
 import javax.swing.*;
 import java.beans.ConstructorProperties;
+import java.lang.annotation.Target;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -25,15 +26,17 @@ public class PlayerAI extends Player {
     private Difficulty difficulty;
     PlaygroundHeatmap playgroundHeatmap;
 
+
     Playground.FieldType lastresult;
     Position lastHitPosition;
-    Position [] waterfields ;
+    Position[] waterfields;
     private ArrayList<Position> shipFields = new ArrayList<>();
     private ArrayList<Position> alreadyShot = new ArrayList<>();
     ArrayList<Position> potentialFields = new ArrayList<>();
 
     int randomValueBorder;
     Ship.LifeStatus lastShipSunken = null;
+    int size;
 
     int round = 0;
 
@@ -48,6 +51,7 @@ public class PlayerAI extends Player {
         this.difficulty = difficulty;
         this.playgroundHeatmap = new PlaygroundHeatmap(playgroundSize);
         this.potentialFields = buildPotentialFields(playgroundSize);
+        this.size = playgroundSize;
 
 
     }
@@ -63,13 +67,14 @@ public class PlayerAI extends Player {
 
     /**
      * Calculates a Position for the next shot. The Position is a completely valid position.
+     *
      * @return Position
      */
     @Override
     public Position makeTurn() {
         Position pos = null;
-        assert this.difficulty != null: "Difficulty is not set in PlayerAI";
-        switch (this.difficulty){
+        assert this.difficulty != null : "Difficulty is not set in PlayerAI";
+        switch (this.difficulty) {
             case EASY:
                 pos = this.makeTurnEasy();
                 break;
@@ -89,6 +94,7 @@ public class PlayerAI extends Player {
     /**
      * Search for a random where it is possible to shoot.
      * No logic nor intelligence.
+     *
      * @return Position
      */
     private Position makeTurnEasy() {
@@ -97,7 +103,7 @@ public class PlayerAI extends Player {
             int x = Random.random.nextInt(getPlaygroundOwn().getSize());
             int y = Random.random.nextInt(getPlaygroundOwn().getSize());
             pos = new Position(x, y);
-        }while (playgroundEnemy.canShootAt(pos) != TurnResult.Error.NONE);
+        } while (playgroundEnemy.canShootAt(pos) != TurnResult.Error.NONE);
         LoggerLogic.info("PlayerAI.makeTurn: position=" + pos);
         return pos;
 
@@ -127,7 +133,7 @@ public class PlayerAI extends Player {
         Position target = this.playgroundHeatmap.getHottestPosition(numPossiblePlacements);
         LoggerProfile.stop("buildHeatMap_" + round);
 
-        if (target == null){
+        if (target == null) {
             LoggerLogic.error("Could not find a clever solution-> Making random move");
             return this.makeTurnEasy();
         }
@@ -137,11 +143,20 @@ public class PlayerAI extends Player {
 
     private Position makeMoveHard() {
 
-        int playgroundSize = this.playgroundEnemy.getSize();
+
         Position target;
 
         do {
-            if (!shipFields.isEmpty()/* || lastShipSunken == Ship.LifeStatus.SUNKEN*/){
+            if (!shipFields.isEmpty()/* || lastShipSunken == Ship.LifeStatus.SUNKEN*/) {
+                Position newTarget;
+                for (int i = 0; i < shipFields.size(); i++) {
+                    newTarget = shipFields.get(i);
+                    if (potentialFields.contains(newTarget)){
+                        alreadyShot.add(newTarget);
+                        potentialFields.remove(newTarget);
+                        return newTarget;
+                    }
+                }
                 return fieldAround(lastHitPosition);
             }
             int randomGuess = Random.random.nextInt(potentialFields.size());
@@ -152,11 +167,11 @@ public class PlayerAI extends Player {
 
         } while (!alreadyShot.contains(target) && (playgroundEnemy.canShootAt(target) != TurnResult.Error.NONE));
         alreadyShot.add(target);
-    potentialFields.remove(target);
+        potentialFields.remove(target);
         return target;
     }
 
-    public ArrayList<Position> checkPotential(ArrayList<Position> potentialFields){
+    public ArrayList<Position> checkPotential(ArrayList<Position> potentialFields) {
         if (waterfields != null) {
             for (int i = 0; i < waterfields.length; i++) {
                 if (waterfields[i] != null) {
@@ -168,37 +183,31 @@ public class PlayerAI extends Player {
         return potentialFields;
     }
 
-    public Position fieldAround(Position p){
+    //Todo eventuell komplett löschen und neu schreiben von fieldAround
+
+    public Position fieldAround(Position p) {
         int x = p.getX();
         int y = p.getY();
-        int randomNumber;
-        Position newTarget = p;
 
-        while (newTarget == p || (alreadyShot.contains(newTarget) || (this.playgroundEnemy.canShootAt(newTarget) != TurnResult.Error.NONE))){
-            randomNumber = Random.random.nextInt(4);
-            LoggerLogic.debug("randomNumber: " + randomNumber);
-            switch (randomNumber){
-                case 0:
-                    newTarget = new Position(x-1, y);
-                    LoggerLogic.debug("new Target: " + newTarget);
-                    break;
-                case 1:
-                    newTarget = new Position(x+1, y);
-                    LoggerLogic.debug("new Target: " + newTarget);
-                    break;
-                case 2:
-                    newTarget = new Position(x, y-1);
-                    LoggerLogic.debug("new Target: " + newTarget);
-                    break;
-                default:                                                              //equivalent to case 3
-                    newTarget = new Position(x, y+1);
-                    LoggerLogic.debug("new Target: " + newTarget);
-                    break;
+        int randomnumber;
+        Position newTarget = p;
+        LoggerLogic.debug("target before fieldAroundMethod: " + p);
+        while (alreadyShot.contains(newTarget) || (this.playgroundEnemy.canShootAt(newTarget) != TurnResult.Error.NONE)) {
+            randomnumber = Random.random.nextInt(4);
+            if (randomnumber == 1) {
+                newTarget = new Position(x + 1, y);
+            } else if (randomnumber == 2) {
+                newTarget = new Position(x - 1, y);
+            } else if (randomnumber == 3) {
+                newTarget = new Position(x, y + 1);
+            } else {
+                newTarget = new Position(x, y - 1);
             }
+
+
         }
-//
         alreadyShot.add(newTarget);
-        potentialFields.remove(newTarget);
+        //potentialFields.remove(newTarget);
         return newTarget;
     }
 
@@ -206,7 +215,10 @@ public class PlayerAI extends Player {
     public void update(ShotResult result) {
 
         super.update(result);
+
+        potentialFields.remove(result.getPosition());
         if (result.getType() == Playground.FieldType.SHIP) {
+
             shipFields.add(result.getPosition());
             lastresult = result.getType();
             lastHitPosition = result.getPosition();
@@ -214,22 +226,22 @@ public class PlayerAI extends Player {
 
             potentialFields.remove(result.getPosition());
 
-                if (resultShip.getStatus() == Ship.LifeStatus.SUNKEN) {
-                    lastShipSunken = Ship.LifeStatus.SUNKEN;
-                    // Berechne felder um shif herum, bekommt man das schon irgendwo?
-                    waterfields = ((ShotResultShip) result).getWaterFields();
-                    potentialFields = checkPotential(potentialFields);
-                    shipFields.clear();
-                }
+            if (resultShip.getStatus() == Ship.LifeStatus.SUNKEN) {
+                lastShipSunken = Ship.LifeStatus.SUNKEN;
+                // Berechne felder um shif herum, bekommt man das schon irgendwo?
+                waterfields = ((ShotResultShip) result).getWaterFields();
+                potentialFields = checkPotential(potentialFields);
+                shipFields.clear();
+            }
 
         }
         this.playgroundHeatmap.update(result);
     }
 
-    public ArrayList<Position> buildPotentialFields(int playgroundSize){
-        for (int x = 0; x < playgroundSize; x++){
-            for (int y = 0; y < playgroundSize; y++){
-                if ((x % 2 == 0 && y % 2 == 1) || (x % 2 == 1 && y % 2 == 0)){
+    public ArrayList<Position> buildPotentialFields(int playgroundSize) {
+        for (int x = 0; x < playgroundSize; x++) {
+            for (int y = 0; y < playgroundSize; y++) {
+                if ((x % 2 == 0 && y % 2 == 1) || (x % 2 == 1 && y % 2 == 0)) {
                     potentialFields.add(new Position(x, y));                 //jedes 2te feld is potentiel möglich, beginnend mit dem Feld an Stelle [0][1]
                     randomValueBorder++;                                                     //potentielle Felder werden in extra Array gespeichert, Array könnte/sollte man evtl auslagern?
                 }
@@ -257,7 +269,7 @@ public class PlayerAI extends Player {
     }
 
     public PlaygroundOwnPlaceable getPlaygroundOwn() {
-        return (PlaygroundOwnPlaceable)playgroundOwn;
+        return (PlaygroundOwnPlaceable) playgroundOwn;
     }
 
     @Override
