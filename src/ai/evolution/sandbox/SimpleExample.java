@@ -11,11 +11,12 @@ public class SimpleExample {
 
     private void mainLoop() {
         EvolutionSystem system = new SandboxEvolutionSystem(10);
-        int maxEpochs = 10000;
+        int maxEpochs = 90;
         for (int epoch = 0; epoch < maxEpochs; epoch++) {
-            int numTurns = 20;
-            for (int i = 0; i < numTurns; i++) {
-                system.update();
+            int maxRounds = 10;
+            int rounds = 0;
+            while(!system.update() && rounds < maxRounds){
+                rounds++;
             }
             system.endEpoch();
         }

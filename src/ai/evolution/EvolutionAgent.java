@@ -39,4 +39,6 @@ public abstract class EvolutionAgent implements Agent, Comparable<EvolutionAgent
     public int compareTo(EvolutionAgent evolutionAgent) {
         return Integer.compare(this.score, evolutionAgent.score);
     }
+
+    public abstract boolean isFinished();
 }

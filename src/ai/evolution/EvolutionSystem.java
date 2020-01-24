@@ -19,10 +19,13 @@ public abstract class EvolutionSystem {
 
     protected abstract EvolutionAgent[] getNewAgents(int numAgents);
 
-    public void update() {
+    public boolean update() {
+        boolean finished = false;
         for(EvolutionAgent agent : this.agents){
             agent.makeMove();
+            if(agent.isFinished()) finished = true;
         }
+        return finished;
     }
 
     public void endEpoch() {

@@ -47,7 +47,8 @@ public class EvolutionNeuron {
     }
 
     static double activationFunction(double sumValue) {
-        return Math.min(1., Math.max(0., sumValue));
+        return sumValue;
+//        return Math.min(1., Math.max(0., sumValue));
     }
 
     double getValue() {

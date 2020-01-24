@@ -56,14 +56,18 @@ public abstract class Playground {
         this.elements[pos.getY()][pos.getX()] = new Field(type, element, false);
     }
 
+    public Field[][] getElements() {
+        return elements;
+    }
+
     public enum FieldType{
         SHIP, WATER, FOG;
     }
 
     public static class Field {
-        boolean hit;
-        FieldType type;
-        PlaygroundElement element;
+        public boolean hit;
+        public FieldType type;
+        public PlaygroundElement element;
 
         public Field(FieldType type, PlaygroundElement element, boolean hit){
             this.hit = hit;

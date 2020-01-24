@@ -32,6 +32,11 @@ public class PassThroughAgent extends EvolutionAgent {
     }
 
     @Override
+    public boolean isFinished() {
+        return false;
+    }
+
+    @Override
     public double[] getInputValues() {
         inValue = random.nextDouble();
         return new double[]{inValue};

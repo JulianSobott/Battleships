@@ -37,7 +37,7 @@ public final class Logger {
         public void print(int level, String tag, String msg) {
             int logMethodsBefore = 5;
             int lineNumber = Thread.currentThread().getStackTrace()[logMethodsBefore].getLineNumber();
-            System.out.println("" + LEVELS[level] + "  " + tag + "(" + lineNumber + "): \t" + msg);
+            //System.out.println("" + LEVELS[level] + "  " + tag + "(" + lineNumber + "): \t" + msg);
 
         }
     }
