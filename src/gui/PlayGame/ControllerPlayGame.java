@@ -571,7 +571,11 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
 
     private synchronized void loadEndScreen(boolean humanPlayerWins) {
         ResourcesDestructor.shutdownAll();
-        ControllerGameOver controllerGameOver = new ControllerGameOver(anchorPanePlayGame, humanPlayerWins);
+        int numRounds = gameManager.getRound();
+        int numHits = gameManager.getNumHitsP1();
+        int numMisses = gameManager.getNumMissesP1();
+        ControllerGameOver controllerGameOver = new ControllerGameOver(anchorPanePlayGame, humanPlayerWins, numRounds
+                , numHits, numMisses);
         SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathGameOver, controllerGameOver);
         sceneLoader.loadSceneInExistingWindowWithoutButtons("", (Stage) buttonBack.getScene().getWindow());
     }

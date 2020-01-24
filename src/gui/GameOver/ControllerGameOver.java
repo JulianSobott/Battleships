@@ -6,6 +6,7 @@ import gui.WindowChange.SceneLoader;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.effect.MotionBlur;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -23,14 +24,24 @@ public class ControllerGameOver implements Initializable {
 
     @FXML
     private VBox vBoxColorResult;
+    @FXML
+    private  Label labelRounds;
+    @FXML
+    private ProgressBar progressbarHits;
+    @FXML
+    private ProgressBar progressbarMisses;
 
     private final AnchorPane ANCHORPANEPLAYGROUND;
 
     private final String FILEPATHMAINMENU = "../Main_Menu.fxml";
     private Boolean humanPlayerWins;
+    private int numRounds;
+    private int numHits;
+    private int numMisses;
 
 
-    public ControllerGameOver(AnchorPane anchorPanePlayground ,Boolean humanWinner){
+    public ControllerGameOver(AnchorPane anchorPanePlayground ,Boolean humanWinner, int numRounds, int numHits,
+                              int numMisses){
 
         MotionBlur motionBlur = new MotionBlur();
         this.ANCHORPANEPLAYGROUND = anchorPanePlayground;
@@ -41,6 +52,9 @@ public class ControllerGameOver implements Initializable {
         } else {
             MusicPlayer.playSound(MusicPlayer.Sound.LOSE);
         }
+        this.numRounds = numRounds;
+        this.numHits = numHits;
+        this.numMisses = numMisses;
     }
 
 
@@ -56,6 +70,10 @@ public class ControllerGameOver implements Initializable {
             labelGameStatus.setText("You lost");
             vBoxColorResult.setStyle("-fx-background-color: red");
         }
+
+        labelRounds.setText(numRounds + "");
+        progressbarHits.setProgress((double)numHits/(numHits + numMisses));
+        progressbarMisses.setProgress((double)numMisses/(numHits + numMisses));
     }
 
 

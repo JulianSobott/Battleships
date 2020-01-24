@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="anchorPaneGameOver" prefHeight="400.0" prefWidth="300.0" stylesheets="@../generalApplication%20Design.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="anchorPaneGameOver" prefHeight="400.0" prefWidth="300.0" stylesheets="@../generalApplication%20Design.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox fx:id="vBoxColorResult" alignment="CENTER" layoutY="54.0" prefHeight="97.0" prefWidth="300.0" style="-fx-background-color: grey;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
@@ -13,5 +11,27 @@
          </children>
       </VBox>
       <Button layoutX="180.0" layoutY="343.0" mnemonicParsing="false" onMouseClicked="#goBackToMainMenu" text="Main Menu" AnchorPane.bottomAnchor="30.0" AnchorPane.rightAnchor="30.0" />
+      <VBox alignment="CENTER" layoutY="151.0" prefHeight="172.0" prefWidth="300.0">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label text="Runden: " />
+                  <Label fx:id="labelRounds" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label text="Treffer:" />
+                  <ProgressBar fx:id="progressbarHits" prefWidth="200.0" progress="0.0" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="67.0" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label text="Fehlschüsse" />
+                  <ProgressBar fx:id="progressbarMisses" prefWidth="200.0" progress="0.0" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
    </children>
 </AnchorPane>

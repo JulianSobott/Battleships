@@ -28,6 +28,9 @@ public class GameManager implements GameManagerInterface {
 
     private Thread inGameThread;
 
+    private int numHitsP1 = 0;
+    private int numMissesP1 = 0;
+
     /**
      * Constructor, when game was loaded
      * @param players All Players
@@ -249,6 +252,13 @@ public class GameManager implements GameManagerInterface {
      */
     private void saveTurnResult(TurnResult res){
         for(Player p : this.players){
+            if(this.currentPlayer == this.player1) {
+                if (res.getSHOT_RESULT().getType() == Playground.FieldType.SHIP) {
+                    numHitsP1++;
+                } else{
+                    numMissesP1++;
+                }
+            }
             synchronized (this.lastTurns.get(p)){
                 if (p instanceof PlayerHuman || (player1 instanceof PlayerAI && player1 == p)) {
                     this.lastTurns.get(p).add(res);
@@ -289,5 +299,13 @@ public class GameManager implements GameManagerInterface {
 
     public int getRound() {
         return round;
+    }
+
+    public int getNumMissesP1() {
+        return numMissesP1;
+    }
+
+    public int getNumHitsP1() {
+        return numHitsP1;
     }
 }

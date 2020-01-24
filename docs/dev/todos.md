@@ -1,14 +1,12 @@
 # TODO's ✓
 
 - full screen
-- show heatmap option
 - tests
 - to jar
 - test in eclipse
 - plan for presentation
 
 - (statistics)
-- (settings)
 - (multi language support) 
 
 ## Documentation
