@@ -98,6 +98,8 @@ public class ControllerGameType implements Initializable {
     public CheckBox checkboxCheatmode;
     @FXML
     public CheckBox checkboxSlowAIShooting;
+    @FXML
+    private Button buttonConnect;
 
 
     private static final String filepathBackMainMenu = "../Main_Menu.fxml";
@@ -130,7 +132,6 @@ public class ControllerGameType implements Initializable {
         vBoxNetzwerk.setStyle("-fx-background-color: lightgray");
         vBoxLocal.setStyle("-fx-background-color: lightgray");
         vBoxPlaygroundSettings.setStyle("-fx-background-color: lightgray");
-
 
     }
 
@@ -188,6 +189,7 @@ public class ControllerGameType implements Initializable {
     @FXML
     private void onServerSelected() {
         // TODO: only when wasn't selected before
+        buttonConnect.setVisible(false);
         this.determineLocalIpAddress();
         this.startServer();
     }
@@ -198,7 +200,7 @@ public class ControllerGameType implements Initializable {
 
     @FXML
     private void onClientSelected() {
-        // TODO: only when wasn't selected before
+        buttonConnect.setVisible(true);
         this.setClientInformation();
         this.stopServer();
     }
