@@ -47,7 +47,6 @@ public class ControllerMainMenu {
 
     @FXML
     void loadExistingGame(MouseEvent event) {
-         // TODO: open dialog with all saved games
         ControllerLoadGame controllerLoadGame = new ControllerLoadGame(this.anchorPane);
         SceneLoader sceneLoader = new SceneLoader(null, "../LoadGame/LoadGame.fxml", controllerLoadGame);
         sceneLoader.loadSceneInExistingWindowWithoutButtons("Load Game", (Stage) anchorPane.getScene().getWindow());
@@ -56,11 +55,9 @@ public class ControllerMainMenu {
 
     @FXML
     void loadSettings(MouseEvent event) {
-
-        ControllerSettings controllerSettings = new ControllerSettings();
-        SceneLoader sceneLoader = new SceneLoader(this.anchorPane, "../Settings/Settingsfxml.fxml", controllerSettings);
-        sceneLoader.loadSceneInExistingWindow();
-
+        ControllerSettings controllerSettings = new ControllerSettings(this.anchorPane);
+        SceneLoader sceneLoader = new SceneLoader(this.anchorPane, "../Settings/Settings.fxml", controllerSettings);
+        sceneLoader.loadSceneInExistingWindowWithoutButtons("Einstellungen", (Stage) anchorPane.getScene().getWindow());
     }
 
 }
