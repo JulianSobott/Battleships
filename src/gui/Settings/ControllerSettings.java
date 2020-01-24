@@ -6,9 +6,12 @@ import core.communication_data.LoadGameResult;
 import core.serialization.GameData;
 import core.serialization.GameSerialization;
 import core.utils.logging.LoggerGUI;
+import gui.Media.MusicPlayer;
 import gui.PlayGame.ControllerPlayGame;
 import gui.WindowChange.SceneLoader;
 import gui.newGame.ControllerGameType;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -28,7 +31,7 @@ import java.util.ResourceBundle;
 public class ControllerSettings implements Initializable {
 
     @FXML
-    private CheckBox checkboxEnableMusicClick;
+    private CheckBox checkboxEnableMusic;
 
     @FXML
     private Slider sliderMusicVolume;
@@ -53,7 +56,7 @@ public class ControllerSettings implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        sliderMusicVolume.valueProperty().addListener((observableValue, number, newValue) -> setMusicVolume(newValue.intValue()));
     }
 
     /**
@@ -67,7 +70,16 @@ public class ControllerSettings implements Initializable {
 
     @FXML
     public void onCheckboxEnableMusicClick() {
-        LoggerGUI.debug("onCheckboxEnableMusicClick");
+        if(checkboxEnableMusic.isSelected()) {
+            MusicPlayer.startMusic();
+            sliderMusicVolume.setValue(MusicPlayer.getVolume() * 100);
+        } else {
+            MusicPlayer.stopMusic();
+        }
+    }
+
+    public void setMusicVolume(int newValue) {
+        MusicPlayer.setVolume((double)newValue/100);
     }
 
 }
