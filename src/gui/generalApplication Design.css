@@ -2,8 +2,9 @@
 
 .anchorPane{
     -fx-background-color: white;
+    -fx-background-image: url('Images/background.jpg');
+    -fx-background-size: 100% 100%;
 }
-
 
 .anchorPaneMainMenu{
     -fx-background-color: white;
