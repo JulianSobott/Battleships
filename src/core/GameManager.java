@@ -264,19 +264,6 @@ public class GameManager implements GameManagerInterface {
         else return player1;
     }
 
-
-    /**
-     * Stops the inGameThread and waits till it is joined.
-     */
-    public void exitInGameThread() {
-        inGameThread.interrupt();
-        try {
-            this.inGameThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
     // Save game
     public long saveGame() {
         long id = GameSerialization.saveGame(this);

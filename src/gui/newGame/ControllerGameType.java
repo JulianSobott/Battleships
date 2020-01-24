@@ -466,6 +466,9 @@ public class ControllerGameType implements Initializable {
             controller.initFieldsFromLoad(this.loadedGameData);
 
         }else {
+            if(!radioButtonNetzwerk.isSelected()) {
+                ResourcesDestructor.shutdownServer();
+            }
             // load new scene: ShipPlacement
             ControllerShipPlacement controllerShipPlacement = new ControllerShipPlacement(settings);
             SceneLoader sceneLoader = new SceneLoader(BackToMenu, filepathShipPlacement, controllerShipPlacement);

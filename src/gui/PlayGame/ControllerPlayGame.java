@@ -551,7 +551,7 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
      */
 
     public void goBackToMainMenu() {
-
+        ResourcesDestructor.shutdownAll();
         ControllerMainMenu controllerMainMenu = new ControllerMainMenu();
         SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathBackMainMenu, controllerMainMenu);
         sceneLoader.loadSceneInExistingWindow();
@@ -562,7 +562,7 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
      */
 
     private synchronized void loadEndScreen(boolean humanPlayerWins) {
-
+        ResourcesDestructor.shutdownAll();
         ControllerGameOver controllerGameOver = new ControllerGameOver(anchorPanePlayGame, humanPlayerWins);
         SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathGameOver, controllerGameOver);
         sceneLoader.loadSceneInExistingWindowWithoutButtons("", (Stage) buttonBack.getScene().getWindow());
@@ -572,31 +572,11 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
     /**
      * ...
      */
-    // TODO place
     public void leaveGame() {
         loadEndScreen = false;
 
         LoggerGUI.debug("Leave game");
         ResourcesDestructor.shutdownAll();
-        //this.exitInGameThread();
         this.goBackToMainMenu();
-    }
-
-
-    /**
-     * ...
-     */
-
-    public void exitInGameThread() {
-
-        LoggerGUI.debug("Num threads before exit: " + Thread.activeCount());
-        this.playgroundUpdaterThread.interrupt();
-        try {
-            this.playgroundUpdaterThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        this.gameManager.exitInGameThread();
-        LoggerGUI.debug("Num threads after exit: " + Thread.activeCount());
     }
 }

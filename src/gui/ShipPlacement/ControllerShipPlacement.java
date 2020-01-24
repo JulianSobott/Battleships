@@ -632,7 +632,7 @@ public class ControllerShipPlacement implements Initializable {
 
     @FXML
     public void BackToSettings() {
-
+        ResourcesDestructor.shutdownAll();
         ControllerGameType controllerGameType = new ControllerGameType();
         SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathBackNewGame, controllerGameType);
         sceneLoader.loadSceneInExistingWindow();
