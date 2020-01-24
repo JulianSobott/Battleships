@@ -22,7 +22,7 @@ public class TestAIvAI extends Application {
     @Override
     public void start(Stage primaryStage) {
         int playgroundSize = 30;
-        Player p1 = new PlayerAI(0, "AI1", playgroundSize, PlayerAI.Difficulty.MEDIUM);
+        Player p1 = new PlayerAI(0, "AI1", playgroundSize, PlayerAI.Difficulty.HARD);
         Player p2 = new PlayerAI(1, "AI2", playgroundSize, PlayerAI.Difficulty.EASY);
         GameSettings settings = new GameSettings(playgroundSize, p1, p2, null, p1, true);
 

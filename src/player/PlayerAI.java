@@ -192,6 +192,8 @@ public class PlayerAI extends Player {
         int randomnumber;
         Position newTarget = p;
         LoggerLogic.debug("target before fieldAroundMethod: " + p);
+        // TODO: Remove endless loop
+        // Maybe at waterfieldsAroundShip to alrady sho
         while (alreadyShot.contains(newTarget) || (this.playgroundEnemy.canShootAt(newTarget) != TurnResult.Error.NONE)) {
             randomnumber = Random.random.nextInt(4);
             if (randomnumber == 1) {
