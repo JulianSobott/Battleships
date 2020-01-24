@@ -1,6 +1,7 @@
 package gui.GameOver;
 
 import gui.ControllerMainMenu;
+import gui.Media.MusicPlayer;
 import gui.WindowChange.SceneLoader;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -35,6 +36,11 @@ public class ControllerGameOver implements Initializable {
         this.ANCHORPANEPLAYGROUND = anchorPanePlayground;
         ANCHORPANEPLAYGROUND.setEffect(motionBlur);
         this.humanPlayerWins = humanWinner;
+        if(humanWinner) {
+            MusicPlayer.playSound(MusicPlayer.Sound.WIN);
+        } else {
+            MusicPlayer.playSound(MusicPlayer.Sound.LOSE);
+        }
     }
 
 

@@ -2,16 +2,21 @@ package gui;
 
 import core.utils.ResourcesDestructor;
 import gui.LoadGame.ControllerLoadGame;
+import gui.Media.MusicPlayer;
 import gui.Settings.ControllerSettings;
 import gui.WindowChange.SceneLoader;
 import gui.newGame.ControllerGameType;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-public class ControllerMainMenu {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class ControllerMainMenu implements Initializable {
 
     @FXML
     private AnchorPane anchorPane;
@@ -28,6 +33,11 @@ public class ControllerMainMenu {
     @FXML
     private Button buttonExit;
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        MusicPlayer.loadSounds();
+    }
+
     @FXML
     void closeApplication(MouseEvent event) {
         ResourcesDestructor.shutdownAll();
@@ -38,7 +48,6 @@ public class ControllerMainMenu {
 
     @FXML
     void createNewGame() {
-
         ControllerGameType controllerGameType = new ControllerGameType();
         SceneLoader sceneLoader = new SceneLoader(this.anchorPane, "../newGame/GameType.fxml", controllerGameType);
         sceneLoader.loadSceneInExistingWindow();

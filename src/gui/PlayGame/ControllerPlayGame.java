@@ -9,6 +9,7 @@ import core.utils.ResourcesDestructor;
 import core.utils.logging.LoggerGUI;
 import gui.ControllerMainMenu;
 import gui.GameOver.ControllerGameOver;
+import gui.Media.MusicPlayer;
 import gui.UiClasses.BattleShipGui;
 import gui.UiClasses.PaneExtends;
 import gui.WindowChange.SceneLoader;
@@ -417,6 +418,7 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
                 shotResult.getPosition().getY());
 
         if (shotResult.getType() == Playground.FieldType.SHIP) {
+            MusicPlayer.playSound(MusicPlayer.Sound.HIT_SHIP);
             ShotResultShip resultShip = (ShotResultShip) shotResult;
             cellStyle = "-fx-background-color: #ff0000";
             if (gridPane == gridPaneOwnField) {
@@ -433,6 +435,7 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
                 this.color_fields(waterFields, "Water_Hit", gridPane);
             }
         } else if (shotResult.getType() == Playground.FieldType.WATER) {
+            MusicPlayer.playSound(MusicPlayer.Sound.HIT_WATER);
             paneExtends.setId("Water_Hit");
         } else {
             throw new Error("Invalid shotResult type: " + shotResult.getType());

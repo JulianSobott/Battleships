@@ -19,6 +19,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import javafx.scene.effect.MotionBlur;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
