@@ -79,11 +79,15 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
     private static final String filepathBackMainMenu = "../Main_Menu.fxml";
     private static final String filepathGameOver = "../GameOver/GameOver.fxml";
 
-    public ControllerPlayGame(int playgroudSize, ArrayList<BattleShipGui> shipPositionList, GameManager gameManager) {
+    public ControllerPlayGame(int playgroudSize, ArrayList<BattleShipGui> shipPositionList, GameManager gameManager,
+                              GameSettings gameSettings) {
         this.playgroundSize = playgroudSize;
         this.playgroundHeatmap = new PlaygroundHeatmap(playgroudSize);
         this.shipPositionList = shipPositionList;
         this.gameManager = gameManager;
+
+        this.slowAIShooting = gameSettings.isSlowAiShooting();
+        this.showHeatMap = gameSettings.isShowHeatMap();
     }
 
     /**
@@ -97,7 +101,8 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
         int playgroundSize = gameData.getCurrentPlayer().getPlaygroundOwn().getSize();
         ArrayList<BattleShipGui> shipPositionList = new ArrayList<>();
 
-        ControllerPlayGame controllerPlayGame = new ControllerPlayGame(playgroundSize, shipPositionList, manager);
+        ControllerPlayGame controllerPlayGame = new ControllerPlayGame(playgroundSize, shipPositionList, manager,
+                GameSettings.onlyInGame(true, false));
         return controllerPlayGame;
     }
 

@@ -94,6 +94,10 @@ public class ControllerGameType implements Initializable {
     public ChoiceBox<String> choiceBoxAI1Difficulty;
     @FXML
     public ChoiceBox<String> choiceBoxAI2Difficulty;
+    @FXML
+    public CheckBox checkboxCheatmode;
+    @FXML
+    public CheckBox checkboxSlowAIShooting;
 
 
     private static final String filepathBackMainMenu = "../Main_Menu.fxml";
@@ -405,8 +409,11 @@ public class ControllerGameType implements Initializable {
             p1 = new PlayerHuman(0, "Local", playgroundSize);
         }
         startingPlayer = p2IsStarting ? p2 : p1;
+        boolean slowAiShooting = checkboxSlowAIShooting.isSelected();
+        boolean showHeatMap = checkboxCheatmode.isSelected();
         GameSettings settings =
-                new GameSettings(playgroundSize, p1, p2, networkConnection, startingPlayer, aiVsAi).addGameID(gameID);
+                new GameSettings(playgroundSize, p1, p2, networkConnection, startingPlayer, aiVsAi, slowAiShooting,
+                        showHeatMap, gameID);
         LoggerGUI.info("Start game with settings=" + settings);
         return settings;
     }

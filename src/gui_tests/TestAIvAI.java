@@ -24,7 +24,7 @@ public class TestAIvAI extends Application {
         int playgroundSize = 30;
         Player p1 = new PlayerAI(0, "AI1", playgroundSize, PlayerAI.Difficulty.HARD);
         Player p2 = new PlayerAI(1, "AI2", playgroundSize, PlayerAI.Difficulty.EASY);
-        GameSettings settings = new GameSettings(playgroundSize, p1, p2, null, p1, true);
+        GameSettings settings = new GameSettings(playgroundSize, p1, p2, null, p1, true, false, true, 0);
 
         ControllerShipPlacement controllerShipPlacement = new ControllerShipPlacement(settings);
         SceneLoader sceneLoader = new SceneLoader(null, "../../gui/ShipPlacement/ShipPlacement.fxml",

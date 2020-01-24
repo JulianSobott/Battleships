@@ -12,20 +12,30 @@ public class GameSettings {
     private final Player startingPlayer;
     private final Connected networkConnection;
     private final boolean aiVsAi;
-    private long gameID;
+    private final long gameID;
+    private final boolean slowAiShooting;
+    private final boolean showHeatMap;
+
 
     public GameSettings(int playgroundSize, Player p1, Player p2, Connected networkConnection, Player startingPlayer,
-                        boolean aiVsAi) {
+                        boolean aiVsAi, boolean slowAiShooting, boolean showHeatMap, long gameID) {
         this.playgroundSize = playgroundSize;
         this.p1 = p1;
         this.p2 = p2;
         this.networkConnection = networkConnection;
         this.startingPlayer = startingPlayer;
         this.aiVsAi = aiVsAi;
+        this.slowAiShooting = slowAiShooting;
+        this.showHeatMap = showHeatMap;
+        this.gameID = gameID;
     }
 
     public GameSettings(int playgroundSize, Player p1, Player p2) {
-        this(playgroundSize, p1, p2, null, p1, false);
+        this(playgroundSize, p1, p2, null, p1, false, false, true, 0);
+    }
+
+    public static GameSettings onlyInGame(boolean slowAiShooting, boolean showHeatMap) {
+        return new GameSettings(0, null, null, null, null, false, slowAiShooting, showHeatMap, 0);
     }
 
     public int getPlaygroundSize() {
@@ -52,13 +62,16 @@ public class GameSettings {
         return aiVsAi;
     }
 
-    public GameSettings addGameID(long gameID) {
-        this.gameID = gameID;
-        return this;
-    }
-
     public long getGameID() {
         return gameID;
+    }
+
+    public boolean isSlowAiShooting() {
+        return slowAiShooting;
+    }
+
+    public boolean isShowHeatMap() {
+        return showHeatMap;
     }
 
     @Override

@@ -60,12 +60,14 @@ public class ControllerShipPlacement implements Initializable {
     private HashMap<Integer, ShipCounterPair> hashMapShipLabels = new HashMap<>();
     private ArrayList<ButtonShip> shipArrayListGui = new ArrayList<>();
     private Connected networkConnection;
+    private GameSettings gameSettings;
 
     /**
      * ################################################   Constructors  ################################################
      */
 
     public ControllerShipPlacement(GameSettings settings) {
+        gameSettings = settings;
         this.GAME_MANAGER = new GameManager();
         NewGameResult res = this.GAME_MANAGER.newGame(settings);
         this.SHIP_LIST = res.getSHIP_LIST();
@@ -681,7 +683,8 @@ public class ControllerShipPlacement implements Initializable {
                 shipPositionList.add(buttonShip.getBattleShipGui());
             }
 
-            ControllerPlayGame controllerPlayGame = new ControllerPlayGame(playgroundSize, shipPositionList, this.GAME_MANAGER);
+            ControllerPlayGame controllerPlayGame = new ControllerPlayGame(playgroundSize, shipPositionList,
+                    this.GAME_MANAGER, gameSettings);
             if (this.networkConnection != null) {
                 this.networkConnection.enterInGame(controllerPlayGame);
             }
