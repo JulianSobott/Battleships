@@ -7,7 +7,6 @@ import core.communication_data.ShotResultShip;
 import core.playgrounds.Playground;
 import core.utils.logging.LoggerNetwork;
 import gui.PlayGame.InGameGUI;
-import gui.interfaces.Shutdown;
 import player.PlayerNetwork;
 
 import java.io.*;
@@ -15,7 +14,7 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
-public abstract class Connected implements Shutdown {
+public abstract class Connected {
 
     // Todo evtl in einzelne Methoden für Server und Client aufteilen ???
     // Network
@@ -96,7 +95,7 @@ public abstract class Connected implements Shutdown {
                 break;
             case "CONFIRMED":
                 player.setAllShipsPlaced();
-                if (isStartingPlayer){
+                if (isStartingPlayer) {
                     expectedMessage.set("SHOT"); // PlayerNetwork starts: Enemy shoots first
                 } else expectedMessage.set("ANSWER");
                 break;
@@ -130,7 +129,7 @@ public abstract class Connected implements Shutdown {
     /**
      * Start listening
      */
-    protected void waitMessage(){
+    protected void waitMessage() {
         this.isRunning = true;
         LoggerNetwork.info("Start listening to new messages");
         this.expectedMessage.set(expectedFirstMessage);
@@ -184,7 +183,7 @@ public abstract class Connected implements Shutdown {
         sendMessage("load " + gameID);
     }
 
-    private void sendMessage(String message){
+    private void sendMessage(String message) {
         if (message.equals("answer 0")) {
             synchronized (expectedMessage) {
                 expectedMessage.set("PASS");
@@ -210,51 +209,56 @@ public abstract class Connected implements Shutdown {
 
     /**
      * blocking till available
+     *
      * @return
      */
     public int getPlaygroundSize() {
         Object o = popSentData("playgroundSize");
-        assert o instanceof Integer: "Wrong data sent. Expected Integer got " + o;
+        assert o instanceof Integer : "Wrong data sent. Expected Integer got " + o;
         return (int) o;
     }
 
     /**
      * blocking till available
+     *
      * @return
      */
     public ShotResTuple getShotResult() {
         Object o = popSentData("shotResult");
-        assert o instanceof ShotResTuple: "Wrong data sent. Expected FieldType got " + o;
+        assert o instanceof ShotResTuple : "Wrong data sent. Expected FieldType got " + o;
         return (ShotResTuple) o;
     }
 
     /**
      * blocking till available
+     *
      * @return
      */
     public Position popMakeTurnPosition() {
         Object o = popSentData("makeTurnPosition");
-        assert o instanceof Position: "Wrong data sent. Expected Position got " + o;
+        assert o instanceof Position : "Wrong data sent. Expected Position got " + o;
         return (Position) o;
     }
 
     /**
      * blocking till available
+     *
      * @return
      */
     public boolean isLoadGame() {
         Object o = popSentData("isLoadGame");
-        assert o instanceof Boolean: "Wrong data stored. Expected Boolean got " + o;
+        assert o instanceof Boolean : "Wrong data stored. Expected Boolean got " + o;
         return (Boolean) o;
     }
 
     /**
      * blocking till available
+     *
      * @return
      */
     public long getGameID() {
         Object o = popSentData("gameID");
-        assert o instanceof Long: "Wrong data stored. Expected long got " + o;
+        assert o instanceof Long : "Wrong data stored. Expected long got " + o;
         return (Long) o;
     }
 
@@ -294,11 +298,11 @@ public abstract class Connected implements Shutdown {
     }
 
 
-
     public static class ShotResTuple {
 
         public Playground.FieldType type;
         public boolean sunken;
+
         public ShotResTuple(Playground.FieldType type, boolean sunken) {
             this.type = type;
             this.sunken = sunken;
@@ -307,20 +311,16 @@ public abstract class Connected implements Shutdown {
     }
 
     // Thread control
-
-    @Override
-    public void onShutdown() {
-        isRunning = false;
-    }
+    // TODO: shutdown with ResourceDestructor
 
 
     // GETTER
+
     /**
-     *
      * @return The Player Object that was at {@link #initPlayer(int)} method
      */
     public PlayerNetwork getPlayerNetwork() {
-        assert player != null: "player has not been initialized yet. Wait till initPlayer method was called. After " +
+        assert player != null : "player has not been initialized yet. Wait till initPlayer method was called. After " +
                 "recv size or send size";
         return player;
     }

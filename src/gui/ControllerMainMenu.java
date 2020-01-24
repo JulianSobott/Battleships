@@ -1,26 +1,17 @@
 package gui;
 
-import core.GameManager;
-import core.communication_data.GameSettings;
-import core.communication_data.LoadGameResult;
-import core.serialization.GameData;
-import core.serialization.GameSerialization;
+import core.utils.ResourcesDestructor;
 import gui.LoadGame.ControllerLoadGame;
-import gui.PlayGame.ControllerPlayGame;
 import gui.Settings.ControllerSettings;
-import gui.ShipPlacement.ControllerShipPlacement;
 import gui.WindowChange.SceneLoader;
-import gui.interfaces.Shutdown;
 import gui.newGame.ControllerGameType;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import player.PlayerAI;
-import player.PlayerHuman;
 
-public class ControllerMainMenu implements Shutdown {
+public class ControllerMainMenu {
 
     @FXML
     private AnchorPane anchorPane;
@@ -39,7 +30,7 @@ public class ControllerMainMenu implements Shutdown {
 
     @FXML
     void closeApplication(MouseEvent event) {
-        onShutdown();
+        ResourcesDestructor.shutdownAll();
         Stage stage = (Stage) anchorPane.getScene().getWindow();
         stage.close();
     }
@@ -72,8 +63,4 @@ public class ControllerMainMenu implements Shutdown {
 
     }
 
-    @Override
-    public void onShutdown() {
-
-    }
 }

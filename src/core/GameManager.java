@@ -3,6 +3,7 @@ package core;
 import core.communication_data.*;
 import core.playgrounds.Playground;
 import core.serialization.GameSerialization;
+import core.utils.ResourcesDestructor;
 import core.utils.logging.LoggerLogic;
 import core.utils.logging.LoggerState;
 import player.PlayerAI;
@@ -214,9 +215,11 @@ public class GameManager implements GameManagerInterface {
             if(res != null && res.isFINISHED()) {
                 LoggerState.info("Winner after " + round + " rounds: " + players[res.getPlayerIndex()].toString());
             }
+            ResourcesDestructor.stopSingleThread(inGameThread);
         });
         inGameThread.setName("Main_gameLoop");
         inGameThread.start();
+        ResourcesDestructor.addThread(inGameThread);
         LoggerLogic.info("Started Main_gameLoop thread");
     }
 

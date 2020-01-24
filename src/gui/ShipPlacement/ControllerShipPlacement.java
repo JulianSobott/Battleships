@@ -3,6 +3,7 @@ package gui.ShipPlacement;
 import core.GameManager;
 import core.Ship;
 import core.communication_data.*;
+import core.utils.ResourcesDestructor;
 import core.utils.logging.LoggerGUI;
 import core.utils.logging.LoggerLogic;
 import core.utils.logging.LoggerState;
@@ -11,7 +12,6 @@ import gui.UiClasses.BattleShipGui;
 import gui.UiClasses.ButtonShip;
 import gui.UiClasses.HBoxExends;
 import gui.WindowChange.SceneLoader;
-import gui.interfaces.Shutdown;
 import gui.newGame.ControllerGameType;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
-public class ControllerShipPlacement implements Initializable, Shutdown {
+public class ControllerShipPlacement implements Initializable {
 
     private static final String filepathBackNewGame = "../newGame/GameType.fxml";
     private static final String filepathPlayGame = "../PlayGame/PlayGame.fxml";
@@ -673,6 +673,7 @@ public class ControllerShipPlacement implements Initializable, Shutdown {
                 return null;
             }
         };
+        Thread thread = new Thread(t);
         t.setOnSucceeded(workerStateEvent -> {
             ArrayList<BattleShipGui> shipPositionList = new ArrayList<>();
             for (ButtonShip buttonShip : shipArrayListGui) {
@@ -687,13 +688,10 @@ public class ControllerShipPlacement implements Initializable, Shutdown {
             SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathPlayGame, controllerPlayGame);
             sceneLoader.loadSceneInExistingWindow();
             LoggerState.info("Switch state to In_Game");
+            ResourcesDestructor.stopSingleThread(thread);
         });
-        new Thread(t).start();
-    }
-
-    @Override
-    public void onShutdown() {
-        // shutdown server
+        thread.start();
+        ResourcesDestructor.addThread(thread);
     }
 
 

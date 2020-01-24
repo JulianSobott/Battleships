@@ -5,6 +5,7 @@ import core.communication_data.GameSettings;
 import core.communication_data.LoadGameResult;
 import core.serialization.GameData;
 import core.serialization.GameSerialization;
+import core.utils.ResourcesDestructor;
 import core.utils.logging.LoggerGUI;
 import core.utils.logging.LoggerState;
 import gui.ControllerMainMenu;
@@ -205,6 +206,7 @@ public class ControllerGameType implements Initializable {
     private void startServer() {
         LoggerGUI.info("Starting server");
         Server server = new Server(50000);
+        ResourcesDestructor.addServer(server);
         networkConnection = server;
         Task<Void> task = new Task<Void>() {
             @Override
@@ -214,8 +216,13 @@ public class ControllerGameType implements Initializable {
                 return null;
             }
         };
-        task.setOnSucceeded(workerStateEvent -> labelConnectionStatus.setText("Client connected"));
-        new Thread(task).start();
+        Thread thread = new Thread(task);
+        task.setOnSucceeded(workerStateEvent -> {
+            labelConnectionStatus.setText("Client connected");
+            ResourcesDestructor.stopSingleThread(thread);
+        });
+        thread.start();
+        ResourcesDestructor.addThread(thread);
     }
 
     /**
@@ -225,7 +232,7 @@ public class ControllerGameType implements Initializable {
     private void stopServer() {
         if (networkConnection instanceof Server && networkConnection.isStarted()) {
             LoggerGUI.info("Stopping server");
-            ((Server) networkConnection).shutdown();
+            ResourcesDestructor.shutdownServer();
         }
     }
 
@@ -416,7 +423,9 @@ public class ControllerGameType implements Initializable {
 
     @FXML
     public void goBacktoMainMenus(MouseEvent event) {
-        // TODO: stop network
+        if (networkConnection != null && networkConnection.isStarted()) {
+
+        }
         ControllerMainMenu controllerMainMenu = new ControllerMainMenu();
         SceneLoader sceneLoader = new SceneLoader(BackToMenu, filepathBackMainMenu, controllerMainMenu);
         sceneLoader.loadSceneInExistingWindow();

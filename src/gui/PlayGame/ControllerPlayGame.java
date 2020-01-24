@@ -5,6 +5,7 @@ import core.communication_data.*;
 import core.playgrounds.Playground;
 import core.playgrounds.PlaygroundInterface;
 import core.serialization.GameData;
+import core.utils.ResourcesDestructor;
 import core.utils.logging.LoggerGUI;
 import gui.ControllerMainMenu;
 import gui.GameOver.ControllerGameOver;
@@ -396,11 +397,12 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
             if(loadEndScreen) {
                 loadEndScreen(playerHumanWins);
             }
+            ResourcesDestructor.stopSingleThread(playgroundUpdaterThread);
         });
-
         playgroundUpdaterThread = new Thread(task);
         playgroundUpdaterThread.setName("GUI_PlaygroundUpdater");
         playgroundUpdaterThread.start();
+        ResourcesDestructor.addThread(playgroundUpdaterThread);
     }
 
 
@@ -575,7 +577,8 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
         loadEndScreen = false;
 
         LoggerGUI.debug("Leave game");
-        this.exitInGameThread();
+        ResourcesDestructor.shutdownAll();
+        //this.exitInGameThread();
         this.goBackToMainMenu();
     }
 

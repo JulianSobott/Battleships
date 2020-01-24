@@ -1,5 +1,6 @@
 package gui;
 
+import core.utils.ResourcesDestructor;
 import core.utils.logging.LoggerState;
 import gui.WindowChange.SceneLoader;
 import javafx.application.Application;
@@ -24,7 +25,11 @@ public class Main extends Application {
         ControllerMainMenu controllerMainMenu = new ControllerMainMenu();
         SceneLoader sceneLoader = new SceneLoader(null, "../Main_Menu.fxml", controllerMainMenu);
         sceneLoader.loadSceneInNewWindow("Battleship");
+    }
 
-
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+        ResourcesDestructor.shutdownAll();
     }
 }

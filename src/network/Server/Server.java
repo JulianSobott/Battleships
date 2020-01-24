@@ -24,10 +24,11 @@ public class Server extends Connected {
 
     public Server(int port) {
         this.expectedFirstMessage = "CONFIRMED";
-        this.isStartingPlayer = true;
         try {
             socket = new ServerSocket(port);
+            socket.setReuseAddress(true);
             LoggerNetwork.info("Start server: ip=" + Utils.getIpAddress() + ", port=" + port);
+            this.isStartingPlayer = true;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -62,7 +63,7 @@ public class Server extends Connected {
                 try {
                     clientConnected.wait();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    LoggerNetwork.info("Server stopped waiting for client connection");
                 }
             }
         }
@@ -81,6 +82,7 @@ public class Server extends Connected {
                 stopListening();
                 LoggerNetwork.info("Closed Server");
             }
+            isStarted = false;
         } catch (IOException e) {
             e.printStackTrace();
         }
