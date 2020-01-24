@@ -19,7 +19,7 @@ public class Client extends Connected {
         this.ip = ip;
         this.port = port;
         this.expectedFirstMessage = "SIZE";
-        this.isStartingPlayer = true;
+        this.isStartingPlayer = false;
     }
 
     @Override

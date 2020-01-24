@@ -3,6 +3,8 @@
 - client starts shooting not server
 - stop threads
 - stop server
+- full screen
+- show heatmap option
 - tests
 - to jar
 - test in eclipse

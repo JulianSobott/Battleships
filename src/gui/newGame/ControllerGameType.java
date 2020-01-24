@@ -309,7 +309,7 @@ public class ControllerGameType implements Initializable {
         Player p1 = null;
         Player p2;
         Player startingPlayer;
-        boolean p1IsStarting = true;
+        boolean p2IsStarting = false;
         boolean aiVsAi = false;
         long gameID = -1;
 
@@ -356,7 +356,6 @@ public class ControllerGameType implements Initializable {
                 } else{
                     playgroundSize = networkConnection.getPlaygroundSize();
                 }
-                p1IsStarting = false;
             }
             // Server
             else if (radioButtonServer.isSelected()) {
@@ -367,6 +366,7 @@ public class ControllerGameType implements Initializable {
                 if (!fromNetworkLoad) {
                     ((Server) networkConnection).startGame(playgroundSize);
                 }
+                p2IsStarting = true;
             } else {
                 showNotification("Server or Client","You must specify whether you want to be server or client");
                 LoggerGUI.warning("No server/client selected.");
@@ -397,7 +397,7 @@ public class ControllerGameType implements Initializable {
         if (p1 == null) {
             p1 = new PlayerHuman(0, "Local", playgroundSize);
         }
-        startingPlayer = p1IsStarting ? p1 : p2;
+        startingPlayer = p2IsStarting ? p2 : p1;
         GameSettings settings =
                 new GameSettings(playgroundSize, p1, p2, networkConnection, startingPlayer, aiVsAi).addGameID(gameID);
         LoggerGUI.info("Start game with settings=" + settings);
