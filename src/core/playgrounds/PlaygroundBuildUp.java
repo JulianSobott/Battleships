@@ -27,6 +27,17 @@ public class PlaygroundBuildUp extends Playground {
 
     /**
      * Call when a ship is discovered.
+     * Organizes ships, that the Playground contains proper ship objects
+     *
+     * <h3>Algorithm</h3>
+     * <pre>{@code
+     * create a new ship at this position
+     * for adjacentField in adjacentFields:
+     *      if adjacentField is Ship:
+     *          concatenate with newShip
+     * if not concatenated:
+     *      add newShip
+     * }</pre>
      *
      * Concatenates adjacent ship objects.
      * @param position ShipPosition of the discovered Ship
@@ -35,6 +46,7 @@ public class PlaygroundBuildUp extends Playground {
     public void setShip(Position position, Ship.LifeStatus lifeStatus) {
         numHitShipsFields++;
         Ship newShip = new Ship(position);
+        boolean concatenated = false;
         int[][] adjacentPositions = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
         for (int[] adjacentPos : adjacentPositions) {
             int x = position.getX() + adjacentPos[0];
@@ -43,16 +55,18 @@ public class PlaygroundBuildUp extends Playground {
                 Position p = new Position(x, y);
                 if (!p.isOutsideOfPlayground(this.size) && this.elements[p.getY()][p.getX()].type == FieldType.SHIP) {
                     Ship adjacentShip = (Ship) this.elements[p.getY()][p.getX()].element;
-                    this.removeShipByID(adjacentShip.getId());
                     adjacentShip.concatenateShips(newShip);
-                    newShip = adjacentShip;
                     this.elements[p.getY()][p.getX()].element = newShip;
+                    concatenated = true;
+                    newShip = adjacentShip;
                 }
             }
         }
-        newShip.setLives(lifeStatus == Ship.LifeStatus.ALIVE ? 2 : 1); // Got hit will take lives later on
+        if (!concatenated) {
+            putShip(newShip);
+        }
+        newShip.setLives(lifeStatus == Ship.LifeStatus.ALIVE ? 1 : 0);
         this.elements[position.getY()][position.getX()] = new Field(FieldType.SHIP, newShip, true);
-        this.putShip(newShip);
         if (lifeStatus == Ship.LifeStatus.SUNKEN) {
             for(Position p : getSurroundingWaterPositions(newShip)) {
                 setWater(p);

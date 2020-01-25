@@ -57,9 +57,8 @@ public class Ship extends PlaygroundElement implements Serializable {
 
     /**
      * Concatenate two adjacent ship objects to one Object
-     * @param s1 A Ship Object adjacent to s2
-     * @param s2 A Ship object Adjacent to s3
-     * @return A new Ship Object with updated position
+     * On this only the position is updated. s1 is not changed.
+     * @param s1 A Ship Object adjacent to this
      */
     public void concatenateShips(Ship s1) {
         Ship s2 = this;
