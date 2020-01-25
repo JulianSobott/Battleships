@@ -684,6 +684,7 @@ public class ControllerShipPlacement implements Initializable {
                 shipPositionList.add(buttonShip.getBattleShipGui());
             }
 
+            LoggerState.info("Switch state to In_Game");
             ControllerPlayGame controllerPlayGame = new ControllerPlayGame(playgroundSize, shipPositionList,
                     this.GAME_MANAGER, gameSettings);
             if (this.networkConnection != null) {
@@ -692,7 +693,6 @@ public class ControllerShipPlacement implements Initializable {
             LoggerGUI.info("Switch scene: ShipPlacement --> PlayGame");
             SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathPlayGame, controllerPlayGame);
             sceneLoader.loadSceneInExistingWindow();
-            LoggerState.info("Switch state to In_Game");
             ResourcesDestructor.stopSingleThread(thread);
         });
         thread.start();

@@ -374,7 +374,7 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
                     updateShowCurrentPlayer();
                     res = gameManager.pollTurn("GUI_1");
                     if (res != null) {
-                        LoggerGUI.info("TurnResult in GUI: " + res);
+                        LoggerGUI.debug("TurnResult in GUI: " + res);
                         if (res.getError() == TurnResult.Error.NONE) {
                             if (res.getPlayerIndex() == 1 && slowAIShooting) {
                                 Thread.sleep(AI_SHOOTING_DELAY_MS);

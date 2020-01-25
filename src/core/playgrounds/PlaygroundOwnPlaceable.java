@@ -25,7 +25,7 @@ public class PlaygroundOwnPlaceable extends PlaygroundPlaceable implements Playg
      */
     @Override
     public ShotResult gotHit(Position position){
-        LoggerLogic.info("gotHit: position=" + position);
+        LoggerLogic.debug("gotHit: position=" + position);
         Playground.Field f = this.elements[position.getY()][position.getX()];
         f.gotHit();
         ShotResult res;
@@ -41,7 +41,7 @@ public class PlaygroundOwnPlaceable extends PlaygroundPlaceable implements Playg
         }else{
             res = new ShotResultWater(position, f.type);
         }
-        LoggerLogic.info("gotHit return: ShotResult=" + res);
+        LoggerLogic.debug("gotHit return: ShotResult=" + res);
         return res;
     }
 

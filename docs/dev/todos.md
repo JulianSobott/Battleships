@@ -30,7 +30,3 @@
 - (cleanup code)
 - Check logging messages (reduce duplicates)
     - Maybe add LoggerAI
-    - Logger GUI -> Switch scenes
-    - Starting player after Switch state in Game
-    - PlaygroundOwnPlaceable.gotHit to debug
-    - gui.PlayGame.ControllerPlayGame$1.call Line: 377, Thread: GUI_PlaygroundUpdater to debug

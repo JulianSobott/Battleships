@@ -20,7 +20,6 @@ public class PlaygroundOwnBuildUp extends PlaygroundBuildUp implements Playgroun
 
     @Override
     public ShotResult gotHit(Position position) {
-        LoggerLogic.info("gotHit: position=" + position);
         Field f = this.elements[position.getY()][position.getX()];
         f.gotHit();
         ShotResult res;
