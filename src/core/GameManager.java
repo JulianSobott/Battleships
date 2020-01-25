@@ -195,7 +195,7 @@ public class GameManager implements GameManagerInterface {
      */
     private void nextPlayer() {
         this.currentPlayer = this.otherPlayer(this.currentPlayer);
-        LoggerState.info("Next Player: " + this.currentPlayer);
+        LoggerState.info(round + ": Next Player: " + this.currentPlayer);
     }
 
     /**
@@ -253,7 +253,7 @@ public class GameManager implements GameManagerInterface {
     private void saveTurnResult(TurnResult res){
         for(Player p : this.players){
             if(this.currentPlayer == this.player1) {
-                if (res.getSHOT_RESULT().getType() == Playground.FieldType.SHIP) {
+                if (res.getError() == TurnResult.Error.NONE && res.getSHOT_RESULT().getType() == Playground.FieldType.SHIP) {
                     numHitsP1++;
                 } else{
                     numMissesP1++;

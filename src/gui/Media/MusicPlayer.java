@@ -12,7 +12,7 @@ public class MusicPlayer {
 
     private static MusicPlayer instance = new MusicPlayer();
     private MediaPlayer mediaPlayer;
-    private boolean playSoundEffects = true;
+    private boolean playSoundEffects = false;
     private HashMap<Sound, MediaPlayer> soundEffects = new HashMap<>();
 
     private MusicPlayer() {
