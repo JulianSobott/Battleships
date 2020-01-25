@@ -1,132 +1,160 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.collections.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="750.0" prefWidth="1200.0" styleClass="anchorPane" stylesheets="@../generalApplication%20Design.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="750.0" prefWidth="1200.0" styleClass="anchorPane" stylesheets="@../generalApplication%20Design.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Button fx:id="BackToMenu" layoutX="33.0" layoutY="682.0" mnemonicParsing="false" onMouseClicked="#goBacktoMainMenus" prefHeight="25.0" prefWidth="118.0" text="zurrück" AnchorPane.bottomAnchor="40.66666666666663" AnchorPane.leftAnchor="33.0" />
-      <Label layoutX="253.0" layoutY="73.0" styleClass="label-h2" text="Gegenspieler:">
+      <Label layoutX="253.0" layoutY="73.0" styleClass="label-h2" text="Gegenspieler:" AnchorPane.leftAnchor="250.0" AnchorPane.topAnchor="60.0">
          <font>
             <Font size="18.0" />
          </font></Label>
-      <ImageView fitHeight="393.0" fitWidth="539.0" layoutX="614.0" layoutY="193.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Images/WikingerschiffBesatzung.jpg" />
-         </image>
-      </ImageView>
-      <HBox layoutX="57.0" layoutY="144.0" prefHeight="27.0" prefWidth="527.0" spacing="130.0" AnchorPane.leftAnchor="57.0" AnchorPane.rightAnchor="616.0" AnchorPane.topAnchor="144.0">
+      <HBox layoutX="57.0" layoutY="144.0" prefHeight="27.0" prefWidth="527.0" spacing="300.0" styleClass="vBoxTask" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="130.0">
          <children>
             <RadioButton fx:id="radioButtonKI" mnemonicParsing="false" onMouseClicked="#accentuateSettingsForCurrentGamType" text="KI" />
             <RadioButton fx:id="radioButtonNetzwerk" mnemonicParsing="false" onMouseClicked="#accentuateSettingsForCurrentGamType" text="Netzwerk" />
             <RadioButton fx:id="radioButtonLocal" mnemonicParsing="false" onMouseClicked="#accentuateSettingsForCurrentGamType" prefHeight="27.0" prefWidth="97.0" text="KI vs. KI" />
          </children>
-      </HBox>
-      <Separator layoutX="179.0" layoutY="193.0" orientation="VERTICAL" prefHeight="306.0" prefWidth="0.0" />
-      <Separator layoutX="391.0" layoutY="183.0" orientation="VERTICAL" prefHeight="306.0" prefWidth="0.0" />
-      <VBox fx:id="vBoxNetzwerk" layoutX="196.0" layoutY="193.0" prefHeight="306.0" prefWidth="175.0" spacing="10.0" styleClass="vBoxTask" AnchorPane.leftAnchor="196.0" AnchorPane.topAnchor="193.0">
-         <children>
-            <HBox spacing="15.0">
-               <children>
-                  <RadioButton fx:id="radioButtonServer" mnemonicParsing="false" onMouseClicked="#onServerSelected" text="Server" />
-                  <RadioButton fx:id="radioButtonClient" mnemonicParsing="false" onMouseClicked="#onClientSelected" text="Client" />
-               </children>
-               <padding>
-                  <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
-               </padding>
-            </HBox>
-            <Label text="IP_Adresse:" />
-            <TextField fx:id="textFieldIpAddress" promptText="192.168.5.34" text="localhost" />
-            <Button fx:id="buttonConnect" mnemonicParsing="false" onMouseClicked="#btnConnectClicked" text="Connect" visible="false" />
-            <Label fx:id="labelConnectionStatus" text="Not connected" />
-         </children>
-         <padding>
-            <Insets left="5.0" right="5.0" />
-         </padding>
-      </VBox>
-      <VBox fx:id="vBoxLocal" layoutX="410.0" layoutY="193.0" prefHeight="306.0" prefWidth="175.0" spacing="15.0" styleClass="vBoxTask" AnchorPane.leftAnchor="410.0" AnchorPane.topAnchor="193.0">
-         <children>
-            <Label text="Player 1:" />
-            <ChoiceBox fx:id="choiceBoxAI1Difficulty" prefWidth="150.0" value="Schwer">
-               <items>
-                  <FXCollections fx:factory="observableArrayList">
-                     <String fx:value="Leicht" />
-                     <String fx:value="Mittel" />
-                     <String fx:value="Schwer" />
-                  </FXCollections>
-               </items>
-            </ChoiceBox>
-            <Label text="Player 2:" />
-            <ChoiceBox fx:id="choiceBoxAI2Difficulty" prefWidth="150.0" value="Schwer">
-               <items>
-                  <FXCollections fx:factory="observableArrayList">
-                     <String fx:value="Leicht" />
-                     <String fx:value="Mittel" />
-                     <String fx:value="Schwer" />
-                  </FXCollections>
-               </items>
-            </ChoiceBox>
-         </children>
-         <padding>
-            <Insets left="5.0" right="5.0" top="10.0" />
-         </padding>
-      </VBox>
-      <VBox fx:id="vBoxKI" alignment="TOP_CENTER" layoutX="34.0" layoutY="193.0" prefHeight="306.0" prefWidth="133.0" spacing="15.0" styleClass="vBoxTask" AnchorPane.leftAnchor="33.999999999999915" AnchorPane.topAnchor="193.0">
-         <children>
-            <Label text="Schwierigkeitsgrad:" />
-            <VBox alignment="CENTER_LEFT" spacing="10.0">
-               <children>
-                  <RadioButton fx:id="radioButtonEasy" mnemonicParsing="false" text="Leicht" />
-                  <RadioButton fx:id="radioButtonMedium" mnemonicParsing="false" text="Mittel" />
-                  <RadioButton fx:id="radioButtonHard" mnemonicParsing="false" text="Schwer" />
-               </children>
-               <VBox.margin>
-                  <Insets left="10.0" />
-               </VBox.margin>
-            </VBox>
-         </children>
-         <padding>
-            <Insets left="5.0" right="5.0" top="10.0" />
-         </padding>
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-      </VBox>
-      <Button layoutX="1020.0" layoutY="682.0" mnemonicParsing="false" onMouseClicked="#loadShipPlacementScene" prefHeight="25.0" prefWidth="133.0" text="Spiel starten" AnchorPane.bottomAnchor="40.66666666666663" AnchorPane.rightAnchor="46.66666666666674" />
-      <VBox fx:id="vBoxPlaygroundSettings" alignment="TOP_CENTER" layoutX="33.0" layoutY="529.0" prefHeight="123.0" prefWidth="551.0" spacing="10.0" styleClass="vBoxTask" AnchorPane.leftAnchor="33.0" AnchorPane.topAnchor="529.0">
-         <children>
-            <Label text="Spielfeldeinstellungen:">
-               <padding>
-                  <Insets bottom="5.0" />
-               </padding>
-            </Label>
-            <HBox alignment="CENTER_LEFT" spacing="20.0">
-               <children>
-                  <Label text="Spielfeldgröße:" />
-                  <TextField fx:id="textfieldPlaygroundSize" alignment="CENTER" promptText="Spielfeld größe" text="5" />
-               </children>
-               <padding>
-                  <Insets bottom="5.0" left="5.0" top="5.0" />
-               </padding>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
-               <children>
-                  <Label text="Verlangsamte Spielegeschwindigkeit: " />
-                  <CheckBox fx:id="checkboxSlowAIShooting" mnemonicParsing="false" />
-                  <Label text="Cheatmode: " />
-                  <CheckBox fx:id="checkboxCheatmode" mnemonicParsing="false" />
-               </children>
-            </HBox>
-         </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding>
-      </VBox>
-      <Separator layoutX="40.0" layoutY="513.0" prefHeight="0.0" prefWidth="539.0" />
+      </HBox>
+      <HBox alignment="CENTER" layoutX="95.0" layoutY="196.0" spacing="30.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="150.0">
+         <children>
+            <VBox fx:id="vBoxKI" prefWidth="250.0" spacing="30.0" styleClass="vBoxTask">
+               <children>
+                  <Label text="Schwierigkeitsgrad:">
+                     <VBox.margin>
+                        <Insets left="50.0" />
+                     </VBox.margin>
+                  </Label>
+                  <VBox alignment="CENTER_LEFT" spacing="10.0">
+                     <children>
+                        <RadioButton fx:id="radioButtonEasy" mnemonicParsing="false" text="Leicht" />
+                        <RadioButton fx:id="radioButtonMedium" mnemonicParsing="false" text="Mittel" />
+                        <RadioButton fx:id="radioButtonHard" mnemonicParsing="false" text="Schwer" />
+                     </children>
+                     <VBox.margin>
+                        <Insets left="10.0" />
+                     </VBox.margin>
+                  </VBox>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </VBox>
+            <VBox fx:id="vBoxNetzwerk" alignment="CENTER_LEFT" prefWidth="250.0" spacing="30.0" styleClass="vBoxTask">
+               <children>
+                  <HBox alignment="CENTER" spacing="15.0">
+                     <children>
+                        <RadioButton fx:id="radioButtonServer" mnemonicParsing="false" onMouseClicked="#onServerSelected" text="Server" />
+                        <RadioButton fx:id="radioButtonClient" mnemonicParsing="false" onMouseClicked="#onClientSelected" text="Client" />
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+                     </padding>
+                  </HBox>
+                  <Label text="IP_Adresse:">
+                     <VBox.margin>
+                        <Insets left="15.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TextField fx:id="textFieldIpAddress" promptText="192.168.5.34" text="localhost">
+                     <VBox.margin>
+                        <Insets left="15.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <Button fx:id="buttonConnect" mnemonicParsing="false" onMouseClicked="#btnConnectClicked" text="Connect" visible="false" />
+                  <Label fx:id="labelConnectionStatus" text="Not connected">
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="15.0" />
+                     </VBox.margin>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </VBox>
+            <VBox fx:id="vBoxLocal" alignment="CENTER_LEFT" prefWidth="250.0" spacing="30.0" styleClass="vBoxTask">
+               <children>
+                  <Label text="Player 1:" />
+                  <ChoiceBox fx:id="choiceBoxAI1Difficulty" prefWidth="150.0" value="Schwer">
+                     <items>
+                        <FXCollections fx:factory="observableArrayList">
+                           <String fx:value="Leicht" />
+                           <String fx:value="Mittel" />
+                           <String fx:value="Schwer" />
+                        </FXCollections>
+                     </items>
+                  </ChoiceBox>
+                  <Label text="Player 2:" />
+                  <ChoiceBox fx:id="choiceBoxAI2Difficulty" prefWidth="150.0" value="Schwer">
+                     <items>
+                        <FXCollections fx:factory="observableArrayList">
+                           <String fx:value="Leicht" />
+                           <String fx:value="Mittel" />
+                           <String fx:value="Schwer" />
+                        </FXCollections>
+                     </items>
+                  </ChoiceBox>
+               </children>
+               <padding>
+                  <Insets left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </VBox>
+         </children>
+      </HBox>
+      <Button layoutX="1020.0" layoutY="682.0" mnemonicParsing="false" onMouseClicked="#loadShipPlacementScene" prefHeight="25.0" prefWidth="133.0" text="Spiel starten" AnchorPane.bottomAnchor="40.66666666666663" AnchorPane.rightAnchor="46.66666666666674" />
+      <HBox alignment="CENTER_LEFT" layoutX="95.0" layoutY="536.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="540.0">
+         <children>
+            <VBox fx:id="vBoxPlaygroundSettings" alignment="TOP_CENTER" prefHeight="123.0" prefWidth="551.0" spacing="10.0" styleClass="vBoxTask">
+               <children>
+                  <Label text="Spielfeldeinstellungen:">
+                     <padding>
+                        <Insets bottom="5.0" />
+                     </padding>
+                  </Label>
+                  <HBox alignment="CENTER_LEFT" spacing="20.0">
+                     <children>
+                        <Label text="Spielfeldgröße:" />
+                        <TextField fx:id="textfieldPlaygroundSize" alignment="CENTER" promptText="Spielfeld größe" text="5" />
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" top="5.0" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                     <children>
+                        <Label text="Verlangsamte Spielegeschwindigkeit: " />
+                        <CheckBox fx:id="checkboxSlowAIShooting" mnemonicParsing="false" />
+                        <Label text="Cheatmode: " />
+                        <CheckBox fx:id="checkboxCheatmode" mnemonicParsing="false" />
+                     </children>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </VBox>
+         </children>
+         <padding>
+            <Insets left="70.0" />
+         </padding>
+      </HBox>
    </children>
 </AnchorPane>
