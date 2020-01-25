@@ -5,6 +5,7 @@ import core.Player;
 import core.communication_data.LoadGameResult;
 import core.serialization.GameData;
 import core.serialization.GameSerialization;
+import core.utils.logging.LoggerGUI;
 import gui.PlayGame.ControllerPlayGame;
 import gui.WindowChange.SceneLoader;
 import gui.newGame.ControllerGameType;
@@ -95,15 +96,15 @@ public class ControllerLoadGame implements Initializable {
             GameData gameData = res.getGameData();
             if(ps[1].getClass() == PlayerNetwork.class)
             {
+                LoggerGUI.info("Switch scene: LoadGame --> NewGame");
                 ControllerGameType controllerGameType = new ControllerGameType();
                 SceneLoader sceneLoader = new SceneLoader(this.ANCHORPANEMAINMENU, "../newGame/GameType.fxml", controllerGameType);
                 sceneLoader.loadSceneInExistingWindow();
                 controllerGameType.initFromNetworkLoad(res.getGameData());
-
-                //TODO: Methode aufrufen die felder mit Werten belegt...
                 return;
             }
 
+            LoggerGUI.info("Switch scene: LoadGame --> PlayGame");
             ControllerPlayGame controller = ControllerPlayGame.fromLoad(gameData);
             SceneLoader sceneLoader = new SceneLoader(this.ANCHORPANEMAINMENU, "../PlayGame/PlayGame.fxml", controller);
             sceneLoader.loadSceneInExistingWindow();
@@ -143,7 +144,7 @@ public class ControllerLoadGame implements Initializable {
      */
 
     public void closeWindow() {
-
+        LoggerGUI.info("Switch scene: LoadGame --> MainMenu");
         ANCHORPANEMAINMENU.setEffect(null);
         Stage stage = (Stage) anchorPaneLoadGames.getScene().getWindow();
         stage.close();

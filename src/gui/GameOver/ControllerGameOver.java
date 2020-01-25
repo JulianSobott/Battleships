@@ -1,5 +1,6 @@
 package gui.GameOver;
 
+import core.utils.logging.LoggerGUI;
 import gui.ControllerMainMenu;
 import gui.Media.MusicPlayer;
 import gui.WindowChange.SceneLoader;
@@ -78,7 +79,7 @@ public class ControllerGameOver implements Initializable {
 
 
     public void goBackToMainMenu(){
-
+        LoggerGUI.info("Switch scene: EndScreen --> MainMenu");
         ANCHORPANEPLAYGROUND.setEffect(null);
 
         Stage stage = (Stage) labelGameStatus.getScene().getWindow();

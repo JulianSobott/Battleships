@@ -635,6 +635,7 @@ public class ControllerShipPlacement implements Initializable {
     @FXML
     public void BackToSettings() {
         ResourcesDestructor.shutdownAll();
+        LoggerGUI.info("Switch scene: ShipPlacement --> NewGame");
         ControllerGameType controllerGameType = new ControllerGameType();
         SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathBackNewGame, controllerGameType);
         sceneLoader.loadSceneInExistingWindow();
@@ -688,6 +689,7 @@ public class ControllerShipPlacement implements Initializable {
             if (this.networkConnection != null) {
                 this.networkConnection.enterInGame(controllerPlayGame);
             }
+            LoggerGUI.info("Switch scene: ShipPlacement --> PlayGame");
             SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathPlayGame, controllerPlayGame);
             sceneLoader.loadSceneInExistingWindow();
             LoggerState.info("Switch state to In_Game");

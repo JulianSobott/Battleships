@@ -1,6 +1,8 @@
 package gui;
 
 import core.utils.ResourcesDestructor;
+import core.utils.logging.LoggerGUI;
+import core.utils.logging.LoggerState;
 import gui.LoadGame.ControllerLoadGame;
 import gui.Media.MusicPlayer;
 import gui.Settings.ControllerSettings;
@@ -40,6 +42,7 @@ public class ControllerMainMenu implements Initializable {
 
     @FXML
     void closeApplication(MouseEvent event) {
+        LoggerState.info("End Program");
         ResourcesDestructor.shutdownAll();
         Stage stage = (Stage) anchorPane.getScene().getWindow();
         stage.close();
@@ -48,6 +51,7 @@ public class ControllerMainMenu implements Initializable {
 
     @FXML
     void createNewGame() {
+        LoggerGUI.info("Switch scene: MainMenu --> NewGame");
         ControllerGameType controllerGameType = new ControllerGameType();
         SceneLoader sceneLoader = new SceneLoader(this.anchorPane, "../newGame/GameType.fxml", controllerGameType);
         sceneLoader.loadSceneInExistingWindow();
@@ -56,6 +60,7 @@ public class ControllerMainMenu implements Initializable {
 
     @FXML
     void loadExistingGame(MouseEvent event) {
+        LoggerGUI.info("Switch scene: MainMenu --> LoadGame");
         ControllerLoadGame controllerLoadGame = new ControllerLoadGame(this.anchorPane);
         SceneLoader sceneLoader = new SceneLoader(null, "../LoadGame/LoadGame.fxml", controllerLoadGame);
         sceneLoader.loadSceneInExistingWindowWithoutButtons("Load Game", (Stage) anchorPane.getScene().getWindow());
@@ -64,6 +69,7 @@ public class ControllerMainMenu implements Initializable {
 
     @FXML
     void loadSettings(MouseEvent event) {
+        LoggerGUI.info("Switch scene: MainMenu --> Settings");
         ControllerSettings controllerSettings = new ControllerSettings(this.anchorPane);
         SceneLoader sceneLoader = new SceneLoader(this.anchorPane, "../Settings/Settings.fxml", controllerSettings);
         sceneLoader.loadSceneInExistingWindowWithoutButtons("Einstellungen", (Stage) anchorPane.getScene().getWindow());

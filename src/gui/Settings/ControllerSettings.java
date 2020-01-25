@@ -64,6 +64,7 @@ public class ControllerSettings implements Initializable {
      * closes the window in which the scores are selected
      */
     public void closeWindow() {
+        LoggerGUI.info("Switch scene: Settings --> MainMenu");
         ANCHORPANE_MAINMENU.setEffect(null);
         Stage stage = (Stage) anchorPaneSettings.getScene().getWindow();
         stage.close();

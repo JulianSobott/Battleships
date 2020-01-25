@@ -559,6 +559,7 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
      */
 
     public void goBackToMainMenu() {
+        LoggerGUI.info("Switch scene: PlayGame --> MainMenu");
         ResourcesDestructor.shutdownAll();
         ControllerMainMenu controllerMainMenu = new ControllerMainMenu();
         SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathBackMainMenu, controllerMainMenu);
@@ -574,6 +575,7 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
         int numRounds = gameManager.getRound();
         int numHits = gameManager.getNumHitsP1();
         int numMisses = gameManager.getNumMissesP1();
+        LoggerGUI.info("Switch scene: PlayGame --> EndScreen");
         ControllerGameOver controllerGameOver = new ControllerGameOver(anchorPanePlayGame, humanPlayerWins, numRounds
                 , numHits, numMisses);
         SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathGameOver, controllerGameOver);

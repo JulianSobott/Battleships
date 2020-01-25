@@ -432,8 +432,9 @@ public class ControllerGameType implements Initializable {
 
     @FXML
     public void goBacktoMainMenus(MouseEvent event) {
+        LoggerGUI.info("Switch scene: NewGame --> MainMenu");
         if (networkConnection != null && networkConnection.isStarted()) {
-
+            // TODO
         }
         ControllerMainMenu controllerMainMenu = new ControllerMainMenu();
         SceneLoader sceneLoader = new SceneLoader(BackToMenu, filepathBackMainMenu, controllerMainMenu);
@@ -469,6 +470,7 @@ public class ControllerGameType implements Initializable {
             ((PlayerNetwork) loadedGameData.getPlayers()[1]).setConnected(networkConnection);
 
             // load new scene: PlayGame
+            LoggerGUI.info("Switch scene: NewGame --> PlayGame");
             ControllerPlayGame controller = ControllerPlayGame.fromLoad(this.loadedGameData);
             SceneLoader sceneLoader = new SceneLoader(BackToMenu, "../PlayGame/PlayGame.fxml", controller);
             sceneLoader.loadSceneInExistingWindow();
@@ -479,6 +481,7 @@ public class ControllerGameType implements Initializable {
                 ResourcesDestructor.shutdownServer();
             }
             // load new scene: ShipPlacement
+            LoggerGUI.info("Switch scene: NewGame --> ShipPlacement");
             ControllerShipPlacement controllerShipPlacement = new ControllerShipPlacement(settings);
             SceneLoader sceneLoader = new SceneLoader(BackToMenu, filepathShipPlacement, controllerShipPlacement);
             sceneLoader.loadSceneInExistingWindow();
