@@ -434,7 +434,7 @@ public class ControllerGameType implements Initializable {
     public void goBacktoMainMenus(MouseEvent event) {
         LoggerGUI.info("Switch scene: NewGame --> MainMenu");
         if (networkConnection != null && networkConnection.isStarted()) {
-            // TODO
+            ResourcesDestructor.shutdownServer();
         }
         ControllerMainMenu controllerMainMenu = new ControllerMainMenu();
         SceneLoader sceneLoader = new SceneLoader(BackToMenu, filepathBackMainMenu, controllerMainMenu);
