@@ -30,8 +30,18 @@
 
 .vBoxTask{
     -fx-background-radius: 6;
-    -fx-background-color: linear-gradient(white 30%, white 100%);
+    -fx-background-color: linear-gradient(#000080 0%, blue 40%, #000080 90%);
     -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.75) , 5,0,0,1 );
+}
+
+.vBoxTask2{
+    -fx-background-radius: 6;
+    -fx-background-color: linear-gradient(#4B0082 0%, #9932CC 40%, #4B0082 90%);
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.75) , 5,0,0,1 );
+}
+
+.gameType{
+
 }
 
 .LoadGame{
@@ -64,6 +74,7 @@
 .button:hover {
     -fx-border-color: none;
     -fx-border-width: 1px;
+    -fx-text-fill: white;
     -fx-background-color: orange;
 
 }

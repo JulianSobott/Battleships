@@ -13,8 +13,6 @@ import gui.PlayGame.ControllerPlayGame;
 import gui.ShipPlacement.ControllerShipPlacement;
 import gui.WindowChange.SceneLoader;
 import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -32,13 +30,9 @@ import player.PlayerAI;
 import player.PlayerHuman;
 import player.PlayerNetwork;
 
-import java.net.Inet4Address;
-import java.net.InetAddress;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.ResourceBundle;
-import java.util.concurrent.CompletableFuture;
 
 
 public class ControllerGameType implements Initializable {
@@ -128,10 +122,10 @@ public class ControllerGameType implements Initializable {
         radioButtonMedium.setToggleGroup(toggleGroupDifficulty);
         radioButtonHard.setToggleGroup(toggleGroupDifficulty);
 
-        vBoxKI.setStyle("-fx-background-color: lightgray");
-        vBoxNetzwerk.setStyle("-fx-background-color: lightgray");
-        vBoxLocal.setStyle("-fx-background-color: lightgray");
-        vBoxPlaygroundSettings.setStyle("-fx-background-color: lightgray");
+      //  vBoxKI.setStyle("-fx-background-color: lightgray");
+      //  vBoxNetzwerk.setStyle("-fx-background-color: lightgray");
+       // vBoxLocal.setStyle("-fx-background-color: lightgray");
+      //  vBoxPlaygroundSettings.setStyle("-fx-background-color: lightgray");
 
     }
 
@@ -270,22 +264,22 @@ public class ControllerGameType implements Initializable {
 
         if (radioButtonKI.isSelected()) {
 
-            vBoxKI.setStyle("-fx-background-color: #626D71");
-            vBoxNetzwerk.setStyle("-fx-background-color: lightgray");
-            vBoxLocal.setStyle("-fx-background-color: lightgray");
-            vBoxPlaygroundSettings.setStyle("-fx-background-color: #626D71");
+            vBoxKI.setStyle("-fx-background-color: linear-gradient(#000080 0%, blue 40%, #000080 90%);");
+            vBoxNetzwerk.setStyle("-fx-background-color: linear-gradient(#4B0082 0%, #9932CC 40%, #4B0082 90%);");
+            vBoxLocal.setStyle("-fx-background-color: linear-gradient(#4B0082 0%, #9932CC 40%, #4B0082 90%);");
+            vBoxPlaygroundSettings.setStyle("-fx-background-color: linear-gradient(#000080 0%, blue 40%, #000080 90%);");
         } else if (radioButtonNetzwerk.isSelected()) {
 
-            vBoxKI.setStyle("-fx-background-color: lightgray");
-            vBoxNetzwerk.setStyle("-fx-background-color: #626D71");
-            vBoxLocal.setStyle("-fx-background-color: lightgray");
-            vBoxPlaygroundSettings.setStyle("-fx-background-color: #626D71");
+            vBoxKI.setStyle("-fx-background-color: linear-gradient(#4B0082 0%, #9932CC 40%, #4B0082 90%);");
+            vBoxNetzwerk.setStyle("-fx-background-color: linear-gradient(#000080 0%, blue 40%, #000080 90%);");
+            vBoxLocal.setStyle("-fx-background-color: linear-gradient(#4B0082 0%, #9932CC 40%, #4B0082 90%);");
+            vBoxPlaygroundSettings.setStyle("-fx-background-color: linear-gradient(#000080 0%, blue 40%, #000080 90%);");
         } else if (radioButtonLocal.isSelected()) {
 
-            vBoxKI.setStyle("-fx-background-color: lightgray");
-            vBoxNetzwerk.setStyle("-fx-background-color: lightgray");
-            vBoxLocal.setStyle("-fx-background-color: #626D71");
-            vBoxPlaygroundSettings.setStyle("-fx-background-color: #626D71");
+            vBoxKI.setStyle("-fx-background-color: linear-gradient(#4B0082 0%, #9932CC 40%, #4B0082 90%);");
+            vBoxNetzwerk.setStyle("-fx-background-color: linear-gradient(#4B0082 0%, #9932CC 40%, #4B0082 90%);");
+            vBoxLocal.setStyle("-fx-background-color: linear-gradient(#000080 0%, blue 40%, #000080 90%);");
+            vBoxPlaygroundSettings.setStyle("-fx-background-color: linear-gradient(#000080 0%, blue 40%, #000080 90%);");
         }
     }
 
