@@ -16,7 +16,12 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class Connected {
 
-    // Todo evtl in einzelne Methoden für Server und Client aufteilen ???
+    private static final int SHOOT_INDEX_X = 1;
+    private static final int SHOOT_INDEX_Y = 0;
+    // First possible position where can be shot
+    private static final int SHOOT_OFFSET = 1;
+
+
     // Network
     protected BufferedReader in = null;
     protected BufferedWriter out = null; //setzen damit immerhin null drinsteht bei voreiliger ansprache
@@ -80,7 +85,9 @@ public abstract class Connected {
                 expectedMessage.set("CONFIRMED");
                 break;
             case "SHOT":
-                Position position = new Position(Integer.parseInt(splitted[1]), Integer.parseInt(splitted[2]));
+                // +1 to ignore leading SHOT
+                Position position = new Position(Integer.parseInt(splitted[SHOOT_INDEX_X + 1]) - SHOOT_OFFSET,
+                        Integer.parseInt(splitted[SHOOT_INDEX_Y + 1]) - SHOOT_OFFSET);
                 setSentData("makeTurnPosition", position);
                 // expected message will be set later on
                 break;
@@ -176,7 +183,10 @@ public abstract class Connected {
     }
 
     public void sendShot(Position pos) {
-        sendMessage("shot " + pos.getX() + " " + pos.getY());
+        int[] sendPos = new int[2];
+        sendPos[SHOOT_INDEX_X] = pos.getX() + SHOOT_OFFSET;
+        sendPos[SHOOT_INDEX_Y] = pos.getY() + SHOOT_OFFSET;
+        sendMessage("shot " + sendPos[0] + " " + sendPos[1]);
     }
 
     public void sendLoadGame(long gameID) {
