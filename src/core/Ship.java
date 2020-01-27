@@ -1,11 +1,10 @@
 package core;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import core.communication_data.Position;
 import core.communication_data.ShipID;
 import core.communication_data.ShipPosition;
 import core.playgrounds.PlaygroundElement;
-import core.playgrounds.PlaygroundEnemyBuildUp;
 
 import java.io.Serializable;
 
@@ -15,14 +14,21 @@ public class Ship extends PlaygroundElement implements Serializable {
     private ShipID id;
     private ShipPosition shipPosition;
 
-    public enum LifeStatus {
-        SUNKEN, ALIVE;
+    /**
+     * Constructor for method {@link core.playgrounds.PlaygroundBuildUp#setShip(Position, LifeStatus, boolean)}.
+     * Needed, when ships are only created, when they were hit.
+     *
+     * @param position
+     */
+    public Ship(Position position) {
+        this(0, ShipID.getNextShipID(), new ShipPosition(position.getX(), position.getY(),
+                ShipPosition.Direction.HORIZONTAL, 1));
     }
 
     public Ship() {
     }
 
-    private Ship(int lives, ShipID id, ShipPosition shipPosition){
+    private Ship(int lives, ShipID id, ShipPosition shipPosition) {
         this.lives = lives;
         this.id = id;
         this.shipPosition = shipPosition;
@@ -33,23 +39,18 @@ public class Ship extends PlaygroundElement implements Serializable {
      *
      * @param length Length of the ship
      */
-    Ship(int length){
+    Ship(int length) {
         this(length, ShipID.getNextShipID(), ShipPosition.DEFAULT(length));
     }
 
-    /**
-     * Constructor for method {@link PlaygroundEnemyBuildUp#updateShipObjects(Position)}}.
-     * Needed, when ships are only created, when they were hit.
-     * @param position
-     */
-    public Ship(Position position) {
-        this(0, ShipID.getNextShipID(), new ShipPosition(position.getX(), position.getY(),
-                ShipPosition.Direction.HORIZONTAL, 1));
+    public enum LifeStatus {
+        SUNKEN, ALIVE
     }
 
     /**
      * Needed, when ships are only created, when they were hit.
-     * @param shipPosition
+     *
+     * @param shipPosition The position of the ship
      */
     Ship(ShipPosition shipPosition) {
         this(0, ShipID.getNextShipID(), shipPosition);

@@ -220,7 +220,7 @@ public abstract class Connected {
     /**
      * blocking till available
      *
-     * @return
+     * @return The playground size, sent by the server
      */
     public int getPlaygroundSize() {
         Object o = popSentData("playgroundSize");
@@ -231,7 +231,7 @@ public abstract class Connected {
     /**
      * blocking till available
      *
-     * @return
+     * @return The last sent ShotResult
      */
     public ShotResTuple getShotResult() {
         Object o = popSentData("shotResult");
@@ -242,7 +242,7 @@ public abstract class Connected {
     /**
      * blocking till available
      *
-     * @return
+     * @return The last sent shot target
      */
     public Position popMakeTurnPosition() {
         Object o = popSentData("makeTurnPosition");
@@ -253,7 +253,7 @@ public abstract class Connected {
     /**
      * blocking till available
      *
-     * @return
+     * @return true if the Game is created from a previous save game
      */
     public boolean isLoadGame() {
         Object o = popSentData("isLoadGame");
@@ -264,7 +264,7 @@ public abstract class Connected {
     /**
      * blocking till available
      *
-     * @return
+     * @return The ID of the game if it is a load game
      */
     public long getGameID() {
         Object o = popSentData("gameID");

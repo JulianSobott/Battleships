@@ -3,7 +3,9 @@ package core;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import core.communication_data.*;
+import core.communication_data.Position;
+import core.communication_data.ShotResult;
+import core.communication_data.TurnResult;
 import core.playgrounds.PlaygroundEnemy;
 import core.playgrounds.PlaygroundEnemyBuildUp;
 import core.playgrounds.PlaygroundOwn;
@@ -36,8 +38,9 @@ public abstract class Player {
 
     /**
      * Enemy shot at this player
-     * @param position
-     * @return
+     *
+     * @param position Position of the shot
+     * @return A ShotResult with information about what was hit
      */
     public ShotResult gotHit(Position position) {
         return this.playgroundOwn.gotHit(position);
@@ -45,7 +48,7 @@ public abstract class Player {
 
     /**
      * This player shot at an enemy and got an result.
-     * @param result
+     * @param result  A ShotResult with information about what was hit
      */
     public void update(ShotResult result) {
         this.playgroundEnemy.update(result);

@@ -1,6 +1,8 @@
 package gui.PlayGame;
 
-import core.*;
+import core.GameManager;
+import core.Player;
+import core.Ship;
 import core.communication_data.*;
 import core.playgrounds.Playground;
 import core.playgrounds.PlaygroundInterface;
@@ -91,9 +93,10 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
     }
 
     /**
-     * Constructor when game was loaded
+     * Factory method when game was loaded
      *
      * @param gameData from loading
+     * @return A new Controller
      */
     public static ControllerPlayGame fromLoad(GameData gameData) {
 
@@ -151,6 +154,8 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
 
     /**
      * GridPane is automatically generated based on predefined parameters
+     *
+     * @param gridPane An empty GridPane
      */
 
     private void generateGridPane(GridPane gridPane) {
@@ -174,6 +179,8 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
 
     /**
      * Water is pre-populated on the playing fields
+     *
+     * @param gridPane A non empty GridPane
      */
 
     private void preallocateFieldsWithWater(GridPane gridPane) {

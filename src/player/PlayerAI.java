@@ -2,19 +2,18 @@ package player;
 
 import core.Player;
 import core.Ship;
-import core.communication_data.*;
+import core.communication_data.Position;
+import core.communication_data.ShotResult;
+import core.communication_data.ShotResultShip;
+import core.communication_data.TurnResult;
 import core.playgrounds.Playground;
 import core.playgrounds.PlaygroundEnemyBuildUp;
 import core.playgrounds.PlaygroundOwnPlaceable;
 import core.utils.Random;
 import core.utils.logging.LoggerLogic;
 import core.utils.logging.LoggerProfile;
-import javafx.geometry.Pos;
 
-import javax.swing.*;
 import java.beans.ConstructorProperties;
-import java.lang.annotation.Target;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class PlayerAI extends Player {
@@ -114,11 +113,12 @@ public class PlayerAI extends Player {
      *
      * <b>Algorithm:</b>
      * <ul>
-     *     <li>in many iterations</li>
+     *     <li>in many iterations
      *          <ul>
      *              <li>place ships random (take already discovered fields in account.)</li>
      *              <li>Every field where a ship is placed increase a counter by one</li>
      *          </ul>
+     *     </li>
      *     <li>Return the field with the highest counter</li>
      * </ul>
      *
