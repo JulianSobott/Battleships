@@ -17,7 +17,7 @@
 <AnchorPane prefHeight="750.0" prefWidth="1200.0" styleClass="anchorPane" stylesheets="@../generalApplication%20Design.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Button fx:id="BackToMenu" layoutX="33.0" layoutY="682.0" mnemonicParsing="false" onMouseClicked="#goBacktoMainMenus" prefHeight="25.0" prefWidth="118.0" text="zurrück" AnchorPane.bottomAnchor="40.66666666666663" AnchorPane.leftAnchor="33.0" />
-      <Label layoutX="253.0" layoutY="73.0" styleClass="label-h2" text="Gegenspieler:" AnchorPane.leftAnchor="250.0" AnchorPane.topAnchor="60.0">
+      <Label alignment="CENTER" layoutX="170.0" layoutY="45.0" prefHeight="53.0" prefWidth="250.0" style="-fx-background-color: blue; -fx-text-fill: white;" styleClass="label-Design" text="Gegenspieler:" AnchorPane.leftAnchor="170.0" AnchorPane.topAnchor="45.0">
          <font>
             <Font size="18.0" />
          </font></Label>
@@ -82,7 +82,10 @@
                         <Insets left="15.0" />
                      </VBox.margin>
                   </TextField>
-                  <Button fx:id="buttonConnect" mnemonicParsing="false" onMouseClicked="#btnConnectClicked" text="Connect" visible="false" />
+                  <Button fx:id="buttonConnect" mnemonicParsing="false" onMouseClicked="#btnConnectClicked" text="Connect" visible="false">
+                     <VBox.margin>
+                        <Insets left="15.0" />
+                     </VBox.margin></Button>
                   <Label fx:id="labelConnectionStatus" text="Not connected">
                      <VBox.margin>
                         <Insets bottom="10.0" left="15.0" />
