@@ -184,6 +184,7 @@ public class ControllerGameType implements Initializable {
     private void onServerSelected() {
         // TODO: only when wasn't selected before
         buttonConnect.setVisible(false);
+        textFieldIpAddress.setEditable(false);
         this.determineLocalIpAddress();
         this.startServer();
     }
@@ -195,6 +196,7 @@ public class ControllerGameType implements Initializable {
     @FXML
     private void onClientSelected() {
         buttonConnect.setVisible(true);
+        textFieldIpAddress.setEditable(true);
         this.setClientInformation();
         this.stopServer();
     }
@@ -346,13 +348,12 @@ public class ControllerGameType implements Initializable {
         }
         // Network
         else if (radioButtonNetzwerk.isSelected()) {
-
             if(networkConnection != null && networkConnection.isConnected()) {
                 networkConnection.startCommunication();
             }
             // Client
             if (radioButtonClient.isSelected()) {
-                if(!networkConnection.isConnected()) {
+                if (networkConnection == null || !networkConnection.isConnected()) {
                     showNotification("No connection to Server", "Please connect first to the server");
                     return null;
                 }
@@ -366,7 +367,7 @@ public class ControllerGameType implements Initializable {
             }
             // Server
             else if (radioButtonServer.isSelected()) {
-                if(!networkConnection.isConnected()) {
+                if (networkConnection == null || !networkConnection.isConnected()) {
                     showNotification("No client connected", "Please wait till a client has connected");
                     return null;
                 }
@@ -396,13 +397,16 @@ public class ControllerGameType implements Initializable {
             p2 = new PlayerAI(1, "AI2", playgroundSize, hashMap.get(choiceBoxAI2Difficulty.getValue()));
             aiVsAi = true;
         } else {
-            // TODO: inform user  ??? Problem ???? noch implementieren ???
             LoggerGUI.warning("No mode selected. Can't start game. Inform User. Check before??");
             assert false;
             p2 = null;
         }
         if (p1 == null) {
             p1 = new PlayerHuman(0, "Local", playgroundSize);
+        }
+        if (!radioButtonNetzwerk.isSelected() && networkConnection != null) {
+            ResourcesDestructor.shutdownServer();
+            networkConnection = null;
         }
         startingPlayer = p2IsStarting ? p2 : p1;
         boolean slowAiShooting = checkboxSlowAIShooting.isSelected();
