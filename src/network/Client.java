@@ -1,10 +1,8 @@
-package network.Client;
+package network;
 
 import core.utils.logging.LoggerNetwork;
-import network.Connected;
-import network.ConnectionStatus;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;

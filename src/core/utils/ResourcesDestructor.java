@@ -1,6 +1,6 @@
 package core.utils;
 
-import network.Server.Server;
+import network.Server;
 
 import java.util.ArrayList;
 import java.util.List;

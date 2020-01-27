@@ -2,7 +2,7 @@ package gui_tests;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import network.Client.Client;
+import network.Client;
 
 
 public class TestNetworkClient extends Application {

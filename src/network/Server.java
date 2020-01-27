@@ -1,20 +1,12 @@
-package network.Server;
+package network;
 
-import core.utils.logging.LoggerLogic;
 import core.utils.logging.LoggerNetwork;
-import gui.PlayGame.ControllerPlayGame;
-import network.Connected;
-import network.ConnectionStatus;
-import network.Utils;
-import player.PlayerNetwork;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Logger;
 
 public class Server extends Connected {
 
