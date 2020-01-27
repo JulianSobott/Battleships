@@ -1,9 +1,9 @@
 package player;
 
-import core.*;
+import core.Player;
+import core.Ship;
 import core.communication_data.Position;
 import core.communication_data.ShotResult;
-import core.communication_data.ShotResultShip;
 import core.playgrounds.Playground;
 import core.playgrounds.PlaygroundEnemyBuildUp;
 import core.playgrounds.PlaygroundOwnBuildUp;
@@ -66,7 +66,7 @@ public class PlayerNetwork extends Player {
             }else {
                 lifeStatus = Ship.LifeStatus.ALIVE;
             }
-            getPlaygroundOwn().setShip(position, lifeStatus);
+            getPlaygroundOwn().setShip(position, lifeStatus, true);
         }
         return super.gotHit(position);
     }

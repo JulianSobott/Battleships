@@ -1,7 +1,9 @@
 package core.playgrounds;
 
-import core.Ship;
-import core.communication_data.*;
+import core.communication_data.Position;
+import core.communication_data.ShotResult;
+import core.communication_data.ShotResultShip;
+import core.communication_data.TurnResult;
 
 import java.beans.ConstructorProperties;
 
@@ -30,7 +32,7 @@ public class PlaygroundEnemyBuildUp extends PlaygroundBuildUp implements Playgro
     public void update(ShotResult shotResult) {
         if (shotResult.getType() == FieldType.SHIP) {
             ShotResultShip res = ((ShotResultShip)shotResult);
-            setShip(res.getPosition(), res.getStatus());
+            setShip(res.getPosition(), res.getStatus(), false);
         } else {
             setWater(shotResult.getPosition());
         }

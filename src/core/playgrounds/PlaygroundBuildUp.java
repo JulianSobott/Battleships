@@ -42,8 +42,9 @@ public class PlaygroundBuildUp extends Playground {
      * Concatenates adjacent ship objects.
      * @param position ShipPosition of the discovered Ship
      * @param lifeStatus Status of the overall Ship object.
+     * @param hitLater true, when the method {@link PlaygroundOwn#gotHit(Position)} will be called in this turn later on
      */
-    public void setShip(Position position, Ship.LifeStatus lifeStatus) {
+    public void setShip(Position position, Ship.LifeStatus lifeStatus, boolean hitLater) {
         numHitShipsFields++;
         Ship newShip = new Ship(position);
         boolean concatenated = false;
@@ -65,10 +66,14 @@ public class PlaygroundBuildUp extends Playground {
         if (!concatenated) {
             putShip(newShip);
         }
-        newShip.setLives(lifeStatus == Ship.LifeStatus.ALIVE ? 1 : 0);
+        if (hitLater) {
+            newShip.setLives(lifeStatus == Ship.LifeStatus.ALIVE ? 2 : 1); // Lives will be taken in gotHit later
+        } else {
+            newShip.setLives(lifeStatus == Ship.LifeStatus.ALIVE ? 1 : 0);
+        }
         this.elements[position.getY()][position.getX()] = new Field(FieldType.SHIP, newShip, true);
         if (lifeStatus == Ship.LifeStatus.SUNKEN) {
-            for(Position p : getSurroundingWaterPositions(newShip)) {
+            for (Position p : getSurroundingWaterPositions(newShip)) {
                 setWater(p);
             }
         }
