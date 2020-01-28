@@ -9,6 +9,8 @@
 - test in eclipse
 - plan for presentation
 
+- wait for pass after sent answer 0 before send shot
+
 - remove field prints
 - current standings
 
