@@ -142,33 +142,33 @@ public class PlayerAI extends Player {
     }
 
     private Position makeMoveHard() {
-
-
-        Position target;
-
-        do {
-            if (!shipFields.isEmpty()/* || lastShipSunken == Ship.LifeStatus.SUNKEN*/) {
-                Position newTarget;
-                for (int i = 0; i < shipFields.size(); i++) {
-                    newTarget = shipFields.get(i);
-                    if (potentialFields.contains(newTarget)){
-                        alreadyShot.add(newTarget);
-                        potentialFields.remove(newTarget);
-                        return newTarget;
-                    }
-                }
-                return fieldAround(lastHitPosition);
-            }
-            int randomGuess = Random.random.nextInt(potentialFields.size());
-            LoggerLogic.debug("randomGuess: " + randomGuess);
-            target = potentialFields.get(randomGuess);                // zufällige bestimmung eines der Felder welches markiert ist
-            LoggerLogic.debug("Target Field: " + target);
-
-
-        } while (!alreadyShot.contains(target) && (playgroundEnemy.canShootAt(target) != TurnResult.Error.NONE));
-        alreadyShot.add(target);
-        potentialFields.remove(target);
-        return target;
+        return makeMoveMedium();
+//
+//        Position target;
+//
+//        do {
+//            if (!shipFields.isEmpty()/* || lastShipSunken == Ship.LifeStatus.SUNKEN*/) {
+//                Position newTarget;
+//                for (int i = 0; i < shipFields.size(); i++) {
+//                    newTarget = shipFields.get(i);
+//                    if (potentialFields.contains(newTarget)){
+//                        alreadyShot.add(newTarget);
+//                        potentialFields.remove(newTarget);
+//                        return newTarget;
+//                    }
+//                }
+//                return fieldAround(lastHitPosition);
+//            }
+//            int randomGuess = Random.random.nextInt(potentialFields.size());
+//            LoggerLogic.debug("randomGuess: " + randomGuess);
+//            target = potentialFields.get(randomGuess);                // zufällige bestimmung eines der Felder welches markiert ist
+//            LoggerLogic.debug("Target Field: " + target);
+//
+//
+//        } while (!alreadyShot.contains(target) && (playgroundEnemy.canShootAt(target) != TurnResult.Error.NONE));
+//        alreadyShot.add(target);
+//        potentialFields.remove(target);
+//        return target;
     }
 
     public ArrayList<Position> checkPotential(ArrayList<Position> potentialFields) {

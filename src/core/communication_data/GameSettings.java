@@ -2,7 +2,6 @@ package core.communication_data;
 
 import core.Player;
 import network.Connected;
-import player.PlayerHuman;
 
 public class GameSettings {
 
@@ -82,6 +81,10 @@ public class GameSettings {
                 ", p2=" + p2 +
                 ", startingPlayer=" + startingPlayer +
                 ", networkConnection=" + networkConnection +
+                ", aiVsAi=" + aiVsAi +
+                ", gameID=" + gameID +
+                ", slowAiShooting=" + slowAiShooting +
+                ", showHeatMap=" + showHeatMap +
                 '}';
     }
 }

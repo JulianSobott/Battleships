@@ -90,6 +90,8 @@ public class ControllerGameType implements Initializable {
     public CheckBox checkboxSlowAIShooting;
     @FXML
     private Button buttonConnect;
+    @FXML
+    private CheckBox checkboxNetworkAI;
 
 
     private static final String filepathBackMainMenu = "../Main_Menu.fxml";
@@ -380,6 +382,10 @@ public class ControllerGameType implements Initializable {
                 p2 = networkConnection.getPlayerNetwork();
             } else {
                 p2 = null; // Will be set to loaded Player later
+            }
+            if(checkboxNetworkAI.isSelected()){
+                p1 = new PlayerAI(0, "AI_0", playgroundSize, PlayerAI.Difficulty.HARD);
+                aiVsAi = true;
             }
         }
         // Local
