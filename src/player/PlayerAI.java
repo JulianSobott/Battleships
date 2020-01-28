@@ -4,6 +4,7 @@ import core.Player;
 import core.Ship;
 import core.communication_data.*;
 import core.playgrounds.Playground;
+import core.playgrounds.PlaygroundEnemy;
 import core.playgrounds.PlaygroundEnemyBuildUp;
 import core.playgrounds.PlaygroundOwnPlaceable;
 import core.utils.Random;
@@ -26,16 +27,10 @@ public class PlayerAI extends Player {
     private Difficulty difficulty;
     PlaygroundHeatmap playgroundHeatmap;
 
-
-    Playground.FieldType lastresult;
-    Position lastHitPosition;
-    Position[] waterfields;
-    private ArrayList<Position> shipFields = new ArrayList<>();
-    private ArrayList<Position> alreadyShot = new ArrayList<>();
+    ArrayList<Position> alreadyShot = new ArrayList<>();
     ArrayList<Position> potentialFields = new ArrayList<>();
+    ArrayList<Position> shipfields = new ArrayList<>();
 
-    int randomValueBorder;
-    Ship.LifeStatus lastShipSunken = null;
     int size;
 
     int round = 0;
@@ -50,7 +45,9 @@ public class PlayerAI extends Player {
         getPlaygroundOwn().printField();
         this.difficulty = difficulty;
         this.playgroundHeatmap = new PlaygroundHeatmap(playgroundSize);
-        this.potentialFields = buildPotentialFields(playgroundSize);
+        if (difficulty.equals(Difficulty.HARD)) {
+            this.potentialFields = buildPotentialFields(playgroundSize);
+        }
         this.size = playgroundSize;
 
 
@@ -141,103 +138,108 @@ public class PlayerAI extends Player {
         return target;
     }
 
+    /**
+     * Only Shoot at every second field, to improve speed of finding all ships.
+     * <b>Algorithm:</b>
+     * <ul>
+     *     <li>just go trough the list of potenital fields randomly</li>
+     *     <li>If a Ship got hit a single time go to shipSecondShot method with last element of shipfields as parameter</li>
+     *     <li>else go to shipThirdShotPlus method with last element of shipfields as parameter</li>
+     * </ul>
+     * @return Position
+     */
     private Position makeMoveHard() {
 
+        int randomNumber = Random.random.nextInt(potentialFields.size());
+        Position target = potentialFields.get(randomNumber);
+        if (shipfields.size() == 1) {
 
-        Position target;
+            target = shipSecondShot(shipfields.get(shipfields.size() - 1));
+        } else if (shipfields.size() >= 2) {
+            target = shipThirdShotPlus(shipfields.get(shipfields.size() - 1));  //probably endlos schleife...endlos schleife bei momentanem test nach zweitem versenkm Schiff?!
+        }
 
-        do {
-            if (!shipFields.isEmpty()/* || lastShipSunken == Ship.LifeStatus.SUNKEN*/) {
-                Position newTarget;
-                for (int i = 0; i < shipFields.size(); i++) {
-                    newTarget = shipFields.get(i);
-                    if (potentialFields.contains(newTarget)){
-                        alreadyShot.add(newTarget);
-                        potentialFields.remove(newTarget);
-                        return newTarget;
-                    }
-                }
-                return fieldAround(lastHitPosition);
+        return target;
+
+    }
+
+    public Position shipSecondShot(Position lastHit) {
+        Position target = new Position(-6666, -6666);
+        for (int i = 0; i < 4; i++) {
+            switch (i) {
+                case 0:
+                    target = new Position(lastHit.getX() + 1, lastHit.getY());
+                    break;
+                case 1:
+                    target = new Position(lastHit.getX() - 1, lastHit.getY());
+
+                    break;
+                case 2:
+                    target = new Position(lastHit.getX(), lastHit.getY() + 1);
+
+                    break;
+                case 3:
+                    target = new Position(lastHit.getX(), lastHit.getY() - 1);
+
+                    break;
             }
-            int randomGuess = Random.random.nextInt(potentialFields.size());
-            LoggerLogic.debug("randomGuess: " + randomGuess);
-            target = potentialFields.get(randomGuess);                // zufällige bestimmung eines der Felder welches markiert ist
-            LoggerLogic.debug("Target Field: " + target);
+            if (!alreadyShot.contains(target) && playgroundEnemy.canShootAt(target) == TurnResult.Error.NONE) {
 
-
-        } while (!alreadyShot.contains(target) && (playgroundEnemy.canShootAt(target) != TurnResult.Error.NONE));
+                potentialFields.remove(target);                                             // unnötig imho
+                return target;
+            }
+        }
         alreadyShot.add(target);
         potentialFields.remove(target);
         return target;
     }
 
-    public ArrayList<Position> checkPotential(ArrayList<Position> potentialFields) {
-        if (waterfields != null) {
-            for (int i = 0; i < waterfields.length; i++) {
-                if (waterfields[i] != null) {
-                    Position position = waterfields[i];
-                    potentialFields.remove(position);
+    public Position shipThirdShotPlus(Position lastHit) {
+        Position target = new Position(-6666, -6666);
+        while (true) {
+            if (lastHit.getX() > shipfields.get(shipfields.size() - 2).getX()) {
+                target = new Position(lastHit.getX() + 1, lastHit.getY());
+                if(!(playgroundEnemy.canShootAt(target) == TurnResult.Error.NONE)){
+                    target = new Position(shipfields.get(0).getX() -1, shipfields.get(shipfields.size()-2).getY());
                 }
+                break;
+            } else if (lastHit.getX() < shipfields.get(shipfields.size() - 2).getX()) {
+                target = new Position(lastHit.getX() - 1, lastHit.getY());
+                if(!(playgroundEnemy.canShootAt(target) == TurnResult.Error.NONE)){
+                    target = new Position(shipfields.get(0).getX() +1, shipfields.get(shipfields.size()-2).getY());
+                }
+                break;
+            } else if (lastHit.getY() > shipfields.get(shipfields.size() - 2).getY()) {
+                target = new Position(lastHit.getX(), lastHit.getY() + 1);
+                if(!(playgroundEnemy.canShootAt(target) == TurnResult.Error.NONE)){
+                    target = new Position(shipfields.get(shipfields.size()-2).getX(), shipfields.get(0).getY() -1);
+                }
+                break;
+            } else if (lastHit.getY() < shipfields.get(shipfields.size() - 2).getY()) {
+                target = new Position(lastHit.getX(), lastHit.getY() - 1);
+                if(!(playgroundEnemy.canShootAt(target) == TurnResult.Error.NONE)){
+                    target = new Position(shipfields.get(shipfields.size()-2).getX(), shipfields.get(0).getY() +1);
+                }
+                break;
             }
         }
-        return potentialFields;
-    }
-
-    //Todo eventuell komplett löschen und neu schreiben von fieldAround
-
-    public Position fieldAround(Position p) {
-        int x = p.getX();
-        int y = p.getY();
-
-        int randomnumber;
-        Position newTarget = p;
-        LoggerLogic.debug("target before fieldAroundMethod: " + p);
-        // TODO: Remove endless loop
-        // Maybe at waterfieldsAroundShip to alrady sho
-        while (alreadyShot.contains(newTarget) || (this.playgroundEnemy.canShootAt(newTarget) != TurnResult.Error.NONE)) {
-            randomnumber = Random.random.nextInt(4);
-            if (randomnumber == 1) {
-                newTarget = new Position(x + 1, y);
-            } else if (randomnumber == 2) {
-                newTarget = new Position(x - 1, y);
-            } else if (randomnumber == 3) {
-                newTarget = new Position(x, y + 1);
-            } else {
-                newTarget = new Position(x, y - 1);
-            }
-
-
-        }
-        alreadyShot.add(newTarget);
-        //potentialFields.remove(newTarget);
-        return newTarget;
+        return target;
     }
 
     @Override
     public void update(ShotResult result) {
 
         super.update(result);
-
-        potentialFields.remove(result.getPosition());
-        if (result.getType() == Playground.FieldType.SHIP) {
-
-            shipFields.add(result.getPosition());
-            lastresult = result.getType();
-            lastHitPosition = result.getPosition();
-            ShotResultShip resultShip = (ShotResultShip) result;
-
-            potentialFields.remove(result.getPosition());
-
-            if (resultShip.getStatus() == Ship.LifeStatus.SUNKEN) {
-                lastShipSunken = Ship.LifeStatus.SUNKEN;
-                // Berechne felder um shif herum, bekommt man das schon irgendwo?
-                waterfields = ((ShotResultShip) result).getWaterFields();
-                potentialFields = checkPotential(potentialFields);
-                shipFields.clear();
-            }
-
-        }
+        alreadyShot.add(result.getPosition());
         this.playgroundHeatmap.update(result);
+
+        if (result.getType().equals(Playground.FieldType.SHIP)) {
+            shipfields.add(result.getPosition());
+            ShotResultShip shotResultShip = (ShotResultShip) result;
+            if (shotResultShip.getStatus() == Ship.LifeStatus.SUNKEN) {
+                shipfields.clear();
+            }
+        }
     }
 
     public ArrayList<Position> buildPotentialFields(int playgroundSize) {
@@ -245,7 +247,7 @@ public class PlayerAI extends Player {
             for (int y = 0; y < playgroundSize; y++) {
                 if ((x % 2 == 0 && y % 2 == 1) || (x % 2 == 1 && y % 2 == 0)) {
                     potentialFields.add(new Position(x, y));                 //jedes 2te feld is potentiel möglich, beginnend mit dem Feld an Stelle [0][1]
-                    randomValueBorder++;                                                     //potentielle Felder werden in extra Array gespeichert, Array könnte/sollte man evtl auslagern?
+                    //potentielle Felder werden in extra Array gespeichert, Array könnte/sollte man evtl auslagern?
                 }
             }
         }
@@ -279,22 +281,3 @@ public class PlayerAI extends Player {
         return "{" + super.toString() + ", difficulty=" + difficulty + "}";
     }
 }
-
-//Fehler mit standardeinstellung, schiffe random platzieren lassen, nach versunkenem eigenem Schiff, während ich dran war
-//    Exception in thread "JavaFX Application Thread" java.lang.NullPointerException
-//        Exception in thread "JavaFX Application Thread" java.lang.NullPointerException
-//        at javafx.graphics/com.sun.glass.ui.gtk.GtkApplication._runLoop(Native Method)
-//        at javafx.graphics/com.sun.glass.ui.gtk.GtkApplication.lambda$runLoop$11(GtkApplication.java:277)
-//        at java.base/java.lang.Thread.run(Thread.java:834)
-
-//
-//[Logic] [DEBUG] Player has already made a shot. player=PlayerHuman{name='1', index=0}
-//        [2020-01-23 02:17:18] (core.GameManager.makeShot Line: 132, Thread: JavaFX Application Thread)
-//        [Logic] [DEBUG] Make shot: player=PlayerHuman{name='1', index=0} position=Position{x=1, y=0}
-//        [2020-01-23 02:17:18] (core.GameManager.makeShot Line: 123, Thread: JavaFX Application Thread)
-//        [Logic] [DEBUG] {PlayerAI{name='2', index=1}=[], PlayerHuman{name='1', index=0}=[Position{x=1, y=2}]}
-//        [2020-01-23 02:17:18] (core.GameManager.makeShot Line: 125, Thread: JavaFX Application Thread)
-//        [Logic] [DEBUG] Position{x=1, y=0}
-//        [2020-01-23 02:17:18] (core.GameManager.makeShot Line: 126, Thread: JavaFX Application Thread)
-//        [Logic] [DEBUG] Player has already made a shot. player=PlayerHuman{name='1', index=0}
-//        [2020-01-23 02:17:18] (core.GameManager.makeShot Line: 132, Thread: JavaFX Application Thread)
