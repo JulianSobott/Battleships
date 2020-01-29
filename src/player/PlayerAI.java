@@ -4,18 +4,13 @@ import core.Player;
 import core.Ship;
 import core.communication_data.*;
 import core.playgrounds.Playground;
-import core.playgrounds.PlaygroundEnemy;
 import core.playgrounds.PlaygroundEnemyBuildUp;
 import core.playgrounds.PlaygroundOwnPlaceable;
 import core.utils.Random;
 import core.utils.logging.LoggerLogic;
 import core.utils.logging.LoggerProfile;
-import javafx.geometry.Pos;
 
-import javax.swing.*;
 import java.beans.ConstructorProperties;
-import java.lang.annotation.Target;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class PlayerAI extends Player {
@@ -146,6 +141,7 @@ public class PlayerAI extends Player {
      *     <li>If a Ship got hit a single time go to shipSecondShot method with last element of shipfields as parameter</li>
      *     <li>else go to shipThirdShotPlus method with last element of shipfields as parameter</li>
      * </ul>
+     *
      * @return Position
      */
     private Position makeMoveHard() {
@@ -164,66 +160,75 @@ public class PlayerAI extends Player {
     }
 
     public Position shipSecondShot(Position lastHit) {
-        Position target = new Position(-6666, -6666);
-        for (int i = 0; i < 4; i++) {
-            switch (i) {
-                case 0:
-                    target = new Position(lastHit.getX() + 1, lastHit.getY());
-                    break;
-                case 1:
-                    target = new Position(lastHit.getX() - 1, lastHit.getY());
-
-                    break;
-                case 2:
-                    target = new Position(lastHit.getX(), lastHit.getY() + 1);
-
-                    break;
-                case 3:
-                    target = new Position(lastHit.getX(), lastHit.getY() - 1);
-
-                    break;
-            }
+        Position[] possibleTargets = new Position[]{
+                new Position(Math.min(size, lastHit.getX() + 1), lastHit.getY()),
+                new Position(Math.max(0, lastHit.getX() - 1), lastHit.getY()),
+                new Position(lastHit.getX(), Math.min(size, lastHit.getY() + 1)),
+                new Position(lastHit.getX(), Math.max(0, lastHit.getY() - 1))
+        };
+        for (Position target : possibleTargets) {
             if (!alreadyShot.contains(target) && playgroundEnemy.canShootAt(target) == TurnResult.Error.NONE) {
-
+                alreadyShot.add(target);
                 potentialFields.remove(target);                                             // unnötig imho
                 return target;
             }
         }
-        alreadyShot.add(target);
-        potentialFields.remove(target);
-        return target;
+        assert false : "Should find at least one field";
+        return null;
     }
 
+    /**
+     * Find a target that is adjacent to a ship and is possible to hit.
+     *
+     * @param lastHit A Position where the Ship was hit.
+     * @return A valid Position that is adjacent to a ship
+     */
     public Position shipThirdShotPlus(Position lastHit) {
-        Position target = new Position(-6666, -6666);
-        while (true) {
-            if (lastHit.getX() > shipfields.get(shipfields.size() - 2).getX()) {
-                target = new Position(lastHit.getX() + 1, lastHit.getY());
-                if(!(playgroundEnemy.canShootAt(target) == TurnResult.Error.NONE)){
-                    target = new Position(shipfields.get(0).getX() -1, shipfields.get(shipfields.size()-2).getY());
+        Ship lastShip = (Ship) this.playgroundEnemy.getFields()[lastHit.getY()][lastHit.getX()].element;
+        assert lastShip.getStatus() == Ship.LifeStatus.ALIVE : "Should not shoot at already sunken ships: ship=" + lastShip;
+        ShipPosition shipPosition = lastShip.getShipPosition();
+        if (shipPosition.getDirection() == ShipPosition.Direction.HORIZONTAL) {
+            // Try to shoot at field left of ship
+            if (shipPosition.getX() - 1 >= 0) {
+                Position target = new Position(shipPosition.getX() - 1, shipPosition.getY());
+                if (playgroundEnemy.canShootAt(target) == TurnResult.Error.NONE) {
+                    return target;
+                } else {
+                    // Can not shoot at the left side
                 }
-                break;
-            } else if (lastHit.getX() < shipfields.get(shipfields.size() - 2).getX()) {
-                target = new Position(lastHit.getX() - 1, lastHit.getY());
-                if(!(playgroundEnemy.canShootAt(target) == TurnResult.Error.NONE)){
-                    target = new Position(shipfields.get(0).getX() +1, shipfields.get(shipfields.size()-2).getY());
+            }
+            // Try to shoot at field right of the ship
+            if (shipPosition.getX() + shipPosition.getLength() <= size) {
+                Position target = new Position(shipPosition.getX() + shipPosition.getLength(), shipPosition.getY());
+                if (playgroundEnemy.canShootAt(target) == TurnResult.Error.NONE) {
+                    return target;
+                } else {
+                    // Can not shoot at the left side
                 }
-                break;
-            } else if (lastHit.getY() > shipfields.get(shipfields.size() - 2).getY()) {
-                target = new Position(lastHit.getX(), lastHit.getY() + 1);
-                if(!(playgroundEnemy.canShootAt(target) == TurnResult.Error.NONE)){
-                    target = new Position(shipfields.get(shipfields.size()-2).getX(), shipfields.get(0).getY() -1);
+            }
+        } else {    // Ship is Vertical
+            // Try to shoot at field above of ship
+            if (shipPosition.getY() - 1 >= 0) {
+                Position target = new Position(shipPosition.getX(), shipPosition.getY() - 1);
+                if (playgroundEnemy.canShootAt(target) == TurnResult.Error.NONE) {
+                    return target;
+                } else {
+                    // Can not shoot at the top side
                 }
-                break;
-            } else if (lastHit.getY() < shipfields.get(shipfields.size() - 2).getY()) {
-                target = new Position(lastHit.getX(), lastHit.getY() - 1);
-                if(!(playgroundEnemy.canShootAt(target) == TurnResult.Error.NONE)){
-                    target = new Position(shipfields.get(shipfields.size()-2).getX(), shipfields.get(0).getY() +1);
+            }
+            // Try to shoot at field under of the ship
+            if (shipPosition.getY() + shipPosition.getLength() <= size) {
+                Position target = new Position(shipPosition.getX(), shipPosition.getY() + shipPosition.getLength());
+                if (playgroundEnemy.canShootAt(target) == TurnResult.Error.NONE) {
+                    return target;
+                } else {
+                    // Can not shoot at the bottom side
                 }
-                break;
             }
         }
-        return target;
+        shipfields.remove(lastHit);
+        Position nextLastHit = shipfields.get(shipfields.size() - 1);
+        return shipThirdShotPlus(nextLastHit);
     }
 
     @Override
