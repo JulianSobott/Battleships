@@ -9,6 +9,7 @@ import core.playgrounds.PlaygroundOwnPlaceable;
 import core.utils.Random;
 import core.utils.logging.LoggerLogic;
 import core.utils.logging.LoggerProfile;
+
 import java.beans.ConstructorProperties;
 import java.util.ArrayList;
 
@@ -39,7 +40,7 @@ public class PlayerAI extends Player {
         getPlaygroundOwn().printField();
         this.difficulty = difficulty;
         this.playgroundHeatmap = new PlaygroundHeatmap(playgroundSize);
-        if (difficulty.equals(Difficulty.HARD)) {
+        if (difficulty == Difficulty.MEDIUM) {
             this.potentialFields = buildPotentialFields(playgroundSize);
         }
         this.size = playgroundSize;
@@ -116,7 +117,7 @@ public class PlayerAI extends Player {
      *
      * @return Position
      */
-    private Position makeMoveMedium() {
+    private Position makeMoveHard() {
         round++;
         // The higher the better the prediction. Too high values can slow down the game
         int numPossiblePlacements = 100;
@@ -144,7 +145,7 @@ public class PlayerAI extends Player {
      *
      * @return Position
      */
-    private Position makeMoveHard() {
+    private Position makeMoveMedium() {
 
         int randomNumber = Random.random.nextInt(potentialFields.size());
         Position target = potentialFields.get(randomNumber);
