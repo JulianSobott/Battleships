@@ -13,7 +13,14 @@ import player.PlayerNetwork;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class GameManager implements GameManagerInterface {
+/**
+ * Core object of the logic.
+ * <p>
+ * Connection between logic and GUI.
+ * Contains the {@link #gameLoop()}.
+ * Forwards the methods for ship placement.
+ */
+public class GameManager {
 
     private Player player1;
     private Player player2;
@@ -49,7 +56,6 @@ public class GameManager implements GameManagerInterface {
     public GameManager() {
     }
 
-    @Override
     public NewGameResult newGame(GameSettings settings) {
         this.initGame(settings.getP1(), settings.getP2());
         this.currentPlayer = settings.getStartingPlayer();
@@ -92,22 +98,18 @@ public class GameManager implements GameManagerInterface {
         this.gameLoop();
     }
 
-    @Override
     public PlaceShipResult placeShip(ShipPosition pos) {
         return ((PlayerHuman)player1).placeShip(pos);
     }
 
-    @Override
     public PlaceShipsRandomRes placeShipsRandom() {
         return ((PlayerHuman)player1).placeShipsRandom();
     }
 
-    @Override
     public PlaceShipResult moveShip(ShipID id, ShipPosition pos) {
         return ((PlayerHuman)player1).moveShip(id, pos);
     }
 
-    @Override
     public boolean deleteShip(ShipID id) {
         return ((PlayerHuman)player1).deleteShip(id);
     }

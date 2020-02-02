@@ -36,7 +36,7 @@ public class CoreFunctions {
         fileHandlerAll = fileHandlerAll1;
     }
 
-    public static Level level = CustomLevel.DEBUG;
+    public static Level level = CustomLevel.INFO;
 
     public static int getLineNumber() {
         return Thread.currentThread().getStackTrace()[STACK_TILL_FUNCTION].getLineNumber();

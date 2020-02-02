@@ -1,12 +1,41 @@
 # Battleships
 Battlehips game with ai and network
 
-MacOS 10.15.1 VM Options:
---module-path="/Library/Java/JavaVirtualMachines/javafx-sdk-11.0.2/lib/" --add-modules=javafx.controls,javafx.fxml
+# Features
+<ul>
+    <li>Play vs an AI</li>
+    <li>Play over the network</li>
+    <li>Simulate AI vs AI</li>
+    <li>3 different AI difficulty levels</li>
+    <li>Cheatmode: Get tips where to shoot</li>
+</ul>
+
+# Repository structure
+
+- *assets*: images, music, stylesheets, csv_data
+- *bin*: The compiled .jar file(s) for execution
+- *docs*: docs for developers and for users
+- *lib*: jar files of the dependencies
+- *src*: java source code
+
+# Run the game
+## Compiled version
+
+- go into the **bin** folder
+- on windows: just double click the **battleships.bat** file
+- all platforms: in the console write
+```shell script
+java -jar Battleships.jar
+```
+- You need java installed and the console must find it
+- You can also pass the full path to the java executable
+
+## Eclipse
 
 
-Alternative :
---module-path="/Library/Java/JavaVirtualMachines/javafx-sdk-11.0.2/lib/" --add-modules=javafx.media,javafx.graphics,javafx.controls,javafx.fxml,javafx.base
-## Inbetriebnahme
+# Dependencies
 
-Vm-Option: --module-path /home/josua/Documents/JavaFX/javafx-sdk-11.0.2/lib --add-modules javafx.controls,javafx.fxml -Djdk.gtk.version=2
+- Java 8+
+- JavaFX2
+- jackson 2.1+
+- junit 5.1 (only for tests)
