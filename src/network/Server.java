@@ -56,6 +56,7 @@ public class Server extends Connected {
                     clientConnected.wait();
                 } catch (InterruptedException e) {
                     LoggerNetwork.info("Server stopped waiting for client connection");
+                    return;
                 }
             }
         }

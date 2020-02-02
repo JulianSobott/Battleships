@@ -1,25 +1,24 @@
 package core.utils;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 public class CsvParser {
 
     public static int[] readCSVships(int size) {
-        int [] res = new int [4];
+        int[] res = new int[4];
 
         try {
-            java.io.BufferedReader FileReader=
-                    new java.io.BufferedReader(
-                            new java.io.FileReader(
-                                    new java.io.File("assets/ship_table.csv")
-                            )
-                    );
-
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(CsvParser.class.getResourceAsStream("/ship_table.csv")));
             String zeile;
 
-            while(null!=(zeile=FileReader.readLine())){
-                String[] split=zeile.split(";");
+            while (null != (zeile = reader.readLine())) {
+                String[] split = zeile.split(";");
 
-                if (split[4].equals(size+"")){
-                    for(int i=0; i<4; i++){
-                        res[i]= Integer.parseInt(split[i]);
+                if (split[4].equals(size + "")) {
+                    for (int i = 0; i < 4; i++) {
+                        res[i] = Integer.parseInt(split[i]);
                     }
                     break;
                 }

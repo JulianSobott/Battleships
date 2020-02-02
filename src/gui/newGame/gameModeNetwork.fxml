@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import gui.custom_elements.HelpWidget?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="rootAnchorPane" xmlns="http://javafx.com/javafx/10.0.2-internal"
+            fx:controller="gui.newGame.ControllerGameModeNetwork">
+    <VBox fx:id="vBoxRoot" styleClass="gameModeSettings" spacing="20">
+        <HBox spacing="20" styleClass="dividerBot">
+            <RadioButton fx:id="rbServer" text="Server" onMouseClicked="#onServerSelected"
+                         styleClass="radioButtonServerClient">
+                <toggleGroup>
+                    <ToggleGroup fx:id="toggleGroupServerClient"/>
+                </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="rbClient" text="Client" toggleGroup="$toggleGroupServerClient"
+                         onMouseClicked="#onClientSelected" styleClass="radioButtonServerClient, gameModeFont">
+            </RadioButton>
+        </HBox>
+        <HBox>
+            <Label text="IP: " styleClass="gameModeFont"/>
+            <TextField fx:id="tfIPAddress" id="tfIPAddress"/>
+        </HBox>
+        <HBox spacing="20">
+            <Button fx:id="btnConnect" text="Verbinden" visible="false" onMouseClicked="#btnConnectClicked"
+                    id="btnConnect"/>
+            <ProgressIndicator fx:id="progressIndicatorConnect" visible="false"/>
+            <Button fx:id="btnCancelConnect" text="Verbinden Abbrechen" onMouseClicked="#btnCancelConnectClicked"
+                    visible="false"/>
+        </HBox>
+        <HBox styleClass="dividerBot">
+            <Label fx:id="lblConnectionStatus" text="Nicht verbunden" styleClass="gameModeFont"/>
+        </HBox>
+        <HBox spacing="30">
+            <HBox>
+                <Label text="KI spielen lassen: " styleClass="labelCheckBox, gameModeFont"/>
+                <CheckBox fx:id="cbAINetwork" styleClass="checkBoxOption, gameModeFont"/>
+                <HelpWidget text="Lehn dich zurück und lass die KI für dich spielen." textAreaWidth="300"
+                            textAreaHeight="20"/>
+            </HBox>
+            <HBox>
+                <Label text="Cheatmode: " styleClass="labelCheckBox, gameModeFont"/>
+                <CheckBox fx:id="cbCheatMode" styleClass="checkBoxOption, gameModeFont"/>
+                <HelpWidget
+                        text="Durch färben der Felder wird dir geholfen an welcher Stelle Schiffe sein können. Helle Felder sind wahrscheinlicher als dunkle."
+                        textAreaWidth="300" textAreaHeight="80"/>
+            </HBox>
+        </HBox>
+    </VBox>
+</AnchorPane>

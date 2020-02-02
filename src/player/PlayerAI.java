@@ -286,4 +286,28 @@ public class PlayerAI extends Player {
     public String toString() {
         return "{" + super.toString() + ", difficulty=" + difficulty + "}";
     }
+
+    public ArrayList<Position> getAlreadyShot() {
+        return alreadyShot;
+    }
+
+    public void setAlreadyShot(ArrayList<Position> alreadyShot) {
+        this.alreadyShot = alreadyShot;
+    }
+
+    public ArrayList<Position> getPotentialFields() {
+        return potentialFields;
+    }
+
+    public void setPotentialFields(ArrayList<Position> potentialFields) {
+        this.potentialFields = potentialFields;
+    }
+
+    public ArrayList<Position> getShipfields() {
+        return shipfields;
+    }
+
+    public void setShipfields(ArrayList<Position> shipfields) {
+        this.shipfields = shipfields;
+    }
 }

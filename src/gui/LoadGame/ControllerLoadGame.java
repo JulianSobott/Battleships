@@ -7,19 +7,17 @@ import core.serialization.GameData;
 import core.serialization.GameSerialization;
 import core.utils.logging.LoggerGUI;
 import gui.PlayGame.ControllerPlayGame;
+import gui.UiClasses.Notification;
 import gui.WindowChange.SceneLoader;
-import gui.newGame.ControllerGameType;
+import gui.newGame.ControllerNewGame;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.control.ListView;
 import javafx.scene.effect.MotionBlur;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-import org.controlsfx.control.Notifications;
 import player.PlayerNetwork;
 
 import java.net.URL;
@@ -94,20 +92,17 @@ public class ControllerLoadGame implements Initializable {
         if (res.getStatus() == LoadGameResult.LoadStatus.SUCCESS) {
 
             GameData gameData = res.getGameData();
-            if(ps[1].getClass() == PlayerNetwork.class)
-            {
+            if (ps[1].getClass() == PlayerNetwork.class) {
                 LoggerGUI.info("Switch scene: LoadGame --> NewGame");
-                ControllerGameType controllerGameType = new ControllerGameType();
-                SceneLoader sceneLoader = new SceneLoader(this.ANCHORPANEMAINMENU, "../newGame/GameType.fxml", controllerGameType);
-                sceneLoader.loadSceneInExistingWindow();
-                controllerGameType.initFromNetworkLoad(res.getGameData());
+                ControllerNewGame controllerNewGame = new ControllerNewGame();
+                SceneLoader.loadSceneInExistingWindow(SceneLoader.GameScene.NEW_GAME, controllerNewGame);
+                controllerNewGame.initFromNetworkLoaded(res.getGameData());
                 return;
             }
 
             LoggerGUI.info("Switch scene: LoadGame --> PlayGame");
             ControllerPlayGame controller = ControllerPlayGame.fromLoad(gameData);
-            SceneLoader sceneLoader = new SceneLoader(this.ANCHORPANEMAINMENU, "../PlayGame/PlayGame.fxml", controller);
-            sceneLoader.loadSceneInExistingWindow();
+            SceneLoader.loadSceneInExistingWindow(SceneLoader.GameScene.PLAY_GAME, controller);
             controller.initFieldsFromLoad(gameData);
         } else {
             // TODO: inform user
@@ -123,14 +118,12 @@ public class ControllerLoadGame implements Initializable {
 
         int index;
         if (listViewSaveGames.getSelectionModel().getSelectedIndex() == -1) {
-            Notifications notifications = Notifications.create()
-                    .title("no saved game selected")
-                    .text("Please select one of the available games, which should be loaded")
-                    .darkStyle()
-                    .hideCloseButton()
-                    .position(Pos.CENTER)
-                    .hideAfter(Duration.seconds(6.0));
-            notifications.showInformation();
+            Notification.create(anchorPaneLoadGames)
+                    .header("Kein Spiel ausgewählt")
+                    .text("Bitte wähle ein Spiel aus")
+                    .level(Notification.NotificationLevel.WARNING)
+                    .autoHide(3000)
+                    .show();
 
             index = -1;
         } else {

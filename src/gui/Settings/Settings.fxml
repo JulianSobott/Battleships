@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
+<?import java.lang.String?>
+<?import java.net.URL?>
 <AnchorPane fx:id="anchorPaneSettings" prefHeight="400.0" prefWidth="300.0" stylesheets="@../generalApplication%20Design.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox alignment="CENTER" layoutX="38.0" layoutY="36.0" prefHeight="80.0" prefWidth="300.0" style="-fx-background-color: grey;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
@@ -15,17 +15,22 @@
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                <children>
-                  <Label text="Musik:" />
-                  <Slider fx:id="sliderMusicVolume" />
-                  <CheckBox fx:id="checkboxEnableMusic" mnemonicParsing="false" onMouseClicked="#onCheckboxEnableMusicClick" />
+                  <Label text="Musik:"/>
+                  <Slider fx:id="sliderMusicVolume"/>
+                  <CheckBox fx:id="checkboxEnableMusic" mnemonicParsing="false"
+                            onMouseClicked="#onCheckboxEnableMusicClick"/>
                </children>
             </HBox>
          </children>
       </VBox>
-      <Button layoutX="95.0" layoutY="349.0" mnemonicParsing="false" onMouseClicked="#closeWindow" prefHeight="27.0" prefWidth="111.0" text="Schließen" />
+      <Button layoutX="95.0" layoutY="349.0" mnemonicParsing="false" onMouseClicked="#closeWindow" prefHeight="27.0"
+              prefWidth="111.0" text="Schließen" styleClass="btnNavigation"/>
    </children>
    <styleClass>
-      <String fx:value="anchorPane" />
-      <String fx:value="LoadGame" />
+      <String fx:value="anchorPane"/>
+      <String fx:value="LoadGame"/>
    </styleClass>
+   <stylesheets>
+      <URL value="@/styles/general.css"/>
+   </stylesheets>
 </AnchorPane>

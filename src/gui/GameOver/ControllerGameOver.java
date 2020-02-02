@@ -1,5 +1,6 @@
 package gui.GameOver;
 
+import core.utils.ResourcesDestructor;
 import core.utils.logging.LoggerGUI;
 import gui.ControllerMainMenu;
 import gui.Media.MusicPlayer;
@@ -34,7 +35,7 @@ public class ControllerGameOver implements Initializable {
 
     private final AnchorPane ANCHORPANEPLAYGROUND;
 
-    private final String FILEPATHMAINMENU = "../Main_Menu.fxml";
+    private final String FILEPATHMAINMENU = "Main_Menu.fxml";
     private Boolean humanPlayerWins;
     private int numRounds;
     private int numHits;
@@ -81,13 +82,13 @@ public class ControllerGameOver implements Initializable {
     public void goBackToMainMenu(){
         LoggerGUI.info("Switch scene: EndScreen --> MainMenu");
         ANCHORPANEPLAYGROUND.setEffect(null);
+        ResourcesDestructor.shutdownAll();
 
         Stage stage = (Stage) labelGameStatus.getScene().getWindow();
         stage.close();
 
         ControllerMainMenu controllerMainMenu = new ControllerMainMenu();
-        SceneLoader sceneLoader = new SceneLoader(ANCHORPANEPLAYGROUND, FILEPATHMAINMENU, controllerMainMenu);
-        sceneLoader.loadSceneInExistingWindow();
+        SceneLoader.loadSceneInExistingWindow(SceneLoader.GameScene.MAIN_MENU, controllerMainMenu);
 
 
     }

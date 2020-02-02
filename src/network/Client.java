@@ -32,9 +32,10 @@ public class Client extends Connected {
             LoggerNetwork.warning("Unknown host: ip=" + ip + ", port=" + port);
             return ConnectionStatus.UNKNOWN_HOST;
         } catch (ConnectException e) {
+            LoggerNetwork.warning("Network connection refused: ip=" + ip + ", port=" + port);
             return ConnectionStatus.REFUSED;
         } catch(IOException e) {
-            e.printStackTrace();
+            LoggerNetwork.warning("Network is unreachable: ip=" + ip + ", port=" + port);
             return ConnectionStatus.UNKNOWN_HOST;
         }
     }

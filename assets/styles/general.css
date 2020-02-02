@@ -1,0 +1,20 @@
+* {
+}
+
+Button:hover {
+    -fx-cursor: hand;
+}
+
+.btnNavigation {
+    -fx-font-size: 14;
+    -fx-background-color: rgba(220, 220, 220, 0.1);
+    -fx-text-fill: #f0f0f0;
+    -fx-border-color: rgba(170, 170, 170, 0.9);
+    -fx-border-width: 2;
+}
+
+.btnNavigation:hover {
+    -fx-text-fill: #FFFFFF;
+    -fx-border-color: rgb(170, 170, 170);
+    -fx-background-color: rgba(100, 100, 100, 0.4);
+}

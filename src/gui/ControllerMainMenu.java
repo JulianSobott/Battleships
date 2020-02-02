@@ -7,7 +7,7 @@ import gui.LoadGame.ControllerLoadGame;
 import gui.Media.MusicPlayer;
 import gui.Settings.ControllerSettings;
 import gui.WindowChange.SceneLoader;
-import gui.newGame.ControllerGameType;
+import gui.newGame.ControllerNewGame;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -52,9 +52,7 @@ public class ControllerMainMenu implements Initializable {
     @FXML
     void createNewGame() {
         LoggerGUI.info("Switch scene: MainMenu --> NewGame");
-        ControllerGameType controllerGameType = new ControllerGameType();
-        SceneLoader sceneLoader = new SceneLoader(this.anchorPane, "../newGame/GameType.fxml", controllerGameType);
-        sceneLoader.loadSceneInExistingWindow();
+        SceneLoader.loadSceneInExistingWindow(SceneLoader.GameScene.NEW_GAME, new ControllerNewGame());
     }
 
 
@@ -62,8 +60,8 @@ public class ControllerMainMenu implements Initializable {
     void loadExistingGame(MouseEvent event) {
         LoggerGUI.info("Switch scene: MainMenu --> LoadGame");
         ControllerLoadGame controllerLoadGame = new ControllerLoadGame(this.anchorPane);
-        SceneLoader sceneLoader = new SceneLoader(null, "../LoadGame/LoadGame.fxml", controllerLoadGame);
-        sceneLoader.loadSceneInExistingWindowWithoutButtons("Load Game", (Stage) anchorPane.getScene().getWindow());
+        SceneLoader.loadSceneInExistingWindowWithoutButtons(SceneLoader.GameScene.LOAD_GAME, controllerLoadGame,
+                "Spiel laden");
 
     }
 
@@ -71,8 +69,7 @@ public class ControllerMainMenu implements Initializable {
     void loadSettings(MouseEvent event) {
         LoggerGUI.info("Switch scene: MainMenu --> Settings");
         ControllerSettings controllerSettings = new ControllerSettings(this.anchorPane);
-        SceneLoader sceneLoader = new SceneLoader(this.anchorPane, "../Settings/Settings.fxml", controllerSettings);
-        sceneLoader.loadSceneInExistingWindowWithoutButtons("Einstellungen", (Stage) anchorPane.getScene().getWindow());
+        SceneLoader.loadSceneInExistingWindowWithoutButtons(SceneLoader.GameScene.SETTINGS, controllerSettings,
+                "Einstellungen");
     }
-
 }

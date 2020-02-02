@@ -1,0 +1,154 @@
+* {
+    -fx-border-color: red;
+    -fx-border-width: 0;
+    -primary: #00c878;
+    -primary-light: #55ff9f;
+    -primary-dark: #005527;
+    -secondary: white;
+}
+
+/*For old window*/
+.radioButtonMode {
+    -fx-pref-width: 150;
+    -fx-padding: 10;
+    -fx-border-insets: 10;
+    -fx-text-alignment: center;
+}
+
+.tfInvalidInput {
+    -fx-border-color: red;
+    -fx-border-width: 3;
+}
+
+.lblSuccess {
+    -fx-text-fill: green;
+    -fx-border-color: green;
+    -fx-border-width: 2;
+}
+
+.lblFail {
+    -fx-text-fill: red;
+    -fx-border-color: red;
+    -fx-border-width: 2;
+}
+
+#borderPaneRoot {
+    -fx-background-image: url("/images/NewGame/background_window.jpg");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+}
+
+/*Top side*/
+#lblHeader {
+    -fx-font-size: 56;
+    -fx-text-fill: #FFFFFF;
+}
+
+/*Left side*/
+.btnGameMode {
+    -fx-padding: 25 0 25 0;
+    -fx-text-alignment: center;
+    -fx-background-color: -primary;
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+    -fx-border-width: 4;
+    -fx-border-color: -primary-light;
+}
+
+.btnGameMode:hover {
+    -fx-border-color: -primary;
+    -fx-background-color: -primary-light;
+}
+
+.btnGameMode.selected {
+    -fx-background-color: -primary-dark;
+    -fx-text-fill: #f8f8f8;
+}
+
+/*Center*/
+
+.gameModeSettings {
+    /*-fx-background-color: radial-gradient(center 40% 50%, radius 200%, darkgray, rgba(0, 255, 157, 0.05));*/
+    -fx-background-color: rgb(0, 85, 39);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 1), 10, 0.2, 3, 3);
+    -fx-padding: 30 30 30 30;
+}
+
+RadioButton {
+    -fx-font-size: 14;
+}
+
+Label {
+    -fx-font-size: 14;
+}
+
+.dividerBot {
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: white;
+    -fx-padding: 0 0 8 0;
+}
+
+.checkBoxOption {
+    -fx-font-size: 16;
+}
+
+.labelCheckBox {
+    -fx-font-size: 16;
+    -fx-text-fill: white;
+}
+
+/*AI*/
+.radioButtonDifficulty {
+    -fx-text-fill: white;
+    -fx-font-size: 18;
+}
+
+/*Network*/
+.radioButtonServerClient {
+    -fx-text-fill: white;
+    -fx-font-size: 16;
+}
+
+.gameModeFont {
+    -fx-text-fill: white;
+}
+
+#tfIPAddress {
+
+}
+
+#btnConnect {
+
+}
+
+/*AI vs AI*/
+#lblVS {
+    -fx-font-size: 22;
+}
+
+/*Bottom side*/
+#paneBottom {
+    -fx-background-image: url("/images/General/background.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-color: transparent;
+}
+
+#lblSize {
+    -fx-font-size: 18;
+}
+
+#btnPlay {
+    -fx-background-image: url('/images/NewGame/play_button_default.png');
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-color: transparent;
+}
+
+#btnPlay.valid {
+    -fx-background-image: url('/images/NewGame/play_button_valid.png');
+}
+
+#btnPlay.invalid {
+    -fx-background-image: url('/images/NewGame/play_button_invalid.png');
+}

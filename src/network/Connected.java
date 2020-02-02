@@ -320,6 +320,18 @@ public abstract class Connected {
 
     }
 
+    /**
+     * When loaded game
+     *
+     * @param isStartingPlayer
+     */
+    public void setIsStartingPlayerOnLoad(boolean isStartingPlayer) {
+        this.isStartingPlayer = isStartingPlayer;
+        if (isStartingPlayer) {
+            expectedMessage.set("SHOT"); // PlayerNetwork starts: Enemy shoots first
+        } else expectedMessage.set("ANSWER");
+    }
+
     // Thread control
     // TODO: shutdown with ResourceDestructor
 

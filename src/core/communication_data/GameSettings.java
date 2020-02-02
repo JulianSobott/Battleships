@@ -5,16 +5,19 @@ import network.Connected;
 
 public class GameSettings {
 
-    private final int playgroundSize;
-    private final Player p1;
-    private final Player p2;
-    private final Player startingPlayer;
-    private final Connected networkConnection;
-    private final boolean aiVsAi;
-    private final long gameID;
-    private final boolean slowAiShooting;
-    private final boolean showHeatMap;
+    private int playgroundSize;
+    private Player p1;
+    private Player p2;
+    private Player startingPlayer;
+    private Connected networkConnection;
+    private boolean aiVsAi;
+    private long gameID;
+    private boolean slowAiShooting;
+    private boolean showHeatMap;
+    private boolean fromNetworkLoad;
 
+    public GameSettings() {
+    }
 
     public GameSettings(int playgroundSize, Player p1, Player p2, Connected networkConnection, Player startingPlayer,
                         boolean aiVsAi, boolean slowAiShooting, boolean showHeatMap, long gameID) {
@@ -73,6 +76,55 @@ public class GameSettings {
         return showHeatMap;
     }
 
+    public static GameSettings create() {
+        return new GameSettings();
+    }
+
+    public GameSettings setPlaygroundSize(int playgroundSize) {
+        this.playgroundSize = playgroundSize;
+        return this;
+    }
+
+    public GameSettings setP1(Player p1) {
+        this.p1 = p1;
+        return this;
+    }
+
+    public GameSettings setP2(Player p2) {
+        this.p2 = p2;
+        return this;
+    }
+
+    public GameSettings setStartingPlayer(Player startingPlayer) {
+        this.startingPlayer = startingPlayer;
+        return this;
+    }
+
+    public GameSettings setNetworkConnection(Connected networkConnection) {
+        this.networkConnection = networkConnection;
+        return this;
+    }
+
+    public GameSettings setAiVsAi(boolean aiVsAi) {
+        this.aiVsAi = aiVsAi;
+        return this;
+    }
+
+    public GameSettings setGameID(long gameID) {
+        this.gameID = gameID;
+        return this;
+    }
+
+    public GameSettings setSlowAiShooting(boolean slowAiShooting) {
+        this.slowAiShooting = slowAiShooting;
+        return this;
+    }
+
+    public GameSettings setShowHeatMap(boolean showHeatMap) {
+        this.showHeatMap = showHeatMap;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "GameSettings{" +
@@ -86,5 +138,13 @@ public class GameSettings {
                 ", slowAiShooting=" + slowAiShooting +
                 ", showHeatMap=" + showHeatMap +
                 '}';
+    }
+
+    public boolean isFromNetworkLoad() {
+        return fromNetworkLoad;
+    }
+
+    public void setFromNetworkLoad(boolean fromNetworkLoad) {
+        this.fromNetworkLoad = fromNetworkLoad;
     }
 }

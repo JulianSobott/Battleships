@@ -13,19 +13,19 @@ import gui.ControllerMainMenu;
 import gui.GameOver.ControllerGameOver;
 import gui.Media.MusicPlayer;
 import gui.UiClasses.BattleShipGui;
+import gui.UiClasses.Notification;
 import gui.UiClasses.PaneExtends;
 import gui.WindowChange.SceneLoader;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
+import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
-import javafx.stage.Stage;
-import javafx.util.Duration;
-import org.controlsfx.control.Notifications;
-import player.PlayerHuman;
+import player.PlayerAI;
 import player.PlaygroundHeatmap;
 
 import java.net.URL;
@@ -70,16 +70,15 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
     private boolean slowAIShooting = false;
     private long AI_SHOOTING_DELAY_MS = 800;
     private boolean loadEndScreen = true;
+    private boolean aiVsAi = false;
 
     ArrayList<BattleShipGui> shipPositionList;
     GameManager gameManager;
+    private Cursor defaultCursor;
 
     // 0: Player1, 1: Player2
     private HashMap<Integer, GridPane> playerGridPaneHashMap = new HashMap<>();
     private Thread playgroundUpdaterThread;
-
-    private static final String filepathBackMainMenu = "../Main_Menu.fxml";
-    private static final String filepathGameOver = "../GameOver/GameOver.fxml";
 
     public ControllerPlayGame(int playgroudSize, ArrayList<BattleShipGui> shipPositionList, GameManager gameManager,
                               GameSettings gameSettings) {
@@ -90,6 +89,7 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
 
         this.slowAIShooting = gameSettings.isSlowAiShooting();
         this.showHeatMap = gameSettings.isShowHeatMap();
+        this.aiVsAi = gameSettings.isAiVsAi();
     }
 
     /**
@@ -136,11 +136,19 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
         this.playerGridPaneHashMap.put(0, gridPaneEnemyField);
         this.gameManager.startGame();
         this.startPlaygroundUpdaterThread();
+
+        ImageCursor cursor = new ImageCursor(new Image(getClass().getResourceAsStream("/images/icons/cursor.png")));
+        buttonBack.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (oldScene == null && newScene != null) {
+                defaultCursor = buttonBack.getScene().getCursor();
+                buttonBack.getScene().setCursor(cursor);
+            }
+        });
     }
 
     public void initFieldsFromLoad(GameData gameData) {
-        // TODO: Is Player1 always local player
         Player localPLayer = gameData.getPlayers()[0];
+        this.aiVsAi = localPLayer instanceof PlayerAI;
         PlaygroundInterface ownPlayground = localPLayer.getPlaygroundOwn();
         PlaygroundInterface enemyPlayground = localPLayer.getPlaygroundEnemy();
 
@@ -339,13 +347,14 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
      */
 
     private void addClickFieldEvent(PaneExtends p) {
-
-        p.setOnMouseClicked(mouseEvent -> {
-            int col = GridPane.getColumnIndex(p);
-            int row = GridPane.getRowIndex(p);
-            Position pos = new Position(col, row);
-            this.gameManager.shootP1(pos);
-        });
+        if (!aiVsAi) {
+            p.setOnMouseClicked(mouseEvent -> {
+                int col = GridPane.getColumnIndex(p);
+                int row = GridPane.getRowIndex(p);
+                Position pos = new Position(col, row);
+                this.gameManager.shootP1(pos);
+            });
+        }
     }
 
     /**
@@ -407,7 +416,7 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
         task.setOnSucceeded(e -> {
             Player player = gameManager.getCurrentPlayer();
             boolean playerHumanWins = player.getIndex() == 0;
-            if(loadEndScreen) {
+            if (loadEndScreen) {
                 loadEndScreen(playerHumanWins);
             }
             ResourcesDestructor.stopSingleThread(playgroundUpdaterThread);
@@ -525,7 +534,9 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
     }
 
     private void saveGame(long id, boolean useID) {
-        Task<Long> t = new Task<>() {
+
+
+        Task<Long> t = new Task<Long>() {
             @Override
             protected Long call() {
                 if (useID) {
@@ -536,21 +547,18 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
             }
         };
         t.setOnSucceeded(e -> {
-                    Notifications notifications = Notifications.create()
-                            .title("SaveGame")
-                            .text("Successfully saved game")
-                            .darkStyle()
-                            .hideCloseButton()
-                            .position(Pos.CENTER)
-                            .hideAfter(Duration.seconds(3.0));
-                    notifications.showConfirm();
-                    try {
-                        LoggerGUI.info("USER INFO: Successfully saved game with id=" + t.get());
-                    } catch (InterruptedException | ExecutionException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-        );
+            try {
+                Notification.create(anchorPanePlayGame)
+                        .header("Spiel erfolgreich gespeichert")
+                        .text("game id: " + t.get())
+                        .level(Notification.NotificationLevel.DONE)
+                        .autoHide(3000)
+                        .show();
+                LoggerGUI.info("USER INFO: Successfully saved game with id=" + t.get());
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
         new Thread(t).start();
     }
 
@@ -566,11 +574,11 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
      */
 
     public void goBackToMainMenu() {
+        buttonBack.getScene().setCursor(defaultCursor);
         LoggerGUI.info("Switch scene: PlayGame --> MainMenu");
         ResourcesDestructor.shutdownAll();
         ControllerMainMenu controllerMainMenu = new ControllerMainMenu();
-        SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathBackMainMenu, controllerMainMenu);
-        sceneLoader.loadSceneInExistingWindow();
+        SceneLoader.loadSceneInExistingWindow(SceneLoader.GameScene.MAIN_MENU, controllerMainMenu);
     }
 
     /**
@@ -578,6 +586,7 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
      */
 
     private synchronized void loadEndScreen(boolean humanPlayerWins) {
+        buttonBack.getScene().setCursor(defaultCursor);
         ResourcesDestructor.shutdownAll();
         int numRounds = gameManager.getRound();
         int numHits = gameManager.getNumHitsP1();
@@ -585,8 +594,7 @@ public class ControllerPlayGame implements Initializable, InGameGUI {
         LoggerGUI.info("Switch scene: PlayGame --> EndScreen");
         ControllerGameOver controllerGameOver = new ControllerGameOver(anchorPanePlayGame, humanPlayerWins, numRounds
                 , numHits, numMisses);
-        SceneLoader sceneLoader = new SceneLoader(buttonBack, filepathGameOver, controllerGameOver);
-        sceneLoader.loadSceneInExistingWindowWithoutButtons("", (Stage) buttonBack.getScene().getWindow());
+        SceneLoader.loadSceneInExistingWindowWithoutButtons(SceneLoader.GameScene.GAME_OVER, controllerGameOver, "");
     }
 
 

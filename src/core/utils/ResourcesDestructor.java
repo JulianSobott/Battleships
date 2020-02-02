@@ -1,5 +1,6 @@
 package core.utils;
 
+import core.utils.logging.LoggerLogic;
 import network.Server;
 
 import java.util.ArrayList;
@@ -32,18 +33,18 @@ public class ResourcesDestructor {
     }
 
     public static void stopThreads() {
-        for(Thread thread : instance.threads) {
-            thread.interrupt();
+        while (instance.threads.size() > 0) {
+            stopSingleThread(instance.threads.remove(0));
         }
         instance.threads = new ArrayList<>();
     }
 
     public static void stopSingleThread(Thread thread) {
-        if(thread  == null) return;
+        if (thread == null) return;
+        LoggerLogic.debug("Stopping thread: name=" + thread.getName() + ", interrupted=" + thread.isInterrupted() +
+                ", alive=" + thread.isAlive());
+        thread.interrupt();
         instance.threads.remove(thread);
-        if (thread.isAlive()) {
-            thread.interrupt();
-        }
     }
 
     public static void shutdownAll() {

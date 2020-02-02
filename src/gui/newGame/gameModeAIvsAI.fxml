@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import java.lang.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="rootAnchorPane" xmlns="http://javafx.com/javafx/10.0.2-internal"
+            fx:controller="gui.newGame.ControllerGameModeAIvsAI">
+    <VBox fx:id="vBoxRoot" styleClass="gameModeSettings">
+        <HBox spacing="20">
+            <ChoiceBox fx:id="choiceBoxDifficultyAI1" styleClass="choiceBoxDifficulty" prefWidth="100" value="Schwer">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Leicht"/>
+                        <String fx:value="Mittel"/>
+                        <String fx:value="Schwer"/>
+                    </FXCollections>
+                </items>
+            </ChoiceBox>
+            <Label text="VS." id="lblVS" styleClass="gameModeFont"/>
+            <ChoiceBox fx:id="choiceBoxDifficultyAI2" styleClass="choiceBoxDifficulty"
+                       prefWidth="$choiceBoxDifficultyAI1.prefWidth" value="Schwer">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Leicht"/>
+                        <String fx:value="Mittel"/>
+                        <String fx:value="Schwer"/>
+                    </FXCollections>
+                </items>
+            </ChoiceBox>
+        </HBox>
+    </VBox>
+</AnchorPane>

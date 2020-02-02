@@ -1,32 +1,17 @@
 package gui.Settings;
 
 
-import core.Player;
-import core.communication_data.LoadGameResult;
-import core.serialization.GameData;
-import core.serialization.GameSerialization;
 import core.utils.logging.LoggerGUI;
 import gui.Media.MusicPlayer;
-import gui.PlayGame.ControllerPlayGame;
-import gui.WindowChange.SceneLoader;
-import gui.newGame.ControllerGameType;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import javafx.scene.effect.MotionBlur;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-import org.controlsfx.control.Notifications;
-import player.PlayerNetwork;
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class ControllerSettings implements Initializable {

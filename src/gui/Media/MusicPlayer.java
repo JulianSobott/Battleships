@@ -5,7 +5,6 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 
-import java.io.File;
 import java.util.HashMap;
 
 public class MusicPlayer {
@@ -21,18 +20,23 @@ public class MusicPlayer {
 
     public static void loadSounds() {
         new Thread(() -> {
-            for(Sound sound : Sound.values()) {
-                Media media = new Media(new File("assets/sound_effects/", sound.fileName).toURI().toString() + ".mp3");
+            for (Sound sound : Sound.values()) {
+                Media media =
+                        new Media(MusicPlayer.class.getResource("/sound_effects/" + sound.fileName + ".mp3").toString());
                 MediaPlayer mediaPlayer = new MediaPlayer(media);
                 instance.soundEffects.put(sound, mediaPlayer);
             }
         }).start();
     }
 
-    private void initNewSong() {
-        Media song = new Media(getRandomSongFile().toURI().toString());
-        mediaPlayer = new MediaPlayer(song);
-        mediaPlayer.setOnEndOfMedia(this::startNewSong);
+    public static void playSound(Sound sound) {
+        if (instance.playSoundEffects) {
+            double volume = instance.mediaPlayer.getVolume();
+            instance.mediaPlayer.setVolume(0.2);
+            instance.soundEffects.get(sound).seek(new Duration(0));
+            instance.soundEffects.get(sound).play();
+            instance.soundEffects.get(sound).setOnEndOfMedia(() -> instance.mediaPlayer.setVolume(volume));
+        }
     }
 
     private void startNewSong() {
@@ -56,21 +60,16 @@ public class MusicPlayer {
         return instance.mediaPlayer.getVolume();
     }
 
-    public static void playSound(Sound sound) {
-        if(instance.playSoundEffects) {
-            double volume = instance.mediaPlayer.getVolume();
-            instance.mediaPlayer.setVolume(0.2);
-            instance.soundEffects.get(sound).seek(new Duration(0));
-            instance.soundEffects.get(sound).play();
-            instance.soundEffects.get(sound).setOnEndOfMedia(()->instance.mediaPlayer.setVolume(volume));
-        }
+    private void initNewSong() {
+        Media song = new Media(getRandomSongFile());
+        mediaPlayer = new MediaPlayer(song);
+        mediaPlayer.setOnEndOfMedia(this::startNewSong);
     }
 
-    private File getRandomSongFile() {
-        File musicFolder = new File("assets/music/");
-        File[] musicFiles = musicFolder.listFiles();
-        assert musicFiles != null;
-        return musicFiles[Random.random.nextInt(musicFiles.length)];
+    private String getRandomSongFile() {
+        String[] songNames = new String[]{"bensound-epic"};
+        String randomSong = songNames[Random.random.nextInt(songNames.length)];
+        return getClass().getResource("/music/" + randomSong + ".mp3").toString();
     }
 
 
@@ -79,7 +78,7 @@ public class MusicPlayer {
 
         private String fileName;
 
-        private Sound(String fileName) {
+        Sound(String fileName) {
             this.fileName = fileName;
         }
     }

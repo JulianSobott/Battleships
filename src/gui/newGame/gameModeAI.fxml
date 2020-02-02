@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import gui.custom_elements.HelpWidget?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="rootAnchorPane" xmlns="http://javafx.com/javafx/10.0.2-internal"
+            fx:controller="gui.newGame.ControllerGameModeAI">
+    <children>
+        <VBox fx:id="vBoxRoot" styleClass="gameModeSettings" alignment="CENTER" spacing="50.0">
+            <children>
+                <RadioButton fx:id="rbDifficultyEasy" text="Leicht" styleClass="radioButtonDifficulty">
+                    <toggleGroup>
+                        <ToggleGroup fx:id="toggleGroupAIDifficulty"/>
+                    </toggleGroup>
+                </RadioButton>
+                <RadioButton fx:id="rbDifficultyMedium" text="Mittel" toggleGroup="$toggleGroupAIDifficulty"
+                             styleClass="radioButtonDifficulty" selected="true"/>
+                <RadioButton fx:id="rbDifficultyHard" text="Schwer" toggleGroup="$toggleGroupAIDifficulty"
+                             styleClass="radioButtonDifficulty"/>
+                <HBox spacing="30">
+                    <HBox>
+                        <Label text="Langsame KI Schüsse: " styleClass="labelCheckBox"/>
+                        <CheckBox fx:id="cbSlowAIShooting" styleClass="checkBoxOption"/>
+                        <HelpWidget
+                                text="Schüsse der KI werden mit kleinen Pausen dargestellt. Dies sorgt für ein angenehmeres Spiel Erlebnis, kann aber das Spiel in die länge ziehen."
+                                textAreaWidth="300" textAreaHeight="80"/>
+                    </HBox>
+                    <HBox>
+                        <Label text="Cheatmode: " styleClass="labelCheckBox"/>
+                        <CheckBox fx:id="cbCheatMode" styleClass="checkBoxOption"/>
+                        <HelpWidget
+                                text="Durch färben der Felder wird dir geholfen an welcher Stelle Schiffe sein können. Helle Felder sind wahrscheinlicher als dunkle."
+                                textAreaWidth="300" textAreaHeight="100"/>
+                    </HBox>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

@@ -81,6 +81,7 @@ public class PlaygroundPlaceable extends Playground {
         }else{
             ShipPosition oldPosition = ship.getShipPosition();
             this.resetFields(Playground.FieldType.WATER, oldPosition.generateIndices());
+            removeShipByID(ship.getId());
             res = this.placeShip(newPosition, ship);
             if(!res.isSuccessfullyPlaced()){
                 this.placeShip(oldPosition, ship);

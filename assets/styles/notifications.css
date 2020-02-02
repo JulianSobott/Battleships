@@ -1,0 +1,35 @@
+#root {
+    -fx-background-color: #9932CC;
+    -fx-pref-width: 400px;
+    -fx-pref-height: 100;
+    -fx-border-color: #d0d9e0;
+    -fx-border-width: 3;
+}
+
+#leftSide {
+    -fx-pref-width: 50;
+    -fx-background-color: #FFFFFF;
+
+}
+
+#level_icon {
+    -fx-fit-to-width: true;
+    -fx-fit-to-height: true;
+    -fx-pref-width: 10px;
+    -fx-amx-width: 10px;
+}
+
+#rightSide {
+    -fx-pref-width: 350;
+}
+
+#header {
+    -fx-font-size: 18;
+    -fx-font-weight: bold;
+    -fx-padding: 10 0 0 10;
+}
+
+#content {
+    -fx-font-size: 14;
+    -fx-padding: 10 0 0 10;
+}

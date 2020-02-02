@@ -22,8 +22,7 @@ public class TestLoad extends Application {
         if (res.getStatus() == LoadGameResult.LoadStatus.SUCCESS) {
             GameData gameData = res.getGameData();
             ControllerPlayGame controller = ControllerPlayGame.fromLoad(gameData);
-            SceneLoader sceneLoader = new SceneLoader(null, "../../gui/PlayGame/PlayGame.fxml", controller);
-            sceneLoader.loadSceneInNewWindow("Test Ship Placement");
+            SceneLoader.loadSceneInNewWindow(SceneLoader.GameScene.PLAY_GAME, controller, "Test load");
             controller.initFieldsFromLoad(gameData);
         } else {
             LoggerGUI.error("Load failed: res=" + res);

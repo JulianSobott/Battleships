@@ -149,7 +149,7 @@ public abstract class Playground {
      * @return The Ship with the specified ID
      */
     protected Ship getShipByID(ShipID shipID) {
-        assert shipID != null && !shipHashMap.containsKey(shipID): "ShipID is not in HashMap. id=" + shipID;
+        assert shipID != null && shipHashMap.containsKey(shipID) : "ShipID is not in HashMap. id=" + shipID;
         return shipHashMap.get(shipID);
     }
 

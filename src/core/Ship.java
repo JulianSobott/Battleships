@@ -132,4 +132,13 @@ public class Ship extends PlaygroundElement implements Serializable {
     public void setId(ShipID id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "Ship{" +
+                "lives=" + lives +
+                ", id=" + id +
+                ", shipPosition=" + shipPosition +
+                "} " + super.toString();
+    }
 }

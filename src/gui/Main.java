@@ -5,13 +5,7 @@ import core.utils.logging.LoggerGUI;
 import core.utils.logging.LoggerState;
 import gui.WindowChange.SceneLoader;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 
 public class Main extends Application {
 
@@ -25,8 +19,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         LoggerGUI.info("Switch scene: None --> MainMenu");
         ControllerMainMenu controllerMainMenu = new ControllerMainMenu();
-        SceneLoader sceneLoader = new SceneLoader(null, "../Main_Menu.fxml", controllerMainMenu);
-        sceneLoader.loadSceneInNewWindow("Battleship");
+        SceneLoader.loadSceneInNewWindow(SceneLoader.GameScene.MAIN_MENU, controllerMainMenu, "Battleships");
     }
 
     @Override

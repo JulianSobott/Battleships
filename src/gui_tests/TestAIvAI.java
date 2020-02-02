@@ -1,17 +1,12 @@
 package gui_tests;
 
-import core.GameManager;
 import core.Player;
 import core.communication_data.GameSettings;
-import gui.PlayGame.ControllerPlayGame;
 import gui.ShipPlacement.ControllerShipPlacement;
 import gui.WindowChange.SceneLoader;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import player.PlayerAI;
-import player.PlayerHuman;
-
-import java.util.ArrayList;
 
 
 public class TestAIvAI extends Application {
@@ -27,8 +22,6 @@ public class TestAIvAI extends Application {
         GameSettings settings = new GameSettings(playgroundSize, p1, p2, null, p1, true, false, true, 0);
 
         ControllerShipPlacement controllerShipPlacement = new ControllerShipPlacement(settings);
-        SceneLoader sceneLoader = new SceneLoader(null, "../../gui/ShipPlacement/ShipPlacement.fxml",
-                controllerShipPlacement);
-        sceneLoader.loadSceneInNewWindow("AI vs AI");
+        SceneLoader.loadSceneInNewWindow(SceneLoader.GameScene.SHIP_PLACEMENT, controllerShipPlacement, "AI vs AI");
     }
 }
