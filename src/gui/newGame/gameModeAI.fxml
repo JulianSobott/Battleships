@@ -14,9 +14,9 @@
                     </toggleGroup>
                 </RadioButton>
                 <RadioButton fx:id="rbDifficultyMedium" text="Mittel" toggleGroup="$toggleGroupAIDifficulty"
-                             styleClass="radioButtonDifficulty" selected="true"/>
-                <RadioButton fx:id="rbDifficultyHard" text="Schwer" toggleGroup="$toggleGroupAIDifficulty"
                              styleClass="radioButtonDifficulty"/>
+                <RadioButton fx:id="rbDifficultyHard" text="Schwer" toggleGroup="$toggleGroupAIDifficulty"
+                             styleClass="radioButtonDifficulty" selected="true"/>
                 <HBox spacing="30">
                     <HBox>
                         <Label text="Langsame KI Schüsse: " styleClass="labelCheckBox"/>

@@ -59,6 +59,7 @@ public class ControllerShipPlacement implements Initializable {
     private GameSettings gameSettings;
 
     private boolean disableShipPlacement = false; // Set when start game clicked
+    private boolean allShipsPlacedSent = false; // Needed to not send again
 
     /**
      * ################################################   Constructors  ################################################
@@ -196,7 +197,6 @@ public class ControllerShipPlacement implements Initializable {
     /**
      * #########################################   DRAG & Drop-Feature  ############################################
      */
-    private boolean allShipsPlacedSent = false;
 
     /**
      * This method makes it possible to place ships on the playground.
